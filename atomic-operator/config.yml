@@ -1,0 +1,36 @@
+inventory:
+  windows1:
+    executor: cmd # or cmd
+    authentication:
+      username: username
+      password: password
+      verify_ssl: false
+    hosts:
+      - 192.168.1.1
+
+  linux1:
+    executor: ssh
+    authentication:
+      username: username
+      password: password
+      #ssk_key_path:
+      port: 22
+      timeout: 5
+    hosts:
+      - 172.17.0.3
+      # - 10.32.100.1
+
+
+atomic_tests:
+  - guid: 3723ab77-c546-403c-8fb4-bb577033b235
+    # input_arguments:
+    #   second_arg:
+    #     value: pwd
+    inventories:
+      - linux1
+  - guid: 60e860b6-8ae6-49db-ad07-5e73edd88f5d
+    inventories:
+      - linux1
+    input_arguments:
+      output_file:
+        value: custom_output.txt
