@@ -1,0 +1,34 @@
+---
+
+- hosts: localhost
+  roles:
+    - cleanup
+
+- hosts: localhost
+  vars_prompt:
+      - name: networkname
+        prompt: "How should the new network be called"
+        default: network
+        private: no        
+      - name: NumberofLANclients
+        prompt: "How many LAN clients do you want to simulate?"
+        default: 2
+        private: no
+      - name: NumberofWANclients
+        prompt: "How many WAN clients do you want to simulate?"
+        default: 2
+        private: no
+      - name: Dockerhub_Username
+        prompt: "Fill in your Dockerhub username"
+        private: no
+      - name: Dockerhub_Password
+        prompt: "Fill in your Dockerhub password"
+        private: yes
+        no_log: True
+
+  roles:
+    - docker
+    - setup-containerlab
+    - setup-topology
+    - run-and-configure
+#    - capture
