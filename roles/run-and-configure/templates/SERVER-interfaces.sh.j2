@@ -41,8 +41,6 @@ docker exec clab-{{networkname}}-Server3-DNS-WAN apt-get install iproute2 -y
 docker exec clab-{{networkname}}-Server3-DNS-WAN apt-get install inetutils-ping -y
 docker exec clab-{{networkname}}-Server3-DNS-WAN apt-get install nsd -y
 
-# /etc/bind
-
-#docker exec clab-{{networkname}}-Server3-DNS-WAN ip addr add 5.5.5.5/8 dev eth1
-#docker exec clab-{{networkname}}-Server3-DNS-WAN ip route delete default
-#docker exec clab-{{networkname}}-Server3-DNS-WAN ip route add 0.0.0.0/0 via 5.0.0.1 dev eth1
+docker exec clab-{{networkname}}-Server3-DNS-WAN ip addr add 5.5.5.5/8 dev eth1
+docker exec clab-{{networkname}}-Server3-DNS-WAN ip route delete default
+docker exec clab-{{networkname}}-Server3-DNS-WAN ip route add 0.0.0.0/0 via 5.0.0.1 dev eth1
