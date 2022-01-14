@@ -1,0 +1,17 @@
+#/bin/bash
+
+# get nodes:
+# parse node: /etc/containerlab/{{networkname}}/.network.yml
+# get interface numbers:
+# parse links: /etc/containerlab/{{networkname}}/.network.yml
+
+
+{% for h in node}
+{% for i in interfaces}
+ip netns exec clab-{{networkname}}-{{h.node}} tshark \
+-a duration:3600 \
+-b filesize:100000 \
+-i eth{{i}}} \
+-w {{node}}eth{{i}}.pcap &
+{% endfor %}
+{% endfor %}

@@ -1,0 +1,24 @@
+---
+
+- name: install tshark
+  become: yes
+  apt:
+    name: tshark
+    state: present
+    update_cache: yes
+
+- name: Copy Capture script
+  become: yes
+  template:
+    src: capture.sh.j2
+    dest: /etc/containerlab/{{ networkname }}/capture.sh
+
+- name: Change file permissions Capture script
+  become: yes
+  file:
+    path: /etc/containerlab/{{ networkname }}/capture.sh
+    mode: '0744'
+
+- name: Capture script
+  become: yes
+  script: /etc/containerlab/{{ networkname }}/capture.sh

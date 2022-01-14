@@ -1,0 +1,71 @@
+---
+
+- name: Copy Router script
+  become: yes
+  template:
+    src: ROUTER-interfaces.sh.j2
+    dest: /etc/containerlab/{{ networkname }}/ROUTER-interfaces.sh
+
+- name: Copy Server script
+  become: yes
+  template:
+    src: SERVER-interfaces.sh.j2
+    dest: /etc/containerlab/{{ networkname }}/SERVER-interfaces.sh
+
+- name: Copy Client script
+  become: yes
+  template:
+    src: CLIENT-interfaces.sh.j2
+    dest: /etc/containerlab/{{ networkname }}/CLIENT-interfaces.sh
+
+- name: Copy Bridge script
+  become: yes
+  template:
+    src: BRIDGE-interfaces.sh.j2
+    dest: /etc/containerlab/{{ networkname }}/BRIDGE-interfaces.sh
+
+- name: Change file permissions Router script
+  become: yes
+  file:
+    path: /etc/containerlab/{{ networkname }}/ROUTER-interfaces.sh
+    mode: '0744'
+
+- name: Change file permissions Server script
+  become: yes
+  file:
+    path: /etc/containerlab/{{ networkname }}/SERVER-interfaces.sh
+    mode: '0744'
+
+- name: Change file permissions Client script
+  become: yes
+  file:
+    path: /etc/containerlab/{{ networkname }}/CLIENT-interfaces.sh
+    mode: '0744'
+
+- name: Change file permissions Bridge script
+  become: yes
+  file:
+    path: /etc/containerlab/{{ networkname }}/BRIDGE-interfaces.sh
+    mode: '0744'        
+    
+- name: Deploy topology
+  become: yes
+  command: clab deploy --topo /etc/containerlab/{{ networkname }}/network.yml    
+
+- name: Run Router script
+  become: yes
+  script: /etc/containerlab/{{ networkname }}/ROUTER-interfaces.sh
+
+- name: Run Server script
+  become: yes
+  script: /etc/containerlab/{{ networkname }}/SERVER-interfaces.sh
+  ignore_errors: True
+
+- name: Run Client script
+  become: yes
+  script: /etc/containerlab/{{ networkname }}/CLIENT-interfaces.sh
+  ignore_errors: True
+
+- name: Run Bridge script
+  become: yes
+  script: /etc/containerlab/{{ networkname }}/BRIDGE-interfaces.sh

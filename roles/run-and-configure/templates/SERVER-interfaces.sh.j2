@@ -1,0 +1,48 @@
+#!/bin/sh
+
+docker exec clab-{{networkname}}-Server1-nginx-LAN apt-get update -y
+docker exec clab-{{networkname}}-Server1-nginx-LAN apt-get install iproute2 -y
+docker exec clab-{{networkname}}-Server1-nginx-LAN apt-get install inetutils-ping -y
+
+docker exec clab-{{networkname}}-Server1-nginx-LAN ip addr add 123.123.100.10/24 dev eth1
+docker exec clab-{{networkname}}-Server1-nginx-LAN ip route delete default
+docker exec clab-{{networkname}}-Server1-nginx-LAN ip route add 0.0.0.0/0 via 123.123.100.1 dev eth1
+docker exec clab-{{networkname}}-Server1-nginx-LAN bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
+
+docker exec clab-{{networkname}}-Server2-ubuntu-LAN apt-get update -y
+docker exec clab-{{networkname}}-Server2-ubuntu-LAN apt-get install iproute2 -y
+docker exec clab-{{networkname}}-Server2-ubuntu-LAN apt-get install inetutils-ping -y
+
+docker exec clab-{{networkname}}-Server2-ubuntu-LAN ip addr add 123.123.100.11/24 dev eth1
+docker exec clab-{{networkname}}-Server2-ubuntu-LAN ip route delete default
+docker exec clab-{{networkname}}-Server2-ubuntu-LAN ip route add 0.0.0.0/0 via 123.123.100.1 dev eth1
+docker exec clab-{{networkname}}-Server2-ubuntu-LAN bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
+
+docker exec clab-{{networkname}}-Server1-nginx-WAN apt-get update -y
+docker exec clab-{{networkname}}-Server1-nginx-WAN apt-get install iproute2 -y
+docker exec clab-{{networkname}}-Server1-nginx-WAN apt-get install inetutils-ping -y
+
+docker exec clab-{{networkname}}-Server1-nginx-WAN ip addr add 5.20.0.10/8 dev eth1
+docker exec clab-{{networkname}}-Server1-nginx-WAN ip route delete default
+docker exec clab-{{networkname}}-Server1-nginx-WAN ip route add 0.0.0.0/0 via 5.0.0.1 dev eth1
+docker exec clab-{{networkname}}-Server1-nginx-WAN bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
+
+docker exec clab-{{networkname}}-Server2-ubuntu-WAN apt-get update -y
+docker exec clab-{{networkname}}-Server2-ubuntu-WAN apt-get install iproute2 -y
+docker exec clab-{{networkname}}-Server2-ubuntu-WAN apt-get install inetutils-ping -y
+
+docker exec clab-{{networkname}}-Server2-ubuntu-WAN ip addr add 5.20.0.11/8 dev eth1
+docker exec clab-{{networkname}}-Server2-ubuntu-WAN ip route delete default
+docker exec clab-{{networkname}}-Server2-ubuntu-WAN ip route add 0.0.0.0/0 via 5.0.0.1 dev eth1
+docker exec clab-{{networkname}}-Server2-ubuntu-WAN bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
+
+docker exec clab-{{networkname}}-Server3-DNS-WAN apt-get update -y
+docker exec clab-{{networkname}}-Server3-DNS-WAN apt-get install iproute2 -y
+docker exec clab-{{networkname}}-Server3-DNS-WAN apt-get install inetutils-ping -y
+docker exec clab-{{networkname}}-Server3-DNS-WAN apt-get install bind9 -y
+
+# /etc/bind
+
+#docker exec clab-{{networkname}}-Server3-DNS-WAN ip addr add 5.5.5.5/8 dev eth1
+#docker exec clab-{{networkname}}-Server3-DNS-WAN ip route delete default
+#docker exec clab-{{networkname}}-Server3-DNS-WAN ip route add 0.0.0.0/0 via 5.0.0.1 dev eth1

@@ -1,0 +1,42 @@
+all:
+  children:
+    linux:
+      hosts:
+        clab-network-Attacker-LAN:
+          ansible_host: 172.20.20.6
+        clab-network-Attacker-WAN:
+          ansible_host: 172.20.20.12
+        clab-network-Client1-LAN:
+          ansible_host: 172.20.20.11
+        clab-network-Client1-WAN:
+          ansible_host: 172.20.20.9
+        clab-network-Client2-LAN:
+          ansible_host: 172.20.20.8
+        clab-network-Client2-WAN:
+          ansible_host: 172.20.20.10
+        clab-network-Server1-nginx-LAN:
+          ansible_host: 172.20.20.7
+        clab-network-Server1-nginx-WAN:
+          ansible_host: 172.20.20.15
+        clab-network-Server2-ubuntu-LAN:
+          ansible_host: 172.20.20.3
+        clab-network-Server2-ubuntu-WAN:
+          ansible_host: 172.20.20.17
+        clab-network-Server3-DNS-WAN:
+          ansible_host: 172.20.20.5
+        clab-network-Standalone-Client-LAN:
+          ansible_host: 172.20.20.4
+        clab-network-Ubuntu-Client-LAN:
+          ansible_host: 172.20.20.2
+        clab-network-br1-DMZ:
+          ansible_host: 172.20.20.18
+        clab-network-br2-LAN:
+          ansible_host: 172.20.20.14
+        clab-network-br3-Internet:
+          ansible_host: 172.20.20.19
+        clab-network-router1-WAN:
+          ansible_host: 172.20.20.16
+        clab-network-router2-LAN:
+          ansible_host: 172.20.20.13
+        clab-network-router3-Internet:
+          ansible_host: 172.20.20.20

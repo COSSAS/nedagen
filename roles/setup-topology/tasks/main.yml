@@ -1,0 +1,56 @@
+---
+
+- name: Make Containerlab network directory
+  become: yes
+  file:
+    path: /etc/containerlab/{{ networkname }}
+    state: directory
+
+- name: Make router directory
+  become: yes
+  file:
+    path: /etc/containerlab/{{ networkname }}/{{ item }}
+    state: directory
+  loop:
+    - router1-WAN
+    - router2-LAN
+    - router3-Internet
+
+- name: Set router1 files
+  become: yes
+  copy:
+    src: router1-WAN/{{ item }}
+    dest: /etc/containerlab/{{ networkname }}/router1-WAN/{{ item }}
+  loop:
+    - daemons
+    - frr.conf
+
+- name: Set router2 files
+  become: yes
+  copy:
+    src: router2-LAN/{{ item }}
+    dest: /etc/containerlab/{{ networkname }}/router2-LAN/{{ item }}
+  loop:
+    - daemons
+    - frr.conf
+
+- name: Set router3 files
+  become: yes
+  copy:
+    src: router3-Internet/{{ item }}
+    dest: /etc/containerlab/{{ networkname }}/router3-Internet/{{ item }}
+  loop:
+    - daemons
+    - frr.conf
+
+- name: Configure network topology
+  become: yes
+  template:
+    src: network.yml.j2
+    dest: /etc/containerlab/{{ networkname }}/network.yml
+
+- name: Log into DockerHub
+  become: yes
+  docker_login:
+    username: "{{ Dockerhub_Username }}"
+    password: "{{ Dockerhub_Password }}"

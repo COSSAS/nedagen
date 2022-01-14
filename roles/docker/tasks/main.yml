@@ -1,0 +1,49 @@
+---
+
+- name: install dependencies
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  loop:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - software-properties-common
+    - python3-pip
+
+- name: add GPG key
+  become: yes
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: add docker repository to apt
+  become: yes
+  apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu focal stable
+    state: present
+
+- name: install docker
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+  loop:
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
+
+- name: Install Docker pip
+  become: yes
+  pip:
+    name: docker
+    
+- name: start docker service
+  become: yes
+  service:
+    name: docker
+    state: started
+    enabled: yes
