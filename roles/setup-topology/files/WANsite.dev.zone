@@ -1,0 +1,16 @@
+$ORIGIN WANsite.dev.
+$TTL 300
+@       IN      SOA     ns1.WANsite.dev.      admin.WANsite.dev. (
+                        2020111901        ; serial number
+                        60                    ; refresh
+                        120                     ; retry
+                        180                ; expire
+                        67                   ; ttl
+                        )
+        NS      ns1.WANsite.dev.
+
+$ORIGIN WANsite.dev.
+$TTL 60
+ns1     A       5.5.5.5
+
+www     A       5.20.0.10

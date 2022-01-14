@@ -43,6 +43,24 @@
     - daemons
     - frr.conf
 
+- name: Copy NSD config
+  become: yes
+  copy:
+    src: nsd.conf
+    dest: /etc/containerlab/{{ networkname }}/nsd.conf
+
+- name: Copy NSD LANsite config
+  become: yes
+  copy:
+    src: LANsite.dev.zone
+    dest: /etc/containerlab/{{ networkname }}/LANsite.dev.zone
+
+- name: Copy NSD WANsite config
+  become: yes
+  copy:
+    src: WANsite.dev.zone
+    dest: /etc/containerlab/{{ networkname }}/WANsite.dev.zone
+
 - name: Configure network topology
   become: yes
   template:
