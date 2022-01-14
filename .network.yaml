@@ -37,6 +37,8 @@ topology:
       image: praqma/network-multitool:latest
     Server1-nginx-LAN:
       image: nginx:latest
+      binds:
+        - /etc/containerlab/network/LANsite.conf:/etc/nginx/conf.d/default.conf
     Server2-ubuntu-LAN:
       image: ubuntu:latest
     Client1-WAN:
@@ -47,10 +49,16 @@ topology:
       image: ubuntu:latest
     Server1-nginx-WAN:
       image: nginx:latest
+      binds:
+        - /etc/containerlab/network/WANsite.conf:/etc/nginx/conf.d/default.conf
     Server2-ubuntu-WAN:
       image: ubuntu:latest
     Server3-DNS-WAN:
       image: ubuntu:latest
+      binds:
+        - /etc/containerlab/network/nsd.conf:/etc/nsd/nsd.conf
+        - /etc/containerlab/network/LANsite.dev.zone:/etc/nsd/LANsite.dev.zone
+        - /etc/containerlab/network/WANsite.dev.zone:/etc/nsd/WANsite.dev.zone
 
   links:
     - endpoints: ["Client1-WAN:eth1", "br3-Internet:eth6"]
