@@ -43,11 +43,14 @@ docker exec clab-{{networkname}}-Server3-DNS-WAN apt-get install iproute2 -y
 docker exec clab-{{networkname}}-Server3-DNS-WAN apt-get install inetutils-ping -y
 docker exec clab-{{networkname}}-Server3-DNS-WAN apt-get install nano -y
 docker exec clab-{{networkname}}-Server3-DNS-WAN apt-get install curl -y
+docker exec clab-{{networkname}}-Server3-DNS-WAN apt-get install dnsutils -y
 
 docker exec clab-{{networkname}}-Server3-DNS-WAN apt-get install nsd -y
-docker exec clab-{{networkname}}-Server3-DNS-WAN nsd-control-setup
-docker exec clab-{{networkname}}-Server3-DNS-WAN nsd
 
 docker exec clab-{{networkname}}-Server3-DNS-WAN ip addr add 5.5.5.5/8 dev eth1
 docker exec clab-{{networkname}}-Server3-DNS-WAN ip route delete default
 docker exec clab-{{networkname}}-Server3-DNS-WAN ip route add 0.0.0.0/0 via 5.0.0.1 dev eth1
+docker exec clab-{{networkname}}-Server3-DNS-WAN bash -c 'echo "nameserver 127.0.0.53" > /etc/resolv.conf'
+
+docker exec clab-{{networkname}}-Server3-DNS-WAN nsd-control-setup
+docker exec clab-{{networkname}}-Server3-DNS-WAN nsd
