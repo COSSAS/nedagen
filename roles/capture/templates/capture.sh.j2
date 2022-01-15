@@ -1,19 +1,32 @@
 #/bin/bash
 
-# get nodes:
-# parse node: /etc/containerlab/{{networkname}}/.network.yml
-# get interface numbers:
-# parse links: /etc/containerlab/{{networkname}}/.network.yml
+br1-DMZ-interfaces = 3
+br2-LAN-interfaces = {{NumberofLANclients}} +1 + 6
+router1-eth1_eth2 = 2
 
-
-{% for h in node}
-{% for i in interfaces}
-ip netns exec clab-{{networkname}}-{{h.node}} tshark \
+{% for i in range(1, br1-DMZ-interfaces ) %}
+touch {{networkname}}/br1-DMZ-eth{{i}}.pcap
+ip netns exec clab-{{networkname}}-br1-DMZ tshark \
 -a duration:3600 \
 -b filesize:100000 \
 -i eth{{i}}} \
--w {{node}}eth{{i}}.pcap &
-{% endfor %}
+-w {{networkname}}/br1-DMZ-eth{{i}}.pcap &
 {% endfor %}
 
-mergecap for { {{node}}eth{{i}}.pcap } -w {{networkname}}-capture.pcap
+{% for i in range(1, br2-LAN-interfaces ) %}
+touch {{networkname}}/br2-LAN-eth{{i}}.pcap
+ip netns exec clab-{{networkname}}-br2-LAN tshark \
+-a duration:3600 \
+-b filesize:100000 \
+-i eth{{i}}} \
+-w {{networkname}}/br2-LAN-eth{{i}}.pcap &
+{% endfor %}
+
+{% for i in range(1, router1-eth1_eth2 ) %}
+touch {{networkname}}/router1-WAN-eth{{i}}.pcap
+ip netns exec clab-{{networkname}}-router1-WAN tshark \
+-a duration:3600 \
+-b filesize:100000 \
+-i eth{{i}}} \
+-w {{networkname}}/router1-WAN-eth{{i}}.pcap &
+{% endfor %}
