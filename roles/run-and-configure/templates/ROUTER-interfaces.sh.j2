@@ -22,8 +22,5 @@ docker exec -d clab-{{networkname}}-router1-WAN iptables -A FORWARD -d 123.123.1
 docker exec -d clab-{{networkname}}-router1-WAN iptables -A FORWARD -s 123.123.100.10 -p tcp -j ACCEPT
 docker exec -d clab-{{networkname}}-router1-WAN iptables -A FORWARD -s 123.123.100.11 -j ACCEPT
 docker exec -d clab-{{networkname}}-router1-WAN iptables -A FORWARD -d 123.123.100.11 -j ACCEPT
-docker exec -d clab-{{networkname}}-router1-WAN iptables -A FORWARD -d 5.20.0.10 -p tcp --dport 80 -j ACCEPT
-docker exec -d clab-{{networkname}}-router1-WAN iptables -A FORWARD -s 5.20.0.10 -p tcp -j ACCEPT
-docker exec -d clab-{{networkname}}-router1-WAN iptables -A FORWARD -s 5.20.0.11 -j ACCEPT
-docker exec -d clab-{{networkname}}-router1-WAN iptables -A FORWARD -d 5.20.0.11 -j ACCEPT
-docker exec -d clab-{{networkname}}-router1-WAN iptables -A FORWARD -d 0.0.0.0/0 -j DROP
+docker exec -d clab-{{networkname}}-router1-WAN iptables -A FORWARD -s 123.123.123.2 -j ACCEPT
+docker exec -d clab-{{networkname}}-router1-WAN iptables -A FORWARD -d 123.123.123.2 -j ACCEPT
