@@ -1,6 +1,6 @@
 $ORIGIN LANsite.dev.
 $TTL 300
-@       IN      SOA     ns1.LANsite.dev.      admin.csr4.dev. (
+@       IN      SOA     ns1.LANsite.dev.      admin.LANsite.dev. (
                         2020111901        ; serial number
                         60                    ; refresh
                         120                     ; retry
@@ -13,4 +13,4 @@ $ORIGIN LANsite.dev.
 $TTL 60
 ns1     A       5.5.5.5
 
-www     A       123.123.100.10
+@       A       123.123.100.10

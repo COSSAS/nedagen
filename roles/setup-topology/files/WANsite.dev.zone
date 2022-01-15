@@ -13,4 +13,4 @@ $ORIGIN WANsite.dev.
 $TTL 60
 ns1     A       5.5.5.5
 
-www     A       5.20.0.10
+@       A       5.20.0.10
