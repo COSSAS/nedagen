@@ -15,3 +15,5 @@ ip netns exec clab-{{networkname}}-{{h.node}} tshark \
 -w {{node}}eth{{i}}.pcap &
 {% endfor %}
 {% endfor %}
+
+mergecap for { {{node}}eth{{i}}.pcap } -w {{networkname}}-capture.pcap

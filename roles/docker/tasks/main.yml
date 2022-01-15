@@ -22,7 +22,7 @@
 - name: add docker repository to apt
   become: yes
   apt_repository:
-    repo: deb https://download.docker.com/linux/ubuntu focal stable
+    repo: deb https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
     state: present
 
 - name: install docker
