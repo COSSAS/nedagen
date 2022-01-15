@@ -1,6 +1,8 @@
 #### RP1
 Private repo to keep track of code for RP1
 
+For now it only works on ubuntu Impish, Hirsute, focal and bionic, with python3 as ansible interpreter
+
 [Dockerhub](https://hub.docker.com/) credentials are required
 
 - Clone this repo:
