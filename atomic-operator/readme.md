@@ -53,11 +53,16 @@ For remote tests, an inventory must be used that specifies the hosts against whi
 
 
 ## Running Tests
-This can be done based upon a command or by a config file. 
+Access the docker container:
+```bash
+sudo docker exec -it clab-[networkname]-Attacker-WAN bash
+```
+
+Atomic-Operator can run based upon a command or by a config file. 
 
 Running with a config can be done like so:
 ```bash
-sudo atomic-operator run --config_file=config.yml --config_file_only=true
+atomic-operator run --config_file=config.yml --config_file_only=true
 ```
 
 This will only execute the techniques that are specified inside the configuration (note the --config_file_only parameter).
@@ -79,6 +84,13 @@ sync:*:18997:0:99999:7:::
 games:*:18997:0:99999:7:::
 [...]
 ```
+
+Running all 241 tests (at the time of writing), can be done like so:
+```bash
+atomic-operator run --atomics-path ~/atomic-operator/redcanaryco*
+```
+
+
 
 ## Techniques
 An index of the available techniques (in various formats) can be found here: https://github.com/redcanaryco/atomic-red-team/tree/master/atomics/Indexes

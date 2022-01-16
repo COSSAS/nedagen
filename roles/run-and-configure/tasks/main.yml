@@ -69,3 +69,4 @@
 - name: Run Bridge script
   become: yes
   script: /etc/containerlab/{{ networkname }}/BRIDGE-interfaces.sh
+

@@ -46,7 +46,7 @@ topology:
       image: {{ bridgeclientimage }}
 {% endfor %}
     Attacker-WAN:
-      image: {{ ubuntuserverimage }}
+      image: python:3.7-slim
     Server1-nginx-WAN:
       image: {{ webservernginximage }}
       binds:
