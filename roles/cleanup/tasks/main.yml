@@ -7,9 +7,7 @@
 
 - name: delete files
   become: yes
-  shell: rm -r !(captures)
-  args:
-    chdir: /etc/containerlab/
+  shell: rm -r /etc/containerlab/!(captures)
   ignore_errors: yes
 
 - name: delete network files

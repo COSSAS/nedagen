@@ -10,15 +10,15 @@
 
 # tshark capture on br1-DMZ interfaces 
 {% for i in range(1, br1DMZinterfaces +1 ) %}
-ip netns exec clab-{{networkname}}-br1-DMZ tshark -i eth{{i}} -T ek >> /etc/containerlab/captures/{{networkname}}/br1-DMZ_{{ ansible_date_time.iso8601 }}.json &
+ip netns exec clab-{{networkname}}-br1-DMZ tshark -i eth{{i}} -T ek >> /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/br1-DMZ.json &
 {% endfor %}
 
 # tshark capture on br2-LAN interfaces 
 {% for i in range(1, br2LANinterfaces +1 ) %}
-ip netns exec clab-{{networkname}}-br2-LAN tshark -i eth{{i}} -T ek >> /etc/containerlab/captures/{{networkname}}/br2-LAN_{{ ansible_date_time.iso8601 }}.json &
+ip netns exec clab-{{networkname}}-br2-LAN tshark -i eth{{i}} -T ek >> /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/br2-LAN.json &
 {% endfor %}
 
 # tshark capture on the router1-WAN internet and router2-LAN interfaces
 {% for i in range(1, router1eth1eth2 +1 ) %}
-ip netns exec clab-{{networkname}}-router1-WAN tshark -i eth{{i}} -T ek >> /etc/containerlab/captures/{{networkname}}/router1-WAN-eth1_eth2_{{ ansible_date_time.iso8601 }}.json &
+ip netns exec clab-{{networkname}}-router1-WAN tshark -i eth{{i}} -T ek >> /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/router1-WAN-eth1_eth2.json &
 {% endfor %}
