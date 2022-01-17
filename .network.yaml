@@ -1,0 +1,105 @@
+name: network
+
+topology:
+  defaults:
+    kind: linux
+  nodes:
+    router1-WAN:
+      image: frrouting/frr:latest
+      binds:
+        - /etc/containerlab/network/router1-WAN/daemons:/etc/frr/daemons
+        - /etc/containerlab/network/router1-WAN/frr.conf:/etc/frr/frr.conf
+    router2-LAN:
+      image: frrouting/frr:latest
+      binds:
+        - /etc/containerlab/network/router2-LAN/daemons:/etc/frr/daemons
+        - /etc/containerlab/network/router2-LAN/frr.conf:/etc/frr/frr.conf
+    router3-Internet:
+      image: frrouting/frr:latest
+      binds:
+        - /etc/containerlab/network/router3-Internet/daemons:/etc/frr/daemons
+        - /etc/containerlab/network/router3-Internet/frr.conf:/etc/frr/frr.conf
+    br1-DMZ:
+      image: praqma/network-multitool:latest
+    br2-LAN:
+      image: praqma/network-multitool:latest
+    br3-Internet:
+      image: praqma/network-multitool:latest
+    Standalone-Client-LAN:
+      image: praqma/network-multitool:latest
+    Ubuntu-Client-LAN:
+      image: ubuntu:latest
+    Attacker-LAN:
+      image: ubuntu:latest
+    Client1-LAN:
+      image: praqma/network-multitool:latest
+    Client2-LAN:
+      image: praqma/network-multitool:latest
+    Client3-LAN:
+      image: praqma/network-multitool:latest
+    Client4-LAN:
+      image: praqma/network-multitool:latest
+    Client5-LAN:
+      image: praqma/network-multitool:latest
+    Server1-nginx-LAN:
+      image: nginx:latest
+      binds:
+        - /etc/containerlab/network/LANsite.conf:/etc/nginx/conf.d/default.conf
+    Server2-ubuntu-LAN:
+      image: ubuntu:latest
+    Client1-WAN:
+      image: praqma/network-multitool:latest
+    Client2-WAN:
+      image: praqma/network-multitool:latest
+    Client3-WAN:
+      image: praqma/network-multitool:latest
+    Client4-WAN:
+      image: praqma/network-multitool:latest
+    Client5-WAN:
+      image: praqma/network-multitool:latest
+    Client6-WAN:
+      image: praqma/network-multitool:latest
+    Attacker-WAN:
+      image: python:3.7-slim
+    Server1-nginx-WAN:
+      image: nginx:latest
+      binds:
+        - /etc/containerlab/network/WANsite.conf:/etc/nginx/conf.d/default.conf
+    Server2-ubuntu-WAN:
+      image: ubuntu:latest
+    Server3-DNS-WAN:
+      image: ubuntu:latest
+      binds:
+        - /etc/containerlab/network/nsd.conf:/etc/nsd/nsd.conf
+        - /etc/containerlab/network/LANsite.dev.zone:/etc/nsd/LANsite.dev.zone
+        - /etc/containerlab/network/WANsite.dev.zone:/etc/nsd/WANsite.dev.zone
+
+  links:
+    - endpoints: ["Client1-WAN:eth1", "br3-Internet:eth6"]
+    - endpoints: ["Client2-WAN:eth1", "br3-Internet:eth7"]
+    - endpoints: ["Client3-WAN:eth1", "br3-Internet:eth8"]
+    - endpoints: ["Client4-WAN:eth1", "br3-Internet:eth9"]
+    - endpoints: ["Client5-WAN:eth1", "br3-Internet:eth10"]
+    - endpoints: ["Client6-WAN:eth1", "br3-Internet:eth11"]
+    - endpoints: ["Server3-DNS-WAN:eth1", "br3-Internet:eth5"]
+    - endpoints: ["Attacker-WAN:eth1", "br3-Internet:eth4"]
+    - endpoints: ["Server1-nginx-WAN:eth1", "br3-Internet:eth3"]
+    - endpoints: ["Server2-ubuntu-WAN:eth1", "br3-Internet:eth2"]
+    - endpoints: ["br3-Internet:eth1", "router3-Internet:eth1"]
+    - endpoints: ["router3-Internet:eth2", "router1-WAN:eth1"]
+    - endpoints: ["router1-WAN:eth3", "br1-DMZ:eth1"]
+    - endpoints: ["Server1-nginx-LAN:eth1", "br1-DMZ:eth2"]
+    - endpoints: ["Server2-ubuntu-LAN:eth1", "br1-DMZ:eth3"]    
+    - endpoints: ["router1-WAN:eth2", "router2-LAN:eth1"]
+    - endpoints: ["router2-LAN:eth2", "br2-LAN:eth1"]
+    - endpoints: ["router2-LAN:eth3", "br2-LAN:eth2"]
+    - endpoints: ["router2-LAN:eth4", "br2-LAN:eth3"]
+    - endpoints: ["Attacker-LAN:eth1", "br2-LAN:eth4"]
+    - endpoints: ["Ubuntu-Client-LAN:eth1", "br2-LAN:eth6"]
+    - endpoints: ["Standalone-Client-LAN:eth1", "br2-LAN:eth5"]
+    - endpoints: ["Client1-LAN:eth1", "br2-LAN:eth7"]
+    - endpoints: ["Client2-LAN:eth1", "br2-LAN:eth8"]
+    - endpoints: ["Client3-LAN:eth1", "br2-LAN:eth9"]
+    - endpoints: ["Client4-LAN:eth1", "br2-LAN:eth10"]
+    - endpoints: ["Client5-LAN:eth1", "br2-LAN:eth11"]
+

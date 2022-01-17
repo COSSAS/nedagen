@@ -18,6 +18,10 @@
         prompt: "How many WAN clients do you want to simulate?"
         default: 2
         private: no
+      - name: savefile
+        prompt: "Do you want to capture the network traffic? if so, in which fileformat do you want to have it: 'json', 'pcap' or 'both'"
+        default: json
+        private: no     
       - name: Dockerhub_Username
         prompt: "Fill in your Dockerhub username"
         private: no
@@ -27,8 +31,8 @@
         no_log: True
 
   roles:
-    - docker
-    - setup-containerlab
+#    - docker
+#    - setup-containerlab
     - setup-topology
     - run-and-configure
     - capture

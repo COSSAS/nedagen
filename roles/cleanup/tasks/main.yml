@@ -1,13 +1,27 @@
 ---
 
-- name: destroy topology
+- name: Find folders to delete
   become: yes
-  shell: clab destroy --topo /etc/containerlab/*/*.yml
+  find:
+    paths: /etc/containerlab
+    file_type: directory
+    excludes: 
+      - "captures"
+  register: folders
   ignore_errors: yes
 
-- name: delete files
+- name: destroy topology
   become: yes
-  shell: rm -r /etc/containerlab/!(captures)
+  command: clab destroy --topo {{ item.path }}/network.yml
+  ignore_errors: yes
+  with_items: "{{ folders['files'] }}" 
+
+- name: Delete folders except captures
+  become: yes
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ folders['files'] }}"
   ignore_errors: yes
 
 - name: delete network files
@@ -23,6 +37,20 @@
 - name: docker logout
   become: yes
   shell: docker logout
+  ignore_errors: yes
+
+- name: Find folders to merge pcaps
+  become: yes
+  find:
+    paths: /etc/containerlab/captures
+    file_type: directory
+  register: folderss
+  ignore_errors: yes
+
+- name: mergecap
+  become: yes
+  shell: if [ -f {{ item.path }}/merged.pcap ]; then echo "exists"; else mergecap {{ item.path }}/*.pcap -w {{ item.path }}/merged.pcap; fi
+  with_items: "{{ folderss['files'] }}"
   ignore_errors: yes
 
 - name: Pause to get some sensitive input
