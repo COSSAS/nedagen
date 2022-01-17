@@ -21,7 +21,6 @@ docker exec clab-{{networkname}}-Server2-ubuntu-LAN bash -c 'echo "nameserver 5.
 docker exec clab-{{networkname}}-Server1-nginx-WAN apt-get update -y
 docker exec clab-{{networkname}}-Server1-nginx-WAN apt-get install iproute2 -y
 docker exec clab-{{networkname}}-Server1-nginx-WAN apt-get install inetutils-ping -y
-docker exec clab-{{networkname}}-Server1-nignx-WAN apt-get install nano -y
 
 docker exec clab-{{networkname}}-Server1-nginx-WAN ip addr add 5.20.0.10/8 dev eth1
 docker exec clab-{{networkname}}-Server1-nginx-WAN ip route delete default
@@ -41,7 +40,6 @@ docker exec clab-{{networkname}}-Server2-ubuntu-WAN bash -c 'echo "nameserver 5.
 docker exec clab-{{networkname}}-Server3-DNS-WAN apt-get update -y
 docker exec clab-{{networkname}}-Server3-DNS-WAN apt-get install iproute2 -y
 docker exec clab-{{networkname}}-Server3-DNS-WAN apt-get install inetutils-ping -y
-docker exec clab-{{networkname}}-Server3-DNS-WAN apt-get install nano -y
 docker exec clab-{{networkname}}-Server3-DNS-WAN apt-get install curl -y
 docker exec clab-{{networkname}}-Server3-DNS-WAN apt-get install dnsutils -y
 
