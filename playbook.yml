@@ -31,4 +31,4 @@
 #    - setup-containerlab
     - setup-topology
     - run-and-configure
-#    - capture
+    - capture

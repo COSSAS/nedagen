@@ -1,32 +1,24 @@
-#/bin/bash
+#!/bin/bash
 
-br1-DMZ-interfaces = 3
-br2-LAN-interfaces = {{NumberofLANclients}} +1 + 6
-router1-eth1_eth2 = 2
+# script for capturing network traffic on each network segment.
+# capturing is done using tshark and parsed to json to integrate it with Elasticsearch
 
-{% for i in range(1, br1-DMZ-interfaces ) %}
-touch {{networkname}}/br1-DMZ-eth{{i}}.pcap
-ip netns exec clab-{{networkname}}-br1-DMZ tshark \
--a duration:3600 \
--b filesize:100000 \
--i eth{{i}}} \
--w {{networkname}}/br1-DMZ-eth{{i}}.pcap &
+# define number of interfaces to loop through
+{% set br1DMZinterfaces = 3 %}
+{% set br2LANinterfaces = NumberofLANclients|int + 6 %}
+{% set router1eth1eth2 = 2 %}
+
+# tshark capture on br1-DMZ interfaces 
+{% for i in range(1, br1DMZinterfaces +1 ) %}
+ip netns exec clab-{{networkname}}-br1-DMZ tshark -i eth{{i}} -T ek >> /etc/containerlab/captures/{{networkname}}/br1-DMZ_{{ ansible_date_time.iso8601 }}.json &
 {% endfor %}
 
-{% for i in range(1, br2-LAN-interfaces ) %}
-touch {{networkname}}/br2-LAN-eth{{i}}.pcap
-ip netns exec clab-{{networkname}}-br2-LAN tshark \
--a duration:3600 \
--b filesize:100000 \
--i eth{{i}}} \
--w {{networkname}}/br2-LAN-eth{{i}}.pcap &
+# tshark capture on br2-LAN interfaces 
+{% for i in range(1, br2LANinterfaces +1 ) %}
+ip netns exec clab-{{networkname}}-br2-LAN tshark -i eth{{i}} -T ek >> /etc/containerlab/captures/{{networkname}}/br2-LAN_{{ ansible_date_time.iso8601 }}.json &
 {% endfor %}
 
-{% for i in range(1, router1-eth1_eth2 ) %}
-touch {{networkname}}/router1-WAN-eth{{i}}.pcap
-ip netns exec clab-{{networkname}}-router1-WAN tshark \
--a duration:3600 \
--b filesize:100000 \
--i eth{{i}}} \
--w {{networkname}}/router1-WAN-eth{{i}}.pcap &
+# tshark capture on the router1-WAN internet and router2-LAN interfaces
+{% for i in range(1, router1eth1eth2 +1 ) %}
+ip netns exec clab-{{networkname}}-router1-WAN tshark -i eth{{i}} -T ek >> /etc/containerlab/captures/{{networkname}}/router1-WAN-eth1_eth2_{{ ansible_date_time.iso8601 }}.json &
 {% endfor %}

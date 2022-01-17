@@ -1,8 +1,5 @@
 ---
 
-- name: merge pcaps
-  command: mergecap /etc/containerlab/captures/{{networkname}}/*.pcap -w {{networkname}}-complete-capture.pcap
-
 - name: destroy topology
   become: yes
   shell: clab destroy --topo /etc/containerlab/*/*.yml
@@ -10,15 +7,17 @@
 
 - name: delete files
   become: yes
-  shell: rm -r /etc/containerlab/*
+  shell: rm -r !(captures)
+  args:
+    chdir: /etc/containerlab/
   ignore_errors: yes
 
-- name: delete files
+- name: delete network files
   become: yes
   shell: rm -r clab-*
   ignore_errors: yes
 
-- name: delete files
+- name: delete network yaml
   become: yes
   shell: rm .network.yaml
   ignore_errors: yes
