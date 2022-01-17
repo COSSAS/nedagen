@@ -7,15 +7,15 @@
 
 - name: delete files
   become: yes
-  shell: rm -r /etc/containerlab/*
+  shell: rm -r /etc/containerlab/!(captures)
   ignore_errors: yes
 
-- name: delete files
+- name: delete network files
   become: yes
   shell: rm -r clab-*
   ignore_errors: yes
 
-- name: delete files
+- name: delete network yaml
   become: yes
   shell: rm .network.yaml
   ignore_errors: yes

@@ -7,18 +7,30 @@
     state: present
     update_cache: yes
 
+- name: Make capture directory
+  become: yes
+  file:
+    path: /etc/containerlab/captures
+    state: directory
+
+- name: Make network specific capture directory
+  become: yes
+  file:
+    path: /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}
+    state: directory
+
 - name: Copy Capture script
   become: yes
   template:
     src: capture.sh.j2
-    dest: /etc/containerlab/{{ networkname }}/capture.sh
+    dest: /etc/containerlab/captures/capture.sh
 
 - name: Change file permissions Capture script
   become: yes
   file:
-    path: /etc/containerlab/{{ networkname }}/capture.sh
+    path: /etc/containerlab/captures/capture.sh
     mode: '0744'
 
-- name: Capture script
+- name: Run capture script
   become: yes
-  script: /etc/containerlab/{{ networkname }}/capture.sh
+  shell: /etc/containerlab/captures/capture.sh

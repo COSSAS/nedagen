@@ -27,8 +27,8 @@
         no_log: True
 
   roles:
-#    - docker
-#    - setup-containerlab
+    - docker
+    - setup-containerlab
     - setup-topology
     - run-and-configure
-#    - capture
+    - capture
