@@ -10,15 +10,33 @@
 
 # tshark capture on br1-DMZ interfaces 
 {% for i in range(1, br1DMZinterfaces +1 ) %}
+{% if savefile == "json" or savefile == "both" %}
 ip netns exec clab-{{networkname}}-br1-DMZ tshark -i eth{{i}} -T ek >> /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/br1-DMZ.json &
+{% endif %}
+{% if savefile == "pcap" or savefile == "both" %}
+touch /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/br1-DMZ-eth{{i}}.pcap &
+ip netns exec clab-{{networkname}}-br1-DMZ tshark -F pcap -i eth{{i}} -w /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/br1-DMZ-eth{{i}}.pcap &
+{% endif %}
 {% endfor %}
 
 # tshark capture on br2-LAN interfaces 
 {% for i in range(1, br2LANinterfaces +1 ) %}
+{% if savefile == "json" or savefile == "both" %}
 ip netns exec clab-{{networkname}}-br2-LAN tshark -i eth{{i}} -T ek >> /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/br2-LAN.json &
+{% endif %}
+{% if savefile == "pcap" or savefile == "both" %}
+touch /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/br2-LAN-eth{{i}}.pcap
+ip netns exec clab-{{networkname}}-br2-LAN tshark -F pcap -i eth{{i}} -w /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/br2-LAN-eth{{i}}.pcap &
+{% endif %}
 {% endfor %}
 
 # tshark capture on the router1-WAN internet and router2-LAN interfaces
 {% for i in range(1, router1eth1eth2 +1 ) %}
+{% if savefile == "json" or savefile == "both" %}
 ip netns exec clab-{{networkname}}-router1-WAN tshark -i eth{{i}} -T ek >> /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/router1-WAN-eth1_eth2.json &
+{% endif %}
+{% if savefile == "pcap" or savefile == "both" %}
+touch /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/router1-WAN-eth{{i}}.pcap
+ip netns exec clab-{{networkname}}-router1-WAN tshark -F pcap -i eth{{i}} -w /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/router1-WAN-eth{{i}}.pcap &
+{% endif %}
 {% endfor %}
