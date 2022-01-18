@@ -5,7 +5,7 @@
 
 # define number of interfaces to loop through
 {% set br1DMZinterfaces = 3 %}
-{% set br2LANinterfaces = NumberofLANclients|int + 6 %}
+{% set br2LANinterfaces = NumberofLANclients|int + staticinterfaces_br2lan|int %}
 {% set router1eth1eth2 = 2 %}
 
 # tshark capture on br1-DMZ interfaces 

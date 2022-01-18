@@ -62,7 +62,7 @@ topology:
 
   links:
 {% for k in range(1, NumberofWANclients | int +1) %}
-    - endpoints: ["Client{{ k }}-WAN:eth1", "br3-Internet:eth{{ k +5 }}"]
+    - endpoints: ["Client{{ k }}-WAN:eth1", "br3-Internet:eth{{ k + staticinterfaces_br3Internet|int }}"]
 {% endfor %}
     - endpoints: ["Server3-DNS-WAN:eth1", "br3-Internet:eth5"]
     - endpoints: ["Attacker-WAN:eth1", "br3-Internet:eth4"]
@@ -81,5 +81,5 @@ topology:
     - endpoints: ["Ubuntu-Client-LAN:eth1", "br2-LAN:eth6"]
     - endpoints: ["Standalone-Client-LAN:eth1", "br2-LAN:eth5"]
 {% for y in range(1, NumberofLANclients | int +1) %}
-    - endpoints: ["Client{{ y }}-LAN:eth1", "br2-LAN:eth{{ y +6 }}"]
+    - endpoints: ["Client{{ y }}-LAN:eth1", "br2-LAN:eth{{ y + staticinterfaces_br2lan|int }}"]
 {% endfor %}

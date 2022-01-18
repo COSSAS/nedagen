@@ -46,7 +46,6 @@ docker exec clab-{{networkname}}-Attacker-WAN apt-get -yq install pip python3 gi
 docker exec clab-{{networkname}}-Attacker-WAN pip install atomic-operator
 docker exec clab-{{networkname}}-Attacker-WAN atomic-operator get_atomics --destination "/root/atomic-operator"
 
- 
 
 docker exec -d clab-{{networkname}}-Attacker-WAN ip addr add 5.100.0.100/8 dev eth1
 docker exec -d clab-{{networkname}}-Attacker-WAN ip route delete default
