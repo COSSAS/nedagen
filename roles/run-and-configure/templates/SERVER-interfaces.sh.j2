@@ -37,6 +37,17 @@ docker exec clab-{{networkname}}-Server2-ubuntu-WAN ip route delete default
 docker exec clab-{{networkname}}-Server2-ubuntu-WAN ip route add 0.0.0.0/0 via 5.0.0.1 dev eth1
 docker exec clab-{{networkname}}-Server2-ubuntu-WAN bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
 
+docker exec clab-{{networkname}}-Server3-samba-WAN apt-get update -y
+docker exec clab-{{networkname}}-Server3-samba-WAN apt-get install iproute2 -y
+docker exec clab-{{networkname}}-Server3-samba-WAN apt-get install inetutils-ping -y
+docker exec clab-{{networkname}}-Server3-samba-WAN apt-get install curl ssh -y
+
+docker exec clab-{{networkname}}-Server3-samba-WAN ip addr add 5.20.0.12/8 dev eth1
+docker exec clab-{{networkname}}-Server3-samba-WAN ip route delete default
+docker exec clab-{{networkname}}-Server3-samba-WAN ip route add 0.0.0.0/0 via 5.0.0.1 dev eth1
+docker exec clab-{{networkname}}-Server3-samba-WAN bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
+
+
 docker exec clab-{{networkname}}-Server3-DNS-WAN apt-get update -y
 docker exec clab-{{networkname}}-Server3-DNS-WAN apt-get install iproute2 -y
 docker exec clab-{{networkname}}-Server3-DNS-WAN apt-get install inetutils-ping -y

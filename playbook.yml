@@ -31,7 +31,7 @@
         no_log: True
   vars:
     staticinterfaces_br2lan: 6
-    staticinterfaces_br3Internet: 5
+    staticinterfaces_br3Internet: 6
     staticinterfaces_br1dmz: 3
   roles:
 #    - docker

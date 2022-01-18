@@ -53,6 +53,8 @@ topology:
         - /etc/containerlab/{{networkname}}/WANsite.conf:/etc/nginx/conf.d/default.conf
     Server2-ubuntu-WAN:
       image: {{ ubuntuserverimage }}
+    Server3-samba-WAN:
+      image: dperson/samba
     Server3-DNS-WAN:
       image: {{ ubuntuserverimage }}
       binds:
@@ -68,6 +70,7 @@ topology:
     - endpoints: ["Attacker-WAN:eth1", "br3-Internet:eth4"]
     - endpoints: ["Server1-nginx-WAN:eth1", "br3-Internet:eth3"]
     - endpoints: ["Server2-ubuntu-WAN:eth1", "br3-Internet:eth2"]
+    - endpoints: ["Server3-samba-WAN:eth1", "br3-Internet:eth6"]
     - endpoints: ["br3-Internet:eth1", "router3-Internet:eth1"]
     - endpoints: ["router3-Internet:eth2", "router1-WAN:eth1"]
     - endpoints: ["router1-WAN:eth3", "br1-DMZ:eth1"]
