@@ -1,1 +1,0 @@
-WScript.Echo "rundll32 spawned wscript"
