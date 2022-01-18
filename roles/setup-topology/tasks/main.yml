@@ -76,6 +76,23 @@
     dest: /etc/containerlab/{{ networkname }}/WANsite.dev.zone
     mode: 0644
 
+
+
+
+- name: Copy WANweb.sh
+  become: yes
+  copy:
+    src: WANweb.sh
+    dest: /etc/containerlab/{{ networkname }}/WANweb.sh
+    mode: 0744
+
+- name: Copy WANvpn.sh
+  become: yes
+  copy:
+    src: WANvpn.sh
+    dest: /etc/containerlab/{{ networkname }}/WANvpn.sh
+    mode: 0744
+
 - name: Configure network topology
   become: yes
   template:

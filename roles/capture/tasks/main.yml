@@ -33,4 +33,4 @@
 
 - name: Run capture script
   become: yes
-  shell: /etc/containerlab/captures/capture.sh
+  shell: /etc/containerlab/captures/capture.sh &

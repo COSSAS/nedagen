@@ -14,7 +14,7 @@
 ip netns exec clab-{{networkname}}-br1-DMZ tshark -i eth{{i}} -T ek >> /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/br1-DMZ.json &
 {% endif %}
 {% if savefile == "pcap" or savefile == "both" %}
-touch /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/br1-DMZ-eth{{i}}.pcap &
+touch /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/br1-DMZ-eth{{i}}.pcap
 ip netns exec clab-{{networkname}}-br1-DMZ tshark -F pcap -i eth{{i}} -w /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/br1-DMZ-eth{{i}}.pcap &
 {% endif %}
 {% endfor %}
@@ -40,3 +40,28 @@ touch /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}
 ip netns exec clab-{{networkname}}-router1-WAN tshark -F pcap -i eth{{i}} -w /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/router1-WAN-eth{{i}}.pcap &
 {% endif %}
 {% endfor %}
+
+kill_descendant_processes() {
+    local pid="$1"
+    local and_self="${2:-false}"
+    if children="$(pgrep -P "$pid")"; then
+        for child in $children; do
+            kill_descendant_processes "$child" true
+        done
+    fi
+    if [[ "$and_self" == true ]]; then
+        kill -9 "$pid"
+    fi
+}
+
+while true; do
+    capturefoldersize=$(du -h /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}" | awk '{print $1;}')
+    capturefolderMB=$((capturefoldersize / 1000))
+
+    if [capturefolderMB -eq {{ capturelimitMB|int }}] || [capturefolderMB -gt {{ capturelimitMB|int }}]
+    then
+        kill_descendant_processes $$
+    fi
+    break
+done
+
