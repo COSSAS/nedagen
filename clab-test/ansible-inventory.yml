@@ -1,0 +1,70 @@
+all:
+  children:
+    linux:
+      hosts:
+        clab-test-Attacker-LAN:
+          ansible_host: 172.20.20.2
+        clab-test-Attacker-WAN:
+          ansible_host: 172.20.20.6
+        clab-test-Client1-LAN:
+          ansible_host: 172.20.20.33
+        clab-test-Client1-WAN:
+          ansible_host: 172.20.20.25
+        clab-test-Client2-LAN:
+          ansible_host: 172.20.20.10
+        clab-test-Client2-WAN:
+          ansible_host: 172.20.20.14
+        clab-test-Client3-LAN:
+          ansible_host: 172.20.20.32
+        clab-test-Client3-WAN:
+          ansible_host: 172.20.20.21
+        clab-test-Client4-LAN:
+          ansible_host: 172.20.20.15
+        clab-test-Client4-WAN:
+          ansible_host: 172.20.20.34
+        clab-test-Client5-LAN:
+          ansible_host: 172.20.20.11
+        clab-test-Client5-WAN:
+          ansible_host: 172.20.20.8
+        clab-test-Client6-LAN:
+          ansible_host: 172.20.20.31
+        clab-test-Client6-WAN:
+          ansible_host: 172.20.20.27
+        clab-test-Client7-LAN:
+          ansible_host: 172.20.20.23
+        clab-test-Client7-WAN:
+          ansible_host: 172.20.20.9
+        clab-test-Client8-LAN:
+          ansible_host: 172.20.20.19
+        clab-test-Client8-WAN:
+          ansible_host: 172.20.20.18
+        clab-test-Client9-WAN:
+          ansible_host: 172.20.20.29
+        clab-test-Server1-nginx-LAN:
+          ansible_host: 172.20.20.22
+        clab-test-Server1-nginx-WAN:
+          ansible_host: 172.20.20.16
+        clab-test-Server2-ubuntu-LAN:
+          ansible_host: 172.20.20.7
+        clab-test-Server2-ubuntu-WAN:
+          ansible_host: 172.20.20.13
+        clab-test-Server3-DNS-WAN:
+          ansible_host: 172.20.20.5
+        clab-test-Server3-samba-WAN:
+          ansible_host: 172.20.20.17
+        clab-test-Standalone-Client-LAN:
+          ansible_host: 172.20.20.4
+        clab-test-Ubuntu-Client-LAN:
+          ansible_host: 172.20.20.12
+        clab-test-br1-DMZ:
+          ansible_host: 172.20.20.20
+        clab-test-br2-LAN:
+          ansible_host: 172.20.20.28
+        clab-test-br3-Internet:
+          ansible_host: 172.20.20.30
+        clab-test-router1-WAN:
+          ansible_host: 172.20.20.24
+        clab-test-router2-LAN:
+          ansible_host: 172.20.20.3
+        clab-test-router3-Internet:
+          ansible_host: 172.20.20.26
