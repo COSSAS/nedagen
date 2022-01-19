@@ -26,12 +26,12 @@
 
 - name: delete network files
   become: yes
-  shell: rm -r clab-*
+  shell: if [ -f clab-* ]; then rm clab-*; fi
   ignore_errors: yes
 
 - name: delete network yaml
   become: yes
-  shell: rm .network.yaml
+  shell: if [ -f .network.yaml ]; then rm .network.yaml; fi
   ignore_errors: yes
 
 - name: docker logout
@@ -49,7 +49,7 @@
 
 - name: mergecap
   become: yes
-  shell: if [ -f {{ item.path }}/merged.pcap ]; then echo "exists"; else mergecap {{ item.path }}/*.pcap -w {{ item.path }}/merged.pcap; fi
+  shell: if [ ! -f /etc/containerlab/captures/test-2022-01-19T09\:09\:23Z/*merged.pcap ]; then echo "File not found!"; else mergecap /etc/containerlab/captures/test-2022-01-19T09\:09\:23Z/*.pcap -w /etc/containerlab/captures/test-2022-01-19T09\:09\:23Z/merged.pcap; fi
   with_items: "{{ folderss['files'] }}"
   ignore_errors: yes
 

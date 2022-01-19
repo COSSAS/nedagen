@@ -63,8 +63,9 @@ topology:
         - /etc/containerlab/{{networkname}}/WANsite.conf:/etc/nginx/conf.d/default.conf
     Server2-ubuntu-WAN:
       image: {{ ubuntuserverimage }}
-    Server3-samba-WAN:
+    Server4-samba-WAN:
       image: dperson/samba
+      entrypoint: '-u "example1;badpass"'
     Server3-DNS-WAN:
       image: {{ ubuntuserverimage }}
       binds:
