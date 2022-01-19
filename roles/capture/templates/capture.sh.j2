@@ -64,6 +64,7 @@ do
     echo "capturefoldersize: $capturefoldersize" >> /etc/containerlab/test.txt
     echo "finaltest" >> /etc/containerlab/test.txt
     echo "variable {{ capturelimitMB|int }}" >> /etc/containerlab/test.txt
+    
     if (( $capturefolderMB > {{ capturelimitMB|int }} || $capturefolderMB == {{ capturelimitMB|int }} ))
     then
         echo "running" >> /etc/containerlab/test.txt
