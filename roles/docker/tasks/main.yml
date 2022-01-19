@@ -6,6 +6,7 @@
     name: "{{ item }}"
     state: present
     update_cache: yes
+    cache_valid_time: 360
   loop:
     - apt-transport-https
     - ca-certificates
@@ -31,6 +32,7 @@
     name: "{{ item }}"
     state: latest
     update_cache: yes
+    cache_valid_time: 360
   loop:
     - docker-ce
     - docker-ce-cli
