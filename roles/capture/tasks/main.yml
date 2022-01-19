@@ -6,6 +6,9 @@
     name: tshark
     state: present
     update_cache: yes
+  async: 1000
+  poll: 0
+  register: install_tshark
 
 - name: Make capture directory
   become: yes
@@ -36,30 +39,36 @@
   async_status: jid={{ router_script.ansible_job_id }}
   register: job_result_router
   until: job_result_router.finished
-  retries: 1000
+  retries: 500
 
 - name: Check status bridge async script
   become: yes
   async_status: jid={{ bridge_script.ansible_job_id }}
   register: job_result_bridge
   until: job_result_bridge.finished
-  retries: 1000  
+  retries: 500  
 
 - name: Check status server async script
   become: yes
   async_status: jid={{ server_script.ansible_job_id }}
   register: job_result_server
   until: job_result_server.finished
-  retries: 1000  
+  retries: 500
 
 - name: Check status client async script
   become: yes
   async_status: jid={{ client_script.ansible_job_id }}
   register: job_result_client
   until: job_result_client.finished
-  retries: 1000
+  retries: 500
+
+- name: Check status install tshark
+  become: yes
+  async_status: jid={{ install_tshark.ansible_job_id }}
+  register: job_result_tshark
+  until: job_result_tshark.finished
+  retries: 500
 
 - name: Run capture script after config scripts
   become: yes
   shell: /etc/containerlab/captures/capture.sh &
-  when: job_result_router.stdout is defined and job_result_bridge.stdout is defined and job_result_server.stdout is defined and job_result_client.stdout is defined
