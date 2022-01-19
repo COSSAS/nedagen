@@ -2,6 +2,6 @@
 
 bridgeclientimage: praqma/network-multitool:latest
 webservernginximage: nginx:latest
-ubuntuserverimage: ubuntu:latest
+ubuntuimage: ubuntu:latest
 frrimage: frrouting/frr:latest
 dnsimage: ubuntu/bind9:latest
