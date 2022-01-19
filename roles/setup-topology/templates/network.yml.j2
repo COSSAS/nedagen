@@ -50,6 +50,7 @@ topology:
       image: {{ ubuntuserverimage }}
     Server1-samba-LAN:
       image: dperson/samba
+      # entrypoint: '-u "example1;badpass"'
 {% for i in range(1, NumberofWANwebclients | int +1) %}
     Client{{ i }}-WANweb:
       image: {{ bridgeclientimage }}
