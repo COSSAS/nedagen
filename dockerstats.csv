@@ -9,12 +9,12 @@ c4db4f405ed6   clab-network-Server2-ubuntu-WAN      0.00%     1000KiB / 9.725GiB
 c9c99fc318da   clab-network-Client15-WAN            0.00%     1.594MiB / 9.725GiB   0.02%     40.4kB / 946B     0B / 4.1kB       2
 caf75c377e63   clab-network-Client17-WAN            0.00%     1.59MiB / 9.725GiB    0.02%     44kB / 1.09kB     0B / 4.1kB       2
 3e1714c389bc   clab-network-Client25-LAN            0.00%     1.617MiB / 9.725GiB   0.02%     36.6kB / 946B     0B / 4.1kB       2
-2cbc623b7b3e   clab-network-br3-Internet            0.00%     1.609MiB / 9.725GiB   0.02%     37.2kB / 946B     0B / 4.1kB       2
+2cbc623b7b3e   clab-network-br-Internet            0.00%     1.609MiB / 9.725GiB   0.02%     37.2kB / 946B     0B / 4.1kB       2
 11e1d34df820   clab-network-Client22-WAN            0.00%     1.609MiB / 9.725GiB   0.02%     45.9kB / 1.09kB   0B / 4.1kB       2
 147f8f5b7da2   clab-network-Client2-LAN             0.00%     1.594MiB / 9.725GiB   0.02%     45.9kB / 1.09kB   0B / 4.1kB       2
 3b8d58bad2e3   clab-network-Client1-WAN             0.00%     1.598MiB / 9.725GiB   0.02%     36.3kB / 946B     0B / 4.1kB       2
 8e21bf54c685   clab-network-Client41-LAN            0.00%     1.605MiB / 9.725GiB   0.02%     37.5kB / 946B     0B / 4.1kB       2
-ade9d7c9612c   clab-network-router1-WAN             0.00%     14.67MiB / 9.725GiB   0.15%     67kB / 946B       0B / 0B          15
+ade9d7c9612c   clab-network-router-WAN             0.00%     14.67MiB / 9.725GiB   0.15%     67kB / 946B       0B / 0B          15
 bf61405bf244   clab-network-Client30-WAN            0.00%     1.586MiB / 9.725GiB   0.02%     67.7kB / 946B     0B / 4.1kB       2
 6efdd8709db2   clab-network-Client31-WAN            0.00%     1.613MiB / 9.725GiB   0.02%     37.8kB / 946B     0B / 4.1kB       2
 28677b2aaa46   clab-network-Client16-WAN            0.00%     1.594MiB / 9.725GiB   0.02%     52.6kB / 1.09kB   0B / 4.1kB       2
@@ -33,7 +33,7 @@ d2767546d023   clab-network-Client44-LAN            0.00%     1.602MiB / 9.725Gi
 081ea3319ae1   clab-network-Client21-LAN            0.00%     1.586MiB / 9.725GiB   0.02%     75.3kB / 1.02kB   0B / 4.1kB       2
 1918d5648a11   clab-network-Client28-LAN            0.00%     1.602MiB / 9.725GiB   0.02%     84.4kB / 946B     0B / 4.1kB       2
 3bc41c472bb4   clab-network-Client11-LAN            0.00%     1.59MiB / 9.725GiB    0.02%     87.5kB / 946B     0B / 4.1kB       2
-bf8aa6820672   clab-network-br2-LAN                 0.00%     1.594MiB / 9.725GiB   0.02%     64.2kB / 946B     0B / 4.1kB       2
+bf8aa6820672   clab-network-br-LAN1                 0.00%     1.594MiB / 9.725GiB   0.02%     64.2kB / 946B     0B / 4.1kB       2
 3f3c32b8f209   clab-network-Standalone-Client-LAN   0.00%     1.613MiB / 9.725GiB   0.02%     81.7kB / 946B     0B / 4.1kB       2
 ea0c01d4cc1b   clab-network-Client33-WAN            0.00%     1.602MiB / 9.725GiB   0.02%     70.1kB / 946B     0B / 4.1kB       2
 24b68f019ecc   clab-network-Client13-WAN            0.00%     1.594MiB / 9.725GiB   0.02%     52.7kB / 1.18kB   0B / 4.1kB       2
@@ -54,7 +54,7 @@ b20a945a9b80   clab-network-Client33-LAN            0.00%     1.586MiB / 9.725Gi
 ec5a0658316b   clab-network-Client5-WAN             0.00%     1.594MiB / 9.725GiB   0.02%     82.1kB / 946B     0B / 4.1kB       2
 a4618af6469e   clab-network-Client37-LAN            0.00%     1.613MiB / 9.725GiB   0.02%     88.4kB / 946B     0B / 4.1kB       2
 6c7efd9ba81f   clab-network-Client14-LAN            0.00%     1.59MiB / 9.725GiB    0.02%     52.7kB / 1.09kB   0B / 4.1kB       2
-26e882345002   clab-network-router2-LAN             0.07%     13.78MiB / 9.725GiB   0.14%     88.6kB / 946B     0B / 0B          13
+26e882345002   clab-network-router-LAN1             0.07%     13.78MiB / 9.725GiB   0.14%     88.6kB / 946B     0B / 0B          13
 160e19a5c0bf   clab-network-Client20-WAN            0.00%     1.586MiB / 9.725GiB   0.02%     92.2kB / 946B     0B / 4.1kB       2
 bd7277ffdea3   clab-network-Client9-LAN             0.00%     1.59MiB / 9.725GiB    0.02%     62.1kB / 946B     0B / 4.1kB       2
 c047d4fe5931   clab-network-Client23-LAN            0.00%     1.598MiB / 9.725GiB   0.02%     54.9kB / 946B     0B / 4.1kB       2
@@ -80,7 +80,7 @@ c2d8b051d166   clab-network-Client8-WAN             0.00%     1.594MiB / 9.725Gi
 de6ba7206fae   clab-network-Client19-WAN            0.00%     1.602MiB / 9.725GiB   0.02%     73.2kB / 946B     0B / 4.1kB       2
 3997b1d0badc   clab-network-Client12-LAN            0.00%     1.582MiB / 9.725GiB   0.02%     94.9kB / 946B     0B / 4.1kB       2
 ab673776cdf6   clab-network-Client10-LAN            0.00%     1.59MiB / 9.725GiB    0.02%     63kB / 946B       0B / 4.1kB       2
-5c92d961992a   clab-network-br1-DMZ                 0.00%     1.594MiB / 9.725GiB   0.02%     97.5kB / 946B     0B / 4.1kB       2
+5c92d961992a   clab-network-br-DMZ                 0.00%     1.594MiB / 9.725GiB   0.02%     97.5kB / 946B     0B / 4.1kB       2
 0e9358db4b75   clab-network-Client27-WAN            0.00%     1.594MiB / 9.725GiB   0.02%     55.5kB / 946B     0B / 4.1kB       2
 d01bd1cae9f0   clab-network-Client19-LAN            0.00%     1.59MiB / 9.725GiB    0.02%     81.1kB / 946B     0B / 4.1kB       2
 34b6b8b8b675   clab-network-Client6-LAN             0.00%     1.605MiB / 9.725GiB   0.02%     55.5kB / 946B     0B / 4.1kB       2
@@ -94,7 +94,7 @@ a1046bb40d66   clab-network-Client49-LAN            0.00%     1.598MiB / 9.725Gi
 b92c6edb8afe   clab-network-Client39-WAN            0.00%     1.605MiB / 9.725GiB   0.02%     55.5kB / 946B     0B / 4.1kB       2
 806bf4032e10   clab-network-Attacker-WAN            0.00%     1004KiB / 9.725GiB    0.01%     99.6kB / 946B     0B / 0B          1
 cd36a915d062   clab-network-Client27-LAN            0.00%     1.586MiB / 9.725GiB   0.02%     96.3kB / 946B     0B / 4.1kB       2
-88db2f44b000   clab-network-router3-Internet        0.04%     14.72MiB / 9.725GiB   0.15%     94.1kB / 1.02kB   4.1kB / 0B       15
+88db2f44b000   clab-network-router-Internet        0.04%     14.72MiB / 9.725GiB   0.15%     94.1kB / 1.02kB   4.1kB / 0B       15
 2c16e24fa4d2   clab-network-Client30-LAN            0.00%     1.602MiB / 9.725GiB   0.02%     99.8kB / 946B     0B / 4.1kB       2
 c4f924ab13a8   clab-network-Client1-LAN             0.00%     1.59MiB / 9.725GiB    0.02%     101kB / 946B      0B / 4.1kB       2
 a0f5b33a4dd7   clab-network-Client22-LAN            0.00%     1.609MiB / 9.725GiB   0.02%     98.7kB / 946B     0B / 4.1kB       2

@@ -12,16 +12,24 @@
         private: no        
       - name: NumberofLANclients
         prompt: "How many LAN clients do you want to simulate?"
-        default: 2
+        default: "{{ 10 | random }}"
         private: no
-      - name: NumberofWANclients
-        prompt: "How many WAN clients do you want to simulate?"
-        default: 2
+      - name: NumberofWANwebclients
+        prompt: "How many WAN web clients do you want to simulate?"
+        default: "{{ 10 | random }}"
+        private: no
+      - name: NumberofWANvpnclients
+        prompt: "How many WAN vpn clients do you want to simulate?"
+        default: "{{ 10 | random }}"
         private: no
       - name: savefile
         prompt: "Do you want to capture the network traffic? if so, in which fileformat do you want to have it: 'json', 'pcap' or 'both'"
         default: json
-        private: no     
+        private: no
+      - name: capturelimitMB
+        prompt: "How many MBs may the capture files combined be?"
+        default: 100
+        private: no
       - name: Dockerhub_Username
         prompt: "Fill in your Dockerhub username"
         private: no
@@ -29,7 +37,10 @@
         prompt: "Fill in your Dockerhub password"
         private: yes
         no_log: True
-
+  vars:
+    staticinterfaces_br2lan: 6
+    staticinterfaces_br3Internet: 7
+    staticinterfaces_br1dmz: 3
   roles:
 #    - docker
 #    - setup-containerlab
