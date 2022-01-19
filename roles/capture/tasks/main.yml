@@ -41,7 +41,7 @@
 - name: Check status bridge async script
   become: yes
   async_status: jid={{ bridge_script.ansible_job_id }}
-  register: job_result_server
+  register: job_result_bridge
   until: job_result_bridge.finished
   retries: 1000  
 

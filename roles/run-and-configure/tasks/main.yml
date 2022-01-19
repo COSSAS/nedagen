@@ -54,21 +54,21 @@
 
 - name: Run Router script
   become: yes
-  script: /etc/containerlab/{{ networkname }}/ROUTER-interfaces.sh
+  shell: /etc/containerlab/{{ networkname }}/ROUTER-interfaces.sh
   async: 1000
   poll: 0
   register: router_script
 
 - name: Run Bridge script
   become: yes
-  script: /etc/containerlab/{{ networkname }}/BRIDGE-interfaces.sh
+  shell: /etc/containerlab/{{ networkname }}/BRIDGE-interfaces.sh
   async: 1000
   poll: 0
   register: bridge_script
 
 - name: Run Server script
   become: yes
-  script: /etc/containerlab/{{ networkname }}/SERVER-interfaces.sh
+  shell: /etc/containerlab/{{ networkname }}/SERVER-interfaces.sh
   ignore_errors: True
   async: 1000
   poll: 0
@@ -76,7 +76,7 @@
 
 - name: Run Client script
   become: yes
-  script: /etc/containerlab/{{ networkname }}/CLIENT-interfaces.sh
+  shell: /etc/containerlab/{{ networkname }}/CLIENT-interfaces.sh
   ignore_errors: True
   async: 1000
   poll: 0
