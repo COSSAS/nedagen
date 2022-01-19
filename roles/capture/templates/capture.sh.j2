@@ -68,8 +68,9 @@ while true; do
     then
         echo "in" > /etc/containerlab/test.txt
         clab destroy --topo /etc/containerlab/{{ networkname }}/network.yml
-        {% if savefile == "pcap"}
+        {% if savefile == "pcap" %}
         mergecap /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/*.pcap -w /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/merged.pcap
+        {% endif %}
     fi
     break
 done
