@@ -71,4 +71,4 @@
 
 - name: Run capture script after config scripts
   become: yes
-  shell: /etc/containerlab/captures/capture.sh &
+  command: nohup bash /etc/containerlab/captures/capture.sh &
