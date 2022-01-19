@@ -26,7 +26,7 @@
 
 - name: Delete network files
   become: yes
-  shell: if compgen -G "./clab-*" > /dev/null; then rm -rf clab-*; fi
+  shell: find . -type d -name 'clab-*' -exec rm -r {} \; -type d 2> /dev/null
   ignore_errors: yes
 
 - name: Delete network yaml
@@ -47,15 +47,13 @@
   register: folderss
   ignore_errors: yes
 
-- name: Merging potential pcap's
-  become: yes
-  shell: if [ -f {{ item.path }}/*.json ]; then rm .network.yaml; fi
-  ignore_errors: yes
+# - name: Merging potential pcap's
+#   become: yes
+#   shell: if [ -f /etc/containerlab/*.json ]; then rm .network.yaml; fi
+#   ignore_errors: yes
 
 - name: Exit here to not build the network 
   pause:
     prompt: "Stop the playbook with 'Ctrl+C' followed by 'A' if you only wanted to stop and delete the network or press enter to continue"
 
 
-  # shell: if [[ {{ -f item.path }}/*.json]]; then echo "Json found"; elif [ ! -f {{ item.path }}/*merged.pcap ]; then mergecap {{ item.path }}/*.pcap -w {{ item.path }}/merged.pcap;  else echo "Merged.pcap already exists!";  fi
-  
