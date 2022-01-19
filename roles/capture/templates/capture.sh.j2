@@ -54,24 +54,22 @@ ip netns exec clab-{{networkname}}-router-WAN tshark -F pcap -i eth{{i}} -w /etc
 {% endfor %}
 
 
+{% if capturelimitMB|int != 0  %}
 while true
 do
     capturefoldersize=$(du "/etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}" | awk '{print $1;}')
-    {# capturefoldersize=((du "/etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}" | awk '{print $1;}') #}
-    capturefolderMB=$(($capturefoldersize / 1000))
+    # capturefoldersize=((du "/etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}" | awk '{print $1;}')
+    KBtoMB=1000
+    capturefolderMB=$((capturefoldersize / KBtoMB))
 
-    echo "capturefolderMB: $capturefolderMB" >> /etc/containerlab/test.txt
-    echo "capturefoldersize: $capturefoldersize" >> /etc/containerlab/test.txt
-    echo "finaltest" >> /etc/containerlab/test.txt
-
-    if (( $capturefolderMB > {{ capturelimitMB|int }} || $capturefolderMB == {{ capturelimitMB|int }} ))
+    if [ $capturefolderMB -ge {{ capturelimitMB|int }} ]
     then
-        echo "running" >> /etc/containerlab/test.txt
         clab destroy --topo /etc/containerlab/{{ networkname }}/network.yml
-        {% if savefile == "pcap" %}
+        {% if savefile == "pcap" or savefile == "both" %}
         mergecap /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/*.pcap -w /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/merged.pcap
         {% endif %}
+        break
     fi
-    break
 done
+{% endif %}
 
