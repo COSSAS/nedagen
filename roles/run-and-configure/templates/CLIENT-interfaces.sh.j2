@@ -71,3 +71,5 @@ docker exec clab-{{networkname}}-Client{{k}}-WANvpn apt-get install {{ basic_pac
 docker exec clab-{{networkname}}-Client{{k}}-WANvpn apt-get install macchanger -y
 docker exec -d clab-{{networkname}}-Client{{k}}-WANvpn nohup bash WANvpn.sh
 {% endfor %}
+
+
