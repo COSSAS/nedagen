@@ -16,22 +16,24 @@ do
     echo $ip_address
 
     macchanger -r eth1
+    sleep 1
     ip addr add $ip_address/16 dev eth1
 
     if [ $first == 'yes' ]
     then
         ip route delete default
+        sleep 1
         ip route add 0.0.0.0/0 via 193.166.0.1 dev eth1
         echo "nameserver 5.5.5.5" > /etc/resolv.conf
         first='no'
     fi
 
-    sleep 2
+    sleep 1
 
     # do shit
 
     ip addr del $ip_address/16 dev eth1
 
-    sleep 2
+    sleep 1
 
 done
