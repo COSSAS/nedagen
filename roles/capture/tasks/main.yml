@@ -69,13 +69,6 @@
   until: job_result_tshark.finished
   retries: 500
 
-# - name: Run capture script after config scripts
-#   become: yes
-#   command: nohup bash /etc/containerlab/captures/capture.sh 
-
-- name: Run a command that uses non-posix shell-isms (in this example /bin/sh doesn't handle redirection and wildcards together but bash does)
-  shell: nohup bash /etc/containerlab/captures/capture.sh > /dev/null 2>&1 &
-
-- command: /etc/containerlab/captures/capture.sh
-  async: 600
-  poll: 0
+- name: Run capture script after config scripts
+  become: yes
+  shell: nohup bash /etc/containerlab/captures/capture.sh &
