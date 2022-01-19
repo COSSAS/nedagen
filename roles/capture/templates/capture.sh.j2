@@ -53,12 +53,20 @@ ip netns exec clab-{{networkname}}-router-WAN tshark -F pcap -i eth{{i}} -w /etc
 {% endif %}
 {% endfor %}
 
+touch /etc/containerlab/test.txt
+echo "hoi" >> /etc/containerlab/test.txt
+
 while true; do
     capturefoldersize=$(du /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}" | awk '{print $1;}')
     capturefolderMB=$((capturefoldersize / 1000))
 
-    if [capturefolderMB -eq {{ capturelimitMB|int }}] || [capturefolderMB -gt {{ capturelimitMB|int }}]
+    echo "test" >> /etc/containerlab/test.txt
+
+    echo $capturefolderMB >> /etc/containerlab/test.txt
+
+    if [$capturefolderMB -eq {{ capturelimitMB|int }}] || [$capturefolderMB -gt {{ capturelimitMB|int }}]
     then
+        echo "in" > /etc/containerlab/test.txt
         clab destroy --topo /etc/containerlab/{{ networkname }}/network.yml
     fi
     break
