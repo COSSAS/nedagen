@@ -62,11 +62,11 @@ do
 
     echo "capturefolderMB: $capturefolderMB" >> /etc/containerlab/test.txt
     echo "capturefoldersize: $capturefoldersize" >> /etc/containerlab/test.txt
-
+    echo "finaltest" >> /etc/containerlab/test.txt
 
     if (( $capturefolderMB > {{ capturelimitMB|int }} || $capturefolderMB == {{ capturelimitMB|int }} ))
     then
-        echo "in" > /etc/containerlab/test.txt
+        echo "running" >> /etc/containerlab/test.txt
         clab destroy --topo /etc/containerlab/{{ networkname }}/network.yml
         {% if savefile == "pcap" %}
         mergecap /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/*.pcap -w /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/merged.pcap
