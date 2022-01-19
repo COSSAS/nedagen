@@ -47,13 +47,6 @@
   register: folderss
   ignore_errors: yes
 
-# - name: Merging potential pcap's
-#   become: yes
-#   shell: if [ -f /etc/containerlab/*.json ]; then rm .network.yaml; fi
-#   ignore_errors: yes
-
 - name: Exit here to not build the network 
   pause:
     prompt: "Stop the playbook with 'Ctrl+C' followed by 'A' if you only wanted to stop and delete the network or press enter to continue"
-
-
