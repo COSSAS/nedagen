@@ -1,7 +1,18 @@
 #!/bin/sh
 
+docker exec -d clab-{{networkname}}-router1-WAN sysctl -w net.ipv6.conf.all.disable_ipv6=1
+docker exec -d clab-{{networkname}}-router1-WAN sysctl -w net.ipv6.conf.default.disable_ipv6=1
+docker exec -d clab-{{networkname}}-router1-WAN sysctl -w net.ipv6.conf.lo.disable_ipv6=1
 docker exec -d clab-{{networkname}}-router1-WAN ip route delete default
+
+docker exec -d clab-{{networkname}}-router2-LAN sysctl -w net.ipv6.conf.all.disable_ipv6=1
+docker exec -d clab-{{networkname}}-router2-LAN sysctl -w net.ipv6.conf.default.disable_ipv6=1
+docker exec -d clab-{{networkname}}-router2-LAN sysctl -w net.ipv6.conf.lo.disable_ipv6=1
 docker exec -d clab-{{networkname}}-router2-LAN ip route delete default
+
+docker exec -d clab-{{networkname}}-router3-Internet sysctl -w net.ipv6.conf.all.disable_ipv6=1
+docker exec -d clab-{{networkname}}-router3-Internet sysctl -w net.ipv6.conf.default.disable_ipv6=1
+docker exec -d clab-{{networkname}}-router3-Internet sysctl -w net.ipv6.conf.lo.disable_ipv6=1
 docker exec -d clab-{{networkname}}-router3-Internet ip route delete default
 
 docker exec -d clab-{{networkname}}-router3-Internet iptables -A FORWARD -d 10.0.0.0/8 -j DROP

@@ -12,7 +12,7 @@
         private: no        
       - name: NumberofLANclients
         prompt: "How many LAN clients do you want to simulate?"
-        default: 2
+        default: "{{ 10 | random }}"
         private: no
       - name: NumberofWANwebclients
         prompt: "How many WAN web clients do you want to simulate?"

@@ -1,5 +1,8 @@
 #!/bin/sh
 
+docker exec -d clab-{{networkname}}-Server1-nginx-LAN sysctl -w net.ipv6.conf.all.disable_ipv6=1
+docker exec -d clab-{{networkname}}-Server1-nginx-LAN sysctl -w net.ipv6.conf.default.disable_ipv6=1
+docker exec -d clab-{{networkname}}-Server1-nginx-LAN sysctl -w net.ipv6.conf.lo.disable_ipv6=1
 docker exec clab-{{networkname}}-Server1-nginx-LAN apt-get update -y
 docker exec clab-{{networkname}}-Server1-nginx-LAN apt-get install iproute2 -y
 docker exec clab-{{networkname}}-Server1-nginx-LAN apt-get install inetutils-ping -y
@@ -9,6 +12,9 @@ docker exec clab-{{networkname}}-Server1-nginx-LAN ip route delete default
 docker exec clab-{{networkname}}-Server1-nginx-LAN ip route add 0.0.0.0/0 via 123.123.100.1 dev eth1
 docker exec clab-{{networkname}}-Server1-nginx-LAN bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
 
+docker exec -d clab-{{networkname}}-Server2-ubuntu-LAN sysctl -w net.ipv6.conf.all.disable_ipv6=1
+docker exec -d clab-{{networkname}}-Server2-ubuntu-LAN sysctl -w net.ipv6.conf.default.disable_ipv6=1
+docker exec -d clab-{{networkname}}-Server2-ubuntu-LAN sysctl -w net.ipv6.conf.lo.disable_ipv6=1
 docker exec clab-{{networkname}}-Server2-ubuntu-LAN apt-get update -y
 docker exec clab-{{networkname}}-Server2-ubuntu-LAN apt-get install iproute2 -y
 docker exec clab-{{networkname}}-Server2-ubuntu-LAN apt-get install inetutils-ping -y
@@ -18,6 +24,9 @@ docker exec clab-{{networkname}}-Server2-ubuntu-LAN ip route delete default
 docker exec clab-{{networkname}}-Server2-ubuntu-LAN ip route add 0.0.0.0/0 via 123.123.100.1 dev eth1
 docker exec clab-{{networkname}}-Server2-ubuntu-LAN bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
 
+docker exec -d clab-{{networkname}}-Server1-nginx-WAN sysctl -w net.ipv6.conf.all.disable_ipv6=1
+docker exec -d clab-{{networkname}}-Server1-nginx-WAN sysctl -w net.ipv6.conf.default.disable_ipv6=1
+docker exec -d clab-{{networkname}}-Server1-nginx-WAN sysctl -w net.ipv6.conf.lo.disable_ipv6=1
 docker exec clab-{{networkname}}-Server1-nginx-WAN apt-get update -y
 docker exec clab-{{networkname}}-Server1-nginx-WAN apt-get install iproute2 -y
 docker exec clab-{{networkname}}-Server1-nginx-WAN apt-get install inetutils-ping -y
@@ -27,6 +36,9 @@ docker exec clab-{{networkname}}-Server1-nginx-WAN ip route delete default
 docker exec clab-{{networkname}}-Server1-nginx-WAN ip route add 0.0.0.0/0 via 5.0.0.1 dev eth1
 docker exec clab-{{networkname}}-Server1-nginx-WAN bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
 
+docker exec -d clab-{{networkname}}-Server2-ubuntu-WAN sysctl -w net.ipv6.conf.all.disable_ipv6=1
+docker exec -d clab-{{networkname}}-Server2-ubuntu-WAN sysctl -w net.ipv6.conf.default.disable_ipv6=1
+docker exec -d clab-{{networkname}}-Server2-ubuntu-WAN sysctl -w net.ipv6.conf.lo.disable_ipv6=1
 docker exec clab-{{networkname}}-Server2-ubuntu-WAN apt-get update -y
 docker exec clab-{{networkname}}-Server2-ubuntu-WAN apt-get install iproute2 -y
 docker exec clab-{{networkname}}-Server2-ubuntu-WAN apt-get install inetutils-ping -y
@@ -37,17 +49,22 @@ docker exec clab-{{networkname}}-Server2-ubuntu-WAN ip route delete default
 docker exec clab-{{networkname}}-Server2-ubuntu-WAN ip route add 0.0.0.0/0 via 5.0.0.1 dev eth1
 docker exec clab-{{networkname}}-Server2-ubuntu-WAN bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
 
-docker exec clab-{{networkname}}-Server3-samba-WAN apt-get update -y
-docker exec clab-{{networkname}}-Server3-samba-WAN apt-get install iproute2 -y
-docker exec clab-{{networkname}}-Server3-samba-WAN apt-get install inetutils-ping -y
-docker exec clab-{{networkname}}-Server3-samba-WAN apt-get install curl ssh -y
+docker exec -d clab-{{networkname}}-Server4-samba-WAN sysctl -w net.ipv6.conf.all.disable_ipv6=1
+docker exec -d clab-{{networkname}}-Server4-samba-WAN sysctl -w net.ipv6.conf.default.disable_ipv6=1
+docker exec -d clab-{{networkname}}-Server4-samba-WAN sysctl -w net.ipv6.conf.lo.disable_ipv6=1
+docker exec clab-{{networkname}}-Server4-samba-WAN apt-get update -y
+docker exec clab-{{networkname}}-Server4-samba-WAN apt-get install iproute2 -y
+docker exec clab-{{networkname}}-Server4-samba-WAN apt-get install inetutils-ping -y
+docker exec clab-{{networkname}}-Server4-samba-WAN apt-get install curl ssh -y
 
-docker exec clab-{{networkname}}-Server3-samba-WAN ip addr add 5.20.0.12/8 dev eth1
-docker exec clab-{{networkname}}-Server3-samba-WAN ip route delete default
-docker exec clab-{{networkname}}-Server3-samba-WAN ip route add 0.0.0.0/0 via 5.0.0.1 dev eth1
-docker exec clab-{{networkname}}-Server3-samba-WAN bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
+docker exec clab-{{networkname}}-Server4-samba-WAN ip addr add 5.20.0.12/8 dev eth1
+docker exec clab-{{networkname}}-Server4-samba-WAN ip route delete default
+docker exec clab-{{networkname}}-Server4-samba-WAN ip route add 0.0.0.0/0 via 5.0.0.1 dev eth1
+docker exec clab-{{networkname}}-Server4-samba-WAN bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
 
-
+docker exec -d clab-{{networkname}}-Server3-DNS-WAN sysctl -w net.ipv6.conf.all.disable_ipv6=1
+docker exec -d clab-{{networkname}}-Server3-DNS-WAN sysctl -w net.ipv6.conf.default.disable_ipv6=1
+docker exec -d clab-{{networkname}}-Server3-DNS-WAN sysctl -w net.ipv6.conf.lo.disable_ipv6=1
 docker exec clab-{{networkname}}-Server3-DNS-WAN apt-get update -y
 docker exec clab-{{networkname}}-Server3-DNS-WAN apt-get install iproute2 -y
 docker exec clab-{{networkname}}-Server3-DNS-WAN apt-get install inetutils-ping -y
