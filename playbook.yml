@@ -38,9 +38,9 @@
         private: yes
         no_log: True
   vars:
-    staticinterfaces_br2lan: 6
-    staticinterfaces_br3Internet: 7
-    staticinterfaces_br1dmz: 3
+    staticinterfaces_brLan1: 6
+    staticinterfaces_brInternet: 7
+    staticinterfaces_brDMZ: 3
   roles:
 #    - docker
 #    - setup-containerlab
