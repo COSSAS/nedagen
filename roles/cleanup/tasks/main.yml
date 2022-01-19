@@ -10,7 +10,7 @@
   register: folders
   ignore_errors: yes
 
-- name: destroy topology
+- name: Destroy topology
   become: yes
   command: clab destroy --topo {{ item.path }}/network.yml
   ignore_errors: yes
@@ -24,17 +24,17 @@
   with_items: "{{ folders['files'] }}"
   ignore_errors: yes
 
-- name: delete network files
+- name: Delete network files
   become: yes
-  shell: if [ -f clab-* ]; then rm clab-*; fi
+  shell: if compgen -G "./clab-*" > /dev/null; then rm -rf clab-*; fi
   ignore_errors: yes
 
-- name: delete network yaml
+- name: Delete network yaml
   become: yes
   shell: if [ -f .network.yaml ]; then rm .network.yaml; fi
   ignore_errors: yes
 
-- name: docker logout
+- name: Docker logout
   become: yes
   shell: docker logout
   ignore_errors: yes
@@ -47,12 +47,15 @@
   register: folderss
   ignore_errors: yes
 
-- name: mergecap
+- name: Merging potential pcap's
   become: yes
-  shell: if [ ! -f /etc/containerlab/captures/test-2022-01-19T09\:09\:23Z/*merged.pcap ]; then echo "File not found!"; else mergecap /etc/containerlab/captures/test-2022-01-19T09\:09\:23Z/*.pcap -w /etc/containerlab/captures/test-2022-01-19T09\:09\:23Z/merged.pcap; fi
-  with_items: "{{ folderss['files'] }}"
+  shell: if [ -f {{ item.path }}/*.json ]; then rm .network.yaml; fi
   ignore_errors: yes
 
-- name: Pause to get some sensitive input
+- name: Exit here to not build the network 
   pause:
-    prompt: "Stop the playbook with 'Ctrl+C' follow by 'A' if you only wanted to stop and delete the network or press enter to continue"
+    prompt: "Stop the playbook with 'Ctrl+C' followed by 'A' if you only wanted to stop and delete the network or press enter to continue"
+
+
+  # shell: if [[ {{ -f item.path }}/*.json]]; then echo "Json found"; elif [ ! -f {{ item.path }}/*merged.pcap ]; then mergecap {{ item.path }}/*.pcap -w {{ item.path }}/merged.pcap;  else echo "Merged.pcap already exists!";  fi
+  
