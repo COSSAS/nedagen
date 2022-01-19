@@ -12,18 +12,18 @@
         private: no        
       - name: NumberofLANclients
         prompt: "How many LAN clients do you want to simulate?"
-        default: "{{ 10 | random }}"
+        default: "{{ 250 | random +1}}"
         private: no
       - name: NumberofWANwebclients
         prompt: "How many WAN web clients do you want to simulate?"
-        default: "{{ 10 | random }}"
+        default: "{{ 500 | random +1}}"
         private: no
       - name: NumberofWANvpnclients
         prompt: "How many WAN vpn clients do you want to simulate?"
-        default: "{{ 10 | random }}"
+        default: "{{ 500 | random +1}}"
         private: no
       - name: savefile
-        prompt: "Do you want to capture the network traffic? if so, in which fileformat do you want to have it: 'json', 'pcap' or 'both'"
+        prompt: "Do you want to capture the network traffic? if so, in which fileformat do you want to have it: 'json', 'pcap', or 'both'"
         default: json
         private: no
       - name: capturelimitMB
