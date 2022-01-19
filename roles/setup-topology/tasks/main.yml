@@ -14,9 +14,10 @@
   loop:
     - router-WAN
     - router-LAN1
+    - router-LAN2
     - router-Internet
 
-- name: Set router1 files
+- name: Set router WAN files
   become: yes
   copy:
     src: router-WAN/{{ item }}
@@ -25,7 +26,7 @@
     - daemons
     - frr.conf
 
-- name: Set router2 files
+- name: Set router LAN1 files
   become: yes
   copy:
     src: router-LAN1/{{ item }}
@@ -34,7 +35,16 @@
     - daemons
     - frr.conf
 
-- name: Set router3 files
+- name: Set router LAN2 files
+  become: yes
+  copy:
+    src: router-LAN2/{{ item }}
+    dest: /etc/containerlab/{{ networkname }}/router-LAN2/{{ item }}
+  loop:
+    - daemons
+    - frr.conf
+
+- name: Set router Internet files
   become: yes
   copy:
     src: router-Internet/{{ item }}
@@ -43,16 +53,16 @@
     - daemons
     - frr.conf
 
-- name: Copy LANsite config
+- name: Copy DMZsite config
   become: yes
   copy:
-    src: LANsite.conf
-    dest: /etc/containerlab/{{ networkname }}/LANsite.conf
+    src: DMZsite.conf
+    dest: /etc/containerlab/{{ networkname }}/DMZsite.conf
 
 - name: Copy WANsite config
   become: yes
   copy:
-    src: LANsite.conf
+    src: WANsite.conf
     dest: /etc/containerlab/{{ networkname }}/WANsite.conf
 
 - name: Copy NSD config
@@ -62,11 +72,11 @@
     dest: /etc/containerlab/{{ networkname }}/nsd.conf
     mode: 0644
 
-- name: Copy NSD LANsite config
+- name: Copy NSD DMZsite config
   become: yes
   copy:
-    src: LANsite.dev.zone
-    dest: /etc/containerlab/{{ networkname }}/LANsite.dev.zone
+    src: DMZsite.dev.zone
+    dest: /etc/containerlab/{{ networkname }}/DMZsite.dev.zone
     mode: 0644
 
 - name: Copy NSD WANsite config
@@ -75,9 +85,6 @@
     src: WANsite.dev.zone
     dest: /etc/containerlab/{{ networkname }}/WANsite.dev.zone
     mode: 0644
-
-
-
 
 - name: Copy WANweb.sh
   become: yes

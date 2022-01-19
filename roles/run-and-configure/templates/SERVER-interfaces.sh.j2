@@ -1,21 +1,24 @@
 #!/bin/sh
-docker exec -d clab-{{networkname}}-Server1-nginx-LAN {{ ipv6_configuration }}
-docker exec clab-{{networkname}}-Server1-nginx-LAN apt-get update -y
-docker exec clab-{{networkname}}-Server1-nginx-LAN apt-get install {{ basic_packages }}
 
-docker exec clab-{{networkname}}-Server1-nginx-LAN ip addr add 123.123.100.10/24 dev eth1
-docker exec clab-{{networkname}}-Server1-nginx-LAN ip route delete default
-docker exec clab-{{networkname}}-Server1-nginx-LAN ip route add 0.0.0.0/0 via 123.123.100.1 dev eth1
-docker exec clab-{{networkname}}-Server1-nginx-LAN bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
+docker exec -d clab-{{networkname}}-Server1-nginx-DMZ sysctl {{ ipv6_configuration }}
+docker exec clab-{{networkname}}-Server1-nginx-DMZ apt-get update -y
+docker exec clab-{{networkname}}-Server1-nginx-DMZ apt-get install iproute2 -y
+docker exec clab-{{networkname}}-Server1-nginx-DMZ apt-get install inetutils-ping -y
 
-docker exec -d clab-{{networkname}}-Server2-ubuntu-LAN {{ ipv6_configuration }}
-docker exec clab-{{networkname}}-Server2-ubuntu-LAN apt-get update -y
-docker exec clab-{{networkname}}-Server2-ubuntu-LAN apt-get install {{ basic_packages }}
+docker exec clab-{{networkname}}-Server1-nginx-DMZ ip addr add 123.123.100.10/24 dev eth1
+docker exec clab-{{networkname}}-Server1-nginx-DMZ ip route delete default
+docker exec clab-{{networkname}}-Server1-nginx-DMZ ip route add 0.0.0.0/0 via 123.123.100.1 dev eth1
+docker exec clab-{{networkname}}-Server1-nginx-DMZ bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
 
-docker exec clab-{{networkname}}-Server2-ubuntu-LAN ip addr add 123.123.100.11/24 dev eth1
-docker exec clab-{{networkname}}-Server2-ubuntu-LAN ip route delete default
-docker exec clab-{{networkname}}-Server2-ubuntu-LAN ip route add 0.0.0.0/0 via 123.123.100.1 dev eth1
-docker exec clab-{{networkname}}-Server2-ubuntu-LAN bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
+docker exec -d clab-{{networkname}}-Server2-ubuntu-DMZ {{ ipv6_configuration }}
+docker exec clab-{{networkname}}-Server2-ubuntu-DMZ apt-get update -y
+docker exec clab-{{networkname}}-Server2-ubuntu-DMZ apt-get install iproute2 -y
+docker exec clab-{{networkname}}-Server2-ubuntu-DMZ apt-get install inetutils-ping -y
+
+docker exec clab-{{networkname}}-Server2-ubuntu-DMZ ip addr add 123.123.100.11/24 dev eth1
+docker exec clab-{{networkname}}-Server2-ubuntu-DMZ ip route delete default
+docker exec clab-{{networkname}}-Server2-ubuntu-DMZ ip route add 0.0.0.0/0 via 123.123.100.1 dev eth1
+docker exec clab-{{networkname}}-Server2-ubuntu-DMZ bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
 
 docker exec -d clab-{{networkname}}-Server1-nginx-WAN {{ ipv6_configuration }}
 docker exec clab-{{networkname}}-Server1-nginx-WAN apt-get update -y
@@ -36,15 +39,16 @@ docker exec clab-{{networkname}}-Server2-ubuntu-WAN ip route delete default
 docker exec clab-{{networkname}}-Server2-ubuntu-WAN ip route add 0.0.0.0/0 via 5.0.0.1 dev eth1
 docker exec clab-{{networkname}}-Server2-ubuntu-WAN bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
 
-docker exec -d clab-{{networkname}}-Server4-samba-WAN {{ ipv6_configuration }}
-docker exec clab-{{networkname}}-Server4-samba-WAN apt-get update -y
-docker exec clab-{{networkname}}-Server4-samba-WAN apt-get install {{ basic_packages }}
-docker exec clab-{{networkname}}-Server4-samba-WAN apt-get install curl ssh smb -y
+docker exec -d clab-{{networkname}}-Server1-samba-LAN {{ ipv6_configuration }}
+docker exec clab-{{networkname}}-Server1-samba-LAN apt-get update -y
+docker exec clab-{{networkname}}-Server1-samba-LAN apt-get install iproute2 -y
+docker exec clab-{{networkname}}-Server1-samba-LAN apt-get install inetutils-ping -y
+docker exec clab-{{networkname}}-Server1-samba-LAN apt-get install curl ssh -y
 
-docker exec clab-{{networkname}}-Server4-samba-WAN ip addr add 5.20.0.12/8 dev eth1
-docker exec clab-{{networkname}}-Server4-samba-WAN ip route delete default
-docker exec clab-{{networkname}}-Server4-samba-WAN ip route add 0.0.0.0/0 via 5.0.0.1 dev eth1
-docker exec clab-{{networkname}}-Server4-samba-WAN bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
+docker exec clab-{{networkname}}-Server1-samba-LAN ip addr add 192.168.40.5/24 dev eth1
+docker exec clab-{{networkname}}-Server1-samba-LAN ip route delete default
+docker exec clab-{{networkname}}-Server1-samba-LAN ip route add 0.0.0.0/0 via 192.168.40.1 dev eth1
+docker exec clab-{{networkname}}-Server1-samba-LAN bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
 
 docker exec -d clab-{{networkname}}-Server3-DNS-WAN {{ ipv6_configuration }}
 docker exec clab-{{networkname}}-Server3-DNS-WAN apt-get update -y
