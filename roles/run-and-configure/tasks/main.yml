@@ -56,6 +56,13 @@
     dest: /etc/containerlab/{{ networkname }}/Attackers.sh
     mode: '0744'
 
+- name: Copy User profile script
+  become: yes
+  template:
+    src: Cronjobs.sh.j2
+    dest: /etc/containerlab/{{ networkname }}/Cronjobs.sh
+    mode: '0744'
+
 - name: Deploy topology
   become: yes
   command: clab deploy --topo /etc/containerlab/{{ networkname }}/network.yml    
