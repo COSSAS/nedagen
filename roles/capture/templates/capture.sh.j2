@@ -9,6 +9,17 @@
 {% set brLAN2interfaces = 2 %}
 {% set routerWANeth123 = 3 %}
 
+# tshark capture on the router-WAN internet and router-LAN1 interfaces
+{% for i in range(1, routerWANeth123 +1 ) %}
+{% if savefile == "json" or savefile == "both" %}
+ip netns exec clab-{{networkname}}-router-WAN tshark -i eth{{i}} -T ek >> /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/router-WAN-eth123.json &
+{% endif %}
+{% if savefile == "pcap" or savefile == "both" %}
+touch /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/router-WAN-eth{{i}}.pcap
+ip netns exec clab-{{networkname}}-router-WAN tshark -F pcap -i eth{{i}} -w /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/router-WAN-eth{{i}}.pcap &
+{% endif %}
+{% endfor %}
+
 # tshark capture on br-DMZ interfaces 
 {% for i in range(1, brDMZinterfaces +1 ) %}
 {% if savefile == "json" or savefile == "both" %}
@@ -41,18 +52,6 @@ touch /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}
 ip netns exec clab-{{networkname}}-br-LAN2 tshark -F pcap -i eth{{i}} -w /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/br-LAN2-eth{{i}}.pcap &
 {% endif %}
 {% endfor %}
-
-# tshark capture on the router-WAN internet and router-LAN1 interfaces
-{% for i in range(1, routerWANeth123 +1 ) %}
-{% if savefile == "json" or savefile == "both" %}
-ip netns exec clab-{{networkname}}-router-WAN tshark -i eth{{i}} -T ek >> /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/router-WAN-eth123.json &
-{% endif %}
-{% if savefile == "pcap" or savefile == "both" %}
-touch /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/router-WAN-eth{{i}}.pcap
-ip netns exec clab-{{networkname}}-router-WAN tshark -F pcap -i eth{{i}} -w /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/router-WAN-eth{{i}}.pcap &
-{% endif %}
-{% endfor %}
-
 
 {% if capturelimitMB|int != 0  %}
 while true

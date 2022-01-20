@@ -48,18 +48,46 @@
   until: job_result_bridge.finished
   retries: 500  
 
-- name: Check status server async script
+- name: Check status LAN server async script
   become: yes
-  async_status: jid={{ server_script.ansible_job_id }}
-  register: job_result_server
-  until: job_result_server.finished
+  async_status: jid={{ LAN_server_script.ansible_job_id }}
+  register: job_result_LAN_server
+  until: job_result_LAN_server.finished
   retries: 500
 
-- name: Check status client async script
+- name: Check status WAN server async script
   become: yes
-  async_status: jid={{ client_script.ansible_job_id }}
-  register: job_result_client
-  until: job_result_client.finished
+  async_status: jid={{ WAN_server_script.ansible_job_id }}
+  register: job_result_WAN_server
+  until: job_result_WAN_server.finished
+  retries: 500
+
+- name: Check status DMZ server async script
+  become: yes
+  async_status: jid={{ DMZ_server_script.ansible_job_id }}
+  register: job_result_DMZ_server
+  until: job_result_DMZ_server.finished
+  retries: 500  
+
+- name: Check status LAN client async script
+  become: yes
+  async_status: jid={{ LAN_client_script.ansible_job_id }}
+  register: job_result_LAN_client
+  until: job_result_LAN_client.finished
+  retries: 500
+
+- name: Check status WAN client async script
+  become: yes
+  async_status: jid={{ WAN_client_script.ansible_job_id }}
+  register: job_result_WAN_client
+  until: job_result_WAN_client.finished
+  retries: 500
+
+- name: Check status attackers async script
+  become: yes
+  async_status: jid={{ Attackers_script.ansible_job_id }}
+  register: job_result_attackers
+  until: job_result_attackers.finished
   retries: 500
 
 - name: Check status install tshark

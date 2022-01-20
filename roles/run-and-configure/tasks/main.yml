@@ -3,81 +3,121 @@
 - name: Copy Router script
   become: yes
   template:
-    src: ROUTER-interfaces.sh.j2
-    dest: /etc/containerlab/{{ networkname }}/ROUTER-interfaces.sh
+    src: Routers.sh.j2
+    dest: /etc/containerlab/{{ networkname }}/Routers.sh
+    mode: '0744'
 
-- name: Copy Server script
+- name: Copy LAN Server script
   become: yes
   template:
-    src: SERVER-interfaces.sh.j2
-    dest: /etc/containerlab/{{ networkname }}/SERVER-interfaces.sh
+    src: LANservers.sh.j2
+    dest: /etc/containerlab/{{ networkname }}/LANservers.sh
+    mode: '0744'
 
-- name: Copy Client script
+- name: Copy DMZ Server script
   become: yes
   template:
-    src: CLIENT-interfaces.sh.j2
-    dest: /etc/containerlab/{{ networkname }}/CLIENT-interfaces.sh
+    src: DMZservers.sh.j2
+    dest: /etc/containerlab/{{ networkname }}/DMZservers.sh
+    mode: '0744'
+
+- name: Copy WAN Server script
+  become: yes
+  template:
+    src: WANservers.sh.j2
+    dest: /etc/containerlab/{{ networkname }}/WANservers.sh
+    mode: '0744'
+
+- name: Copy LAN Client script
+  become: yes
+  template:
+    src: LANclients.sh.j2
+    dest: /etc/containerlab/{{ networkname }}/LANclients.sh
+    mode: '0744'
+
+- name: Copy WAN Client script
+  become: yes
+  template:
+    src: WANclients.sh.j2
+    dest: /etc/containerlab/{{ networkname }}/WANclients.sh
+    mode: '0744'
 
 - name: Copy Bridge script
   become: yes
   template:
-    src: BRIDGE-interfaces.sh.j2
-    dest: /etc/containerlab/{{ networkname }}/BRIDGE-interfaces.sh
-
-- name: Change file permissions Router script
-  become: yes
-  file:
-    path: /etc/containerlab/{{ networkname }}/ROUTER-interfaces.sh
+    src: Bridges.sh.j2
+    dest: /etc/containerlab/{{ networkname }}/Bridges.sh
     mode: '0744'
 
-- name: Change file permissions Server script
+- name: Copy Attackers script
   become: yes
-  file:
-    path: /etc/containerlab/{{ networkname }}/SERVER-interfaces.sh
+  template:
+    src: Attackers.sh.j2
+    dest: /etc/containerlab/{{ networkname }}/Attackers.sh
     mode: '0744'
 
-- name: Change file permissions Client script
-  become: yes
-  file:
-    path: /etc/containerlab/{{ networkname }}/CLIENT-interfaces.sh
-    mode: '0744'
-
-- name: Change file permissions Bridge script
-  become: yes
-  file:
-    path: /etc/containerlab/{{ networkname }}/BRIDGE-interfaces.sh
-    mode: '0744'        
-    
 - name: Deploy topology
   become: yes
   command: clab deploy --topo /etc/containerlab/{{ networkname }}/network.yml    
 
 - name: Run Router script
   become: yes
-  shell: /etc/containerlab/{{ networkname }}/ROUTER-interfaces.sh
+  shell: /etc/containerlab/{{ networkname }}/Routers.sh
   async: 1000
   poll: 0
   register: router_script
 
 - name: Run Bridge script
   become: yes
-  shell: /etc/containerlab/{{ networkname }}/BRIDGE-interfaces.sh
+  shell: /etc/containerlab/{{ networkname }}/Bridges.sh
   async: 1000
   poll: 0
   register: bridge_script
 
-- name: Run Server script
+- name: Run LAN Server script
   become: yes
-  shell: /etc/containerlab/{{ networkname }}/SERVER-interfaces.sh
+  shell: /etc/containerlab/{{ networkname }}/LANservers.sh
   ignore_errors: True
   async: 1000
   poll: 0
-  register: server_script
+  register: LAN_server_script
 
-- name: Run Client script
+- name: Run WAN Server script
   become: yes
-  shell: /etc/containerlab/{{ networkname }}/CLIENT-interfaces.sh
+  shell: /etc/containerlab/{{ networkname }}/WANservers.sh
   ignore_errors: True
   async: 1000
   poll: 0
-  register: client_script
+  register: WAN_server_script
+
+- name: Run DMZ Server script
+  become: yes
+  shell: /etc/containerlab/{{ networkname }}/DMZservers.sh
+  ignore_errors: True
+  async: 1000
+  poll: 0
+  register: DMZ_server_script  
+
+- name: Run LAN Client script
+  become: yes
+  shell: /etc/containerlab/{{ networkname }}/LANclients.sh
+  ignore_errors: True
+  async: 1000
+  poll: 0
+  register: LAN_client_script
+
+- name: Run WAN Client script
+  become: yes
+  shell: /etc/containerlab/{{ networkname }}/WANclients.sh
+  ignore_errors: True
+  async: 1000
+  poll: 0
+  register: WAN_client_script
+
+- name: Run Attackers script
+  become: yes
+  shell: /etc/containerlab/{{ networkname }}/Attackers.sh
+  ignore_errors: True
+  async: 1000
+  poll: 0
+  register: Attackers_script
