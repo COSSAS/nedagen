@@ -1,5 +1,11 @@
 ---
 
+- name: clean the network 
+  pause:
+    prompt: "Do you want to clean up the network? (yes/no)"
+    echo: yes
+  register: cleanupp
+
 - name: Find folders to delete
   become: yes
   find:
@@ -9,12 +15,14 @@
       - "captures"
   register: folders
   ignore_errors: yes
+  when: cleanupp.user_input == 'yes'
 
 - name: Destroy topology
   become: yes
   command: clab destroy --topo {{ item.path }}/network.yml
   ignore_errors: yes
   with_items: "{{ folders['files'] }}" 
+  when: cleanupp.user_input == 'yes'
 
 - name: Delete folders except captures
   become: yes
@@ -23,21 +31,25 @@
     state: absent
   with_items: "{{ folders['files'] }}"
   ignore_errors: yes
+  when: cleanupp.user_input == 'yes'
 
 - name: Delete network files
   become: yes
   shell: find . -type d -name 'clab-*' -exec rm -r {} \; -type d 2> /dev/null
   ignore_errors: yes
+  when: cleanupp.user_input == 'yes'
 
 - name: Delete network yaml
   become: yes
   shell: if [ -f .network.yaml ]; then rm .network.yaml; fi
   ignore_errors: yes
+  when: cleanupp.user_input == 'yes'
 
 - name: Docker logout
   become: yes
   shell: docker logout
   ignore_errors: yes
+  when: cleanupp.user_input == 'yes'
 
 - name: Find folders to merge pcaps
   become: yes
@@ -46,14 +58,8 @@
     file_type: directory
   register: folderss
   ignore_errors: yes
-
-# - name: Merging potential pcap's
-#   become: yes
-#   shell: if [ -f /etc/containerlab/*.json ]; then rm .network.yaml; fi
-#   ignore_errors: yes
+  when: cleanupp.user_input == 'yes'
 
 - name: Exit here to not build the network 
   pause:
     prompt: "Stop the playbook with 'Ctrl+C' followed by 'A' if you only wanted to stop and delete the network or press enter to continue"
-
-

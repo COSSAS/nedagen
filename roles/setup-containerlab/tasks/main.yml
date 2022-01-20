@@ -2,4 +2,3 @@
 
 - name: Install Containerlab
   shell: bash -c "$(curl -sL https://get-clab.srlinux.dev)"
-

@@ -23,12 +23,12 @@
         default: "{{ 500 | random +1}}"
         private: no
       - name: savefile
-        prompt: "Do you want to capture the network traffic? if so, in which fileformat do you want to have it: 'json', 'pcap', or 'both'"
+        prompt: "Do you want to capture the network traffic? if so, in which fileformat do you want to have it? 'not', 'json', 'pcap', or 'both'"
         default: json
         private: no
       - name: capturelimitMB
-        prompt: "How many MBs may the capture files combined be?"
-        default: 100
+        prompt: "How many MBs may the capture files combined be (the network will automatically be stopped when the capturelimit is reached, this message can be ignored if you do not want a traffic capture)? (0 = unlimited)"
+        default: 0
         private: no
       - name: Dockerhub_Username
         prompt: "Fill in your Dockerhub username"
