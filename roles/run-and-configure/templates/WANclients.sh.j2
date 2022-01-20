@@ -4,7 +4,7 @@
 docker exec -d clab-{{networkname}}-Client{{k}}-WANweb {{ ipv6_configuration }}
 docker exec clab-{{networkname}}-Client{{k}}-WANweb apt-get update -y
 docker exec clab-{{networkname}}-Client{{k}}-WANweb apt-get install {{ basic_packages }}
-docker exec clab-{{networkname}}-Client{{k}}-WANweb apt-get install macchanger -y
+docker exec clab-{{networkname}}-Client{{k}}-WANweb apt-get install macchanger cron -y
 docker exec -d clab-{{networkname}}-Client{{k}}-WANweb nohup bash WANweb.sh
 {% endfor %}
 

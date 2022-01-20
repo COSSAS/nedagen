@@ -56,10 +56,17 @@
     dest: /etc/containerlab/{{ networkname }}/Attackers.sh
     mode: '0744'
 
-- name: Copy User profile script
+- name: Copy Cronjob Template
   become: yes
   template:
     src: Cronjobs.sh.j2
+    dest: /etc/containerlab/{{ networkname }}/Cronjobstemplate.sh
+    mode: '0744'
+
+- name: Copy Cronjob script
+  become: yes
+  copy:
+    src: Cronjobs.sh
     dest: /etc/containerlab/{{ networkname }}/Cronjobs.sh
     mode: '0744'
 
@@ -131,8 +138,8 @@
 
 - name: Run User Profile script
   become: yes
-  shell: /etc/containerlab/{{ networkname }}/Cronjobs.sh
-  ignore_errors: True
-  async: 1000
-  poll: 0
-  register: Cronjob_script
+  shell: /etc/containerlab/{{ networkname }}/Cronjobstemplate.sh
+  # ignore_errors: True
+  # async: 1000
+  # poll: 0
+  # register: Cronjob_template
