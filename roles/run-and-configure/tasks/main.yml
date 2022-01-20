@@ -56,6 +56,13 @@
     dest: /etc/containerlab/{{ networkname }}/Attackers.sh
     mode: '0744'
 
+- name: Copy User profile script
+  become: yes
+  template:
+    src: Cronjobs.sh.j2
+    dest: /etc/containerlab/{{ networkname }}/Cronjobs.sh
+    mode: '0744'
+
 - name: Deploy topology
   become: yes
   command: clab deploy --topo /etc/containerlab/{{ networkname }}/network.yml    
@@ -121,3 +128,11 @@
   async: 1000
   poll: 0
   register: Attackers_script
+
+- name: Run User Profile script
+  become: yes
+  shell: /etc/containerlab/{{ networkname }}/Cronjobs.sh
+  ignore_errors: True
+  async: 1000
+  poll: 0
+  register: Cronjob_script
