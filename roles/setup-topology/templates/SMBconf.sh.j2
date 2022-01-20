@@ -3,7 +3,7 @@
 
 # make a folder if it doesn't exist
 
-for clients in {1..10}
+for clients in {1..{{ NumberofLANclients }}}
 do
 [ ! -d /var/www/html/clients$clients ] && mkdir -p /var/www/html/clients$clients
 
