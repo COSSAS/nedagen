@@ -50,7 +50,8 @@ topology:
       image: {{ ubuntuimage }}
     Server1-samba-LAN:
       image: dperson/samba
-      # entrypoint: '-u "example1;badpass"'
+      binds:
+        - /etc/containerlab/{{networkname}}/SMBconf.sh:/root/SMBconf.sh
 {% for i in range(1, NumberofWANwebclients | int +1) %}
     Client{{ i }}-WANweb:
       image: {{ ubuntuimage }}

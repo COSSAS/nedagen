@@ -53,6 +53,12 @@
     - daemons
     - frr.conf
 
+- name: Set SMB Configuration Files
+  become: yes
+  copy: 
+    src: SMBconf.sh
+    dest: /etc/containerlab/{{ networkname }}/SMBconf.sh
+
 - name: Copy DMZsite config
   become: yes
   copy:
