@@ -55,8 +55,8 @@
 
 - name: Set SMB Configuration Files
   become: yes
-  copy: 
-    src: SMBconf.sh
+  template:
+    src: SMBconf.sh.j2
     dest: /etc/containerlab/{{ networkname }}/SMBconf.sh
 
 - name: Copy DMZsite config
