@@ -13,7 +13,6 @@ docker exec -d clab-{{networkname}}-Server1-samba-LAN ip route delete default
 docker exec -d clab-{{networkname}}-Server1-samba-LAN ip route add 0.0.0.0/0 via 192.168.40.1 dev eth1
 docker exec -d clab-{{networkname}}-Server1-samba-LAN bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
 
-docker exec -d clab-{{networkname}}-Server2-vpn-LAN {{ ipv6_configuration }}
 docker exec -d clab-{{networkname}}-Server2-vpn-LAN ip addr add 192.168.40.10/24 dev eth1
 docker exec -d clab-{{networkname}}-Server2-vpn-LAN ip route delete default
 docker exec -d clab-{{networkname}}-Server2-vpn-LAN ip route add 0.0.0.0/0 via 192.168.40.1 dev eth1

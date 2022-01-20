@@ -60,19 +60,13 @@
   become: yes
   command: clab deploy --topo /etc/containerlab/{{ networkname }}/network.yml    
 
-- name: Run Router script
+- name: Run Attackers script
   become: yes
-  shell: /etc/containerlab/{{ networkname }}/Routers.sh
+  shell: /etc/containerlab/{{ networkname }}/Attackers.sh
+  ignore_errors: True
   async: 1000
   poll: 0
-  register: router_script
-
-- name: Run Bridge script
-  become: yes
-  shell: /etc/containerlab/{{ networkname }}/Bridges.sh
-  async: 1000
-  poll: 0
-  register: bridge_script
+  register: Attackers_script
 
 - name: Run LAN Server script
   become: yes
@@ -114,10 +108,16 @@
   poll: 0
   register: WAN_client_script
 
-- name: Run Attackers script
+- name: Run Router script
   become: yes
-  shell: /etc/containerlab/{{ networkname }}/Attackers.sh
-  ignore_errors: True
+  shell: /etc/containerlab/{{ networkname }}/Routers.sh
   async: 1000
   poll: 0
-  register: Attackers_script
+  register: router_script
+
+- name: Run Bridge script
+  become: yes
+  shell: /etc/containerlab/{{ networkname }}/Bridges.sh
+  async: 1000
+  poll: 0
+  register: bridge_script
