@@ -9,7 +9,7 @@ do
 
 # append these lines at the end of the /etc/samba/smb.conf file
 tee -a /etc/samba/smb.conf << EOF
-[$clients]
+[client$clients]
 
 comment = clients$clients folder
 path = /var/www/html/clients$clients
