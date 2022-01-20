@@ -9,11 +9,10 @@ docker exec -d clab-{{networkname}}-Server1-nginx-DMZ ip route delete default
 docker exec -d clab-{{networkname}}-Server1-nginx-DMZ ip route add 0.0.0.0/0 via 123.123.100.1 dev eth1
 docker exec -d clab-{{networkname}}-Server1-nginx-DMZ bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
 
-docker exec clab-{{networkname}}-Server2-ubuntu-DMZ apt-get update -y
-docker exec clab-{{networkname}}-Server2-ubuntu-DMZ apt-get install {{ basic_packages }}
+docker exec clab-{{networkname}}-Server2-alpine-DMZ apk --no-cache add bash curl
 
-docker exec -d clab-{{networkname}}-Server2-ubuntu-DMZ {{ ipv6_configuration }}
-docker exec -d clab-{{networkname}}-Server2-ubuntu-DMZ ip addr add 123.123.100.11/24 dev eth1
-docker exec -d clab-{{networkname}}-Server2-ubuntu-DMZ ip route delete default
-docker exec -d clab-{{networkname}}-Server2-ubuntu-DMZ ip route add 0.0.0.0/0 via 123.123.100.1 dev eth1
-docker exec -d clab-{{networkname}}-Server2-ubuntu-DMZ bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
+docker exec -d clab-{{networkname}}-Server2-alpine-DMZ {{ ipv6_configuration }}
+docker exec -d clab-{{networkname}}-Server2-alpine-DMZ ip addr add 123.123.100.11/24 dev eth1
+docker exec -d clab-{{networkname}}-Server2-alpine-DMZ ip route delete default
+docker exec -d clab-{{networkname}}-Server2-alpine-DMZ ip route add 0.0.0.0/0 via 123.123.100.1 dev eth1
+docker exec -d clab-{{networkname}}-Server2-alpine-DMZ bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
