@@ -17,21 +17,31 @@
   ignore_errors: yes
   when: cleanupp.user_input == 'yes'
 
-- name: Destroy topology
-  become: yes
-  command: clab destroy --topo {{ item.path }}/network.yml
-  ignore_errors: yes
-  with_items: "{{ folders['files'] }}" 
-  when: cleanupp.user_input == 'yes'
+- name: clean the captures 
+  pause:
+    prompt: "Do you want delete old captures? (yes/no)"
+    echo: yes
+  register: cleancapture
 
-- name: Delete folders except captures
+- name: Find capture folders to delete
+  become: yes
+  find:
+    paths: /etc/containerlab/captures
+    file_type: directory
+  register: capfolders
+  ignore_errors: yes
+  when: cleancapture.user_input == 'yes'
+
+- name: Delete capfolders
   become: yes
   file:
     path: "{{ item.path }}"
     state: absent
-  with_items: "{{ folders['files'] }}"
+  with_items: "{{ capfolders['files'] }}"
   ignore_errors: yes
-  when: cleanupp.user_input == 'yes'
+  async: 1000
+  poll: 0
+  when: cleancapture.user_input == 'yes'
 
 - name: Delete network files
   become: yes
@@ -51,12 +61,19 @@
   ignore_errors: yes
   when: cleanupp.user_input == 'yes'
 
-- name: Find folders to merge pcaps
+- name: Destroy topology
   become: yes
-  find:
-    paths: /etc/containerlab/captures
-    file_type: directory
-  register: folderss
+  command: clab destroy --topo {{ item.path }}/network.yml
+  ignore_errors: yes
+  with_items: "{{ folders['files'] }}"
+  when: cleanupp.user_input == 'yes'
+
+- name: Delete folders except captures
+  become: yes
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ folders['files'] }}"
   ignore_errors: yes
   when: cleanupp.user_input == 'yes'
 

@@ -86,6 +86,20 @@
     dest: /etc/containerlab/{{ networkname }}/WANsite.dev.zone
     mode: 0644
 
+- name: Copy vpn.env
+  become: yes
+  copy:
+    src: vpn.env
+    dest: /etc/containerlab/{{ networkname }}/vpn.env
+    mode: 0744
+
+- name: Copy LANweb.sh
+  become: yes
+  copy:
+    src: LANweb.sh
+    dest: /etc/containerlab/{{ networkname }}/LANweb.sh
+    mode: 0744
+
 - name: Copy WANweb.sh
   become: yes
   copy:

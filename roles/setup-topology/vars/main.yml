@@ -5,3 +5,5 @@ webservernginximage: nginx:latest
 ubuntuimage: ubuntu:latest
 frrimage: frrouting/frr:latest
 dnsimage: ubuntu/bind9:latest
+vpnimage: hwdsl2/ipsec-vpn-server
+sambaimage: dperson/samba

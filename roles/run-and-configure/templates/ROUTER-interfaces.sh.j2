@@ -34,6 +34,10 @@ docker exec -d clab-{{networkname}}-router-Internet iptables -A FORWARD -s 169.2
 
 docker exec -d clab-{{networkname}}-router-LAN1 iptables --table nat --append POSTROUTING --out-interface eth1 -j MASQUERADE
 docker exec -d clab-{{networkname}}-router-LAN2 iptables --table nat --append POSTROUTING --out-interface eth1 -j MASQUERADE
+docker exec -d clab-{{networkname}}-router-LAN2 iptables -A PREROUTING --table nat -i eth3 -p udp --dport 500 -j DNAT --to 192.168.40.10:500
+docker exec -d clab-{{networkname}}-router-LAN2 iptables -A FORWARD -p udp -d 192.168.40.10 --dport 500 -j ACCEPT
+docker exec -d clab-{{networkname}}-router-LAN2 iptables -A PREROUTING --table nat -i eth3 -p udp --dport 4500 -j DNAT --to 192.168.40.10:4500
+docker exec -d clab-{{networkname}}-router-LAN2 iptables -A FORWARD -p udp -d 192.168.40.10 --dport 4500 -j ACCEPT
 
 docker exec -d clab-{{networkname}}-router-WAN iptables -A FORWARD -d 123.123.100.10 -p tcp --dport 80 -j ACCEPT
 docker exec -d clab-{{networkname}}-router-WAN iptables -A FORWARD -s 123.123.100.10 -p tcp -j ACCEPT
