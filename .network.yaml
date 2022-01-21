@@ -62,8 +62,6 @@ topology:
       image: alpine:latest
     Server3-nginx-DMZ:
       image: nginx:latest
-      #binds:
-      #  - /etc/containerlab/network/httpsDMZsite.conf:/etc/nginx/conf.d/default.conf
     Server1-samba-LAN:
       image: dperson/samba
       binds:
@@ -123,8 +121,6 @@ topology:
         - /etc/containerlab/network/WANsite.dev.zone:/etc/nsd/WANsite.dev.zone
     Server4-nginx-WAN:
       image: nginx:latest
-      #binds:
-      #  - /etc/containerlab/network/httpsWANsite.conf:/etc/nginx/conf.d/default.conf
 
   links:
 
@@ -152,7 +148,7 @@ topology:
     - endpoints: ["Server1-nginx-WAN:eth1", "br-Internet:eth5"]
     - endpoints: ["Server2-alpine-WAN:eth1", "br-Internet:eth6"]
     - endpoints: ["Server3-DNS-WAN:eth1", "br-Internet:eth7"]
-   # - endpoints: ["Server4-nginx-WAN:eth1", "br-Internet:eth8"]
+    - endpoints: ["Server4-nginx-WAN:eth1", "br-Internet:eth8"]
 
     - endpoints: ["Client1-WANweb:eth1", "br-Internet:eth9"]
     - endpoints: ["Client2-WANweb:eth1", "br-Internet:eth10"]
