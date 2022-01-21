@@ -30,6 +30,10 @@
         prompt: "How many MBs may the capture files combined be (the network will automatically be stopped when the capturelimit is reached, this message can be ignored if you do not want a traffic capture)? (0 = unlimited)"
         default: 0
         private: no
+      - name: timer
+        prompt: "How long may the network (+-capture) stay running? for example: '6m' (6 minutes) '6h' (6hours) '6d' (6 days), (0 = unlimited)"
+        default: 0
+        private: no
       - name: Dockerhub_Username
         prompt: "Fill in your Dockerhub username"
         private: no

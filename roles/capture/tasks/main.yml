@@ -86,4 +86,3 @@
 - name: Run capture script after config scripts
   become: yes
   shell: bash /etc/containerlab/captures/capture.sh &
-  when: savefile != 'not'

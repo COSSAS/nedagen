@@ -66,6 +66,7 @@ topology:
       image: {{ alpineimage }}
       binds:
         - /etc/containerlab/{{networkname}}/WANweb.sh:/WANweb.sh
+        - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
 {% endfor %}
 {% for i in range(1, NumberofWANvpnclients | int +1) %}
     Client{{ i }}-WANvpn:

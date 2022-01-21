@@ -3,6 +3,8 @@
 # script for capturing network traffic on each network segment.
 # capturing is done using tshark and parsed to json to integrate it with Elasticsearch
 
+{% if savefile != "not" %}
+
 # define number of interfaces to loop through
 {% set brDMZinterfaces = 3 %}
 {% set brLAN1interfaces = NumberofLANclients|int + staticinterfaces_brLan1|int %}
@@ -53,11 +55,35 @@ ip netns exec clab-{{networkname}}-br-LAN2 tshark -F pcap -i eth{{i}} -w /etc/co
 {% endif %}
 {% endfor %}
 
-{% if capturelimitMB|int != 0  %}
+{% endif %}
+
+SECONDS=0
+
 while true
 do
+    {% if timer != "0" %}
+    if [ {{ timer }} == *"m"* ]
+    then
+        giventime=$({{ timer }} | sed 's/m//g')
+        topotimer=$((giventime * 60))
+    elif [ {{ timer }} == *"h"* ]
+    then
+        giventime=$({{ timer }} | sed 's/h//g')
+        topotimer=$((giventime * 3600))
+    elif [ {{ timer }} == *"d"* ]
+    then
+        giventime=$({{ timer }} | sed 's/d//g')
+        topotimer=$((giventime * 86400))
+    fi
+
+    if [ $SECONDS -ge $topotimer ]
+    then
+        clab destroy --topo /etc/containerlab/{{ networkname }}/network.yml
+    fi
+    {% endif %}
+
+    {% if capturelimitMB|int != 0  %}
     capturefoldersize=$(du "/etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}" | awk '{print $1;}')
-    # capturefoldersize=((du "/etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}" | awk '{print $1;}')
     KBtoMB=1000
     capturefolderMB=$((capturefoldersize / KBtoMB))
 
@@ -69,6 +95,7 @@ do
         {% endif %}
         break
     fi
+    {% endif %}
+
 done
-{% endif %}
 
