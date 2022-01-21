@@ -58,8 +58,9 @@ ip netns exec clab-{{networkname}}-br-LAN2 tshark -F pcap -i eth{{i}} -w /etc/co
 {% endif %}
 
 SECONDS=0
+vari=1
 
-while true
+while $vari
 do
     {% if timer != "0" %}
     if [ {{ timer }} == *"m"* ]
@@ -79,6 +80,9 @@ do
     if [ $SECONDS -ge $topotimer ]
     then
         clab destroy --topo /etc/containerlab/{{ networkname }}/network.yml
+        {% if savefile == "pcap" or savefile == "both" %}
+        mergecap /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/*.pcap -w /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/merged.pcap
+        {% endif %}
     fi
     {% endif %}
 
@@ -97,5 +101,15 @@ do
     fi
     {% endif %}
 
-done
+    processesROUTERwan=$(pgrep -f router-WAN-eth)
+    processesDMZ=$(pgrep -f br-DMZ-eth)
+    processesLAN1=$(pgrep -f br-LAN1-eth)
+    processesLAN2=$(pgrep -f br-LAN2-eth)
 
+    if ( [[ $processesROUTERwan ]] && [[ $processesDMZ ]] && [[ $processesLAN1 ]] && [[ $processesLAN2 ]] )
+    then
+        mergecap /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/*.pcap -w /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/merged.pcap
+        vari=0
+    fi
+
+done
