@@ -3,6 +3,7 @@
 bridgeclientimage: praqma/network-multitool:latest
 webservernginximage: nginx:latest
 alpineimage: alpine:latest
+ubuntuimage: ubuntu:latest
 frrimage: frrouting/frr:latest
 vpnimage: hwdsl2/ipsec-vpn-server
 sambaimage: dperson/samba

@@ -33,6 +33,8 @@ docker exec -d clab-{{networkname}}-router-LAN2 iptables -A FORWARD -p udp -d 19
 
 docker exec -d clab-{{networkname}}-router-WAN iptables -A FORWARD -d 123.123.100.10 -p tcp --dport 80 -j ACCEPT
 docker exec -d clab-{{networkname}}-router-WAN iptables -A FORWARD -s 123.123.100.10 -p tcp -j ACCEPT
+docker exec -d clab-{{networkname}}-router-WAN iptables -A FORWARD -d 123.123.100.12 -p tcp --dport 443 -j ACCEPT
+docker exec -d clab-{{networkname}}-router-WAN iptables -A FORWARD -s 123.123.100.12 -p tcp -j ACCEPT
 docker exec -d clab-{{networkname}}-router-WAN iptables -A FORWARD -s 123.123.100.11 -j ACCEPT
 docker exec -d clab-{{networkname}}-router-WAN iptables -A FORWARD -d 123.123.100.11 -j ACCEPT
 docker exec -d clab-{{networkname}}-router-WAN iptables -A FORWARD -s 123.123.123.2 -j ACCEPT

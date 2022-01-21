@@ -11,8 +11,21 @@ docker exec -d clab-{{networkname}}-Server1-nginx-DMZ bash -c 'echo "nameserver 
 
 docker exec clab-{{networkname}}-Server2-alpine-DMZ apk --no-cache add bash curl
 
-docker exec -d clab-{{networkname}}-Server2-alpine-DMZ {{ ipv6_configuration }}
 docker exec -d clab-{{networkname}}-Server2-alpine-DMZ ip addr add 123.123.100.11/24 dev eth1
 docker exec -d clab-{{networkname}}-Server2-alpine-DMZ ip route delete default
 docker exec -d clab-{{networkname}}-Server2-alpine-DMZ ip route add 0.0.0.0/0 via 123.123.100.1 dev eth1
-docker exec -d clab-{{networkname}}-Server2-alpine-DMZ bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
+docker exec clab-{{networkname}}-Server2-alpine-DMZ bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
+
+#docker exec clab-{{networkname}}-Server3-nginx-DMZ apt-get update -y
+#docker exec clab-{{networkname}}-Server3-nginx-DMZ apt-get install {{ basic_packages }}
+#docker exec clab-{{networkname}}-Server3-nginx-DMZ apt-get install openssl -y
+
+#docker exec -d clab-{{networkname}}-Server3-nginx-DMZ sysctl {{ ipv6_configuration }}
+#docker exec -d clab-{{networkname}}-Server3-nginx-DMZ ip addr add 123.123.100.12/24 dev eth1
+#docker exec -d clab-{{networkname}}-Server3-nginx-DMZ ip route delete default
+#docker exec -d clab-{{networkname}}-Server3-nginx-DMZ ip route add 0.0.0.0/0 via 123.123.100.1 dev eth1
+#docker exec -d clab-{{networkname}}-Server3-nginx-DMZ bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
+#docker exec clab-{{networkname}}-Server3-nginx-DMZ bash -c 'openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout localhost.key -out localhost.crt -config localhost.conf'
+#docker exec clab-{{networkname}}-Server3-nginx-DMZ bash -c 'cp localhost.crt /etc/ssl/certs/localhost.crt'
+#docker exec clab-{{networkname}}-Server3-nginx-DMZ bash -c 'cp localhost.key /etc/ssl/private/localhost.key'
+#docker exec clab-{{networkname}}-Server3-nginx-DMZ bash -c 'service nginx reload'

@@ -13,14 +13,26 @@ docker exec clab-{{networkname}}-Server2-alpine-WAN apk --no-cache add bash open
 docker exec -d clab-{{networkname}}-Server2-alpine-WAN ip addr add 5.20.0.11/8 dev eth1
 docker exec -d clab-{{networkname}}-Server2-alpine-WAN ip route delete default
 docker exec -d clab-{{networkname}}-Server2-alpine-WAN ip route add 0.0.0.0/0 via 5.0.0.1 dev eth1
-docker exec -d clab-{{networkname}}-Server2-alpine-WAN bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
+docker exec clab-{{networkname}}-Server2-alpine-WAN bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
  
-docker exec clab-{{networkname}}-Server3-DNS-WAN apk --no-cache add bash bind-tools curl openssl nsd
+docker exec clab-{{networkname}}-Server3-DNS-WAN apk --no-cache add bash curl nsd
 
 docker exec -d clab-{{networkname}}-Server3-DNS-WAN ip addr add 5.5.5.5/8 dev eth1
-docker exec -d clab-{{networkname}}-Server3-DNS-WAN ip route delete default
-docker exec -d clab-{{networkname}}-Server3-DNS-WAN ip route add 0.0.0.0/0 via 5.0.0.1 dev eth1
-docker exec -d clab-{{networkname}}-Server3-DNS-WAN bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
+docker exec clab-{{networkname}}-Server3-DNS-WAN ip route delete default
+docker exec clab-{{networkname}}-Server3-DNS-WAN ip route add 0.0.0.0/0 via 5.0.0.1 dev eth1
+docker exec clab-{{networkname}}-Server3-DNS-WAN bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
 
-docker exec clab-{{networkname}}-Server3-DNS-WAN nsd-control-setup
 docker exec clab-{{networkname}}-Server3-DNS-WAN nsd
+
+#docker exec clab-{{networkname}}-Server4-nginx-WAN apt-get update -y
+#docker exec clab-{{networkname}}-Server4-nginx-WAN apt-get install {{ basic_packages }}
+#docker exec clab-{{networkname}}-Server4-nginx-WAN apt-get install openssl -y
+#docker exec clab-{{networkname}}-Server4-nginx-WAN bash -c 'openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout localhost.key -out localhost.crt -config localhost.conf'
+#docker exec clab-{{networkname}}-Server4-nginx-WAN bash -c 'cp localhost.crt /etc/ssl/certs/localhost.crt'
+#docker exec clab-{{networkname}}-Server4-nginx-WAN bash -c 'cp localhost.key /etc/ssl/private/localhost.key'
+
+#docker exec -d clab-{{networkname}}-Server4-nginx-WAN ip addr add 5.20.0.12/8 dev eth1
+#docker exec -d clab-{{networkname}}-Server4-nginx-WAN ip route delete default
+#docker exec -d clab-{{networkname}}-Server4-nginx-WAN ip route add 0.0.0.0/0 via 5.0.0.1 dev eth1
+#docker exec -d clab-{{networkname}}-Server4-nginx-WAN bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
+#docker exec clab-{{networkname}}-Server4-nginx-WAN bash -c 'service nginx reload'
