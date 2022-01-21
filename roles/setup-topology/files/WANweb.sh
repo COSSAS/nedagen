@@ -24,7 +24,12 @@ do
 
     sleep 1
 
-    curl DMZsite.dev
+    if [ $(($2 % 2)) -eq 0 ]
+    then
+        curl DMZsite.dev
+    else
+        curl -k https://httpsDMZsite.dev
+    fi
 
     sleep 1
 

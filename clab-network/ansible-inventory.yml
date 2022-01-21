@@ -3,68 +3,68 @@ all:
     linux:
       hosts:
         clab-network-Attacker-LAN:
-          ansible_host: 172.20.20.23
+          ansible_host: 172.20.20.14
         clab-network-Attacker-WAN:
-          ansible_host: 172.20.20.8
-        clab-network-Client1-LAN:
-          ansible_host: 172.20.20.32
-        clab-network-Client1-WANvpn:
-          ansible_host: 172.20.20.33
-        clab-network-Client1-WANweb:
-          ansible_host: 172.20.20.6
-        clab-network-Client2-LAN:
-          ansible_host: 172.20.20.9
-        clab-network-Client2-WANvpn:
-          ansible_host: 172.20.20.12
-        clab-network-Client2-WANweb:
-          ansible_host: 172.20.20.13
-        clab-network-Client3-LAN:
           ansible_host: 172.20.20.16
-        clab-network-Client3-WANvpn:
-          ansible_host: 172.20.20.15
-        clab-network-Client3-WANweb:
-          ansible_host: 172.20.20.18
-        clab-network-Client4-LAN:
-          ansible_host: 172.20.20.17
-        clab-network-Client4-WANvpn:
-          ansible_host: 172.20.20.10
-        clab-network-Client4-WANweb:
-          ansible_host: 172.20.20.22
-        clab-network-Server1-nginx-DMZ:
-          ansible_host: 172.20.20.11
-        clab-network-Server1-nginx-WAN:
-          ansible_host: 172.20.20.24
-        clab-network-Server1-samba-LAN:
-          ansible_host: 172.20.20.27
-        clab-network-Server2-alpine-DMZ:
-          ansible_host: 172.20.20.2
-        clab-network-Server2-alpine-WAN:
-          ansible_host: 172.20.20.19
-        clab-network-Server2-vpn-LAN:
-          ansible_host: 172.20.20.31
-        clab-network-Server3-DNS-WAN:
-          ansible_host: 172.20.20.20
-        clab-network-Server3-nginx-DMZ:
-          ansible_host: 172.20.20.21
-        clab-network-Server4-nginx-WAN:
-          ansible_host: 172.20.20.4
-        clab-network-Standalone-Client-LAN:
-          ansible_host: 172.20.20.30
-        clab-network-alpine-Client-LAN:
-          ansible_host: 172.20.20.34
-        clab-network-br-DMZ:
+        clab-network-Client1-LAN:
+          ansible_host: 172.20.20.7
+        clab-network-Client1-WANvpn:
+          ansible_host: 172.20.20.6
+        clab-network-Client1-WANweb:
           ansible_host: 172.20.20.29
+        clab-network-Client2-LAN:
+          ansible_host: 172.20.20.32
+        clab-network-Client2-WANvpn:
+          ansible_host: 172.20.20.11
+        clab-network-Client2-WANweb:
+          ansible_host: 172.20.20.15
+        clab-network-Client3-LAN:
+          ansible_host: 172.20.20.24
+        clab-network-Client3-WANvpn:
+          ansible_host: 172.20.20.19
+        clab-network-Client3-WANweb:
+          ansible_host: 172.20.20.8
+        clab-network-Client4-LAN:
+          ansible_host: 172.20.20.23
+        clab-network-Client4-WANvpn:
+          ansible_host: 172.20.20.31
+        clab-network-Client4-WANweb:
+          ansible_host: 172.20.20.26
+        clab-network-Server1-nginx-DMZ:
+          ansible_host: 172.20.20.2
+        clab-network-Server1-nginx-WAN:
+          ansible_host: 172.20.20.3
+        clab-network-Server1-samba-LAN:
+          ansible_host: 172.20.20.28
+        clab-network-Server2-alpine-DMZ:
+          ansible_host: 172.20.20.4
+        clab-network-Server2-alpine-WAN:
+          ansible_host: 172.20.20.30
+        clab-network-Server2-vpn-LAN:
+          ansible_host: 172.20.20.18
+        clab-network-Server3-DNS-WAN:
+          ansible_host: 172.20.20.27
+        clab-network-Server3-nginx-DMZ:
+          ansible_host: 172.20.20.12
+        clab-network-Server4-nginx-WAN:
+          ansible_host: 172.20.20.33
+        clab-network-Standalone-Client-LAN:
+          ansible_host: 172.20.20.13
+        clab-network-alpine-Client-LAN:
+          ansible_host: 172.20.20.17
+        clab-network-br-DMZ:
+          ansible_host: 172.20.20.5
         clab-network-br-Internet:
           ansible_host: 172.20.20.25
         clab-network-br-LAN1:
-          ansible_host: 172.20.20.26
+          ansible_host: 172.20.20.22
         clab-network-br-LAN2:
-          ansible_host: 172.20.20.14
+          ansible_host: 172.20.20.20
         clab-network-router-Internet:
-          ansible_host: 172.20.20.5
+          ansible_host: 172.20.20.34
         clab-network-router-LAN1:
-          ansible_host: 172.20.20.7
+          ansible_host: 172.20.20.9
         clab-network-router-LAN2:
-          ansible_host: 172.20.20.28
+          ansible_host: 172.20.20.21
         clab-network-router-WAN:
-          ansible_host: 172.20.20.3
+          ansible_host: 172.20.20.10

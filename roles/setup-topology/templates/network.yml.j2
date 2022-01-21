@@ -86,6 +86,8 @@ topology:
         - /etc/containerlab/{{networkname}}/nsd.conf:/etc/nsd/nsd.conf
         - /etc/containerlab/{{networkname}}/DMZsite.dev.zone:/etc/nsd/DMZsite.dev.zone
         - /etc/containerlab/{{networkname}}/WANsite.dev.zone:/etc/nsd/WANsite.dev.zone
+        - /etc/containerlab/{{networkname}}/httpsDMZsite.dev.zone:/etc/nsd/httpsDMZsite.dev.zone
+        - /etc/containerlab/{{networkname}}/httpsWANsite.dev.zone:/etc/nsd/httpsWANsite.dev.zone
     Server4-nginx-WAN:
       image: {{ webservernginximage }}
 

@@ -12,36 +12,71 @@
     - ca-certificates
     - curl
     - software-properties-common
-    - python3-pip
 
-- name: add GPG key
-  become: yes
-  apt_key:
-    url: https://download.docker.com/linux/ubuntu/gpg
-    state: present
-
-- name: add docker repository to apt
-  become: yes
-  apt_repository:
-    repo: deb https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
-    state: present
-
-- name: install docker
+- name: install pip2
   become: yes
   apt:
-    name: "{{ item }}"
-    state: latest
+    name: "python-pip"
+    state: present
     update_cache: yes
     cache_valid_time: 360
-  loop:
-    - docker-ce
-    - docker-ce-cli
-    - containerd.io
+  when: "{{ansible_python['executable'] == "/usr/bin/python2"}}
+
+- name: install pip3
+  become: yes
+  apt:
+    name: "python3-pip"
+    state: present
+    update_cache: yes
+    cache_valid_time: 360
+  when: "{{ansible_python['executable'] == "/usr/bin/python3"}}
+
+- name: Download docker install script
+  become: yes
+  shell: curl -fsSL https://get.docker.com -o get-docker.sh
+
+- name: Run docker install script
+  become: yes
+  shell: sh get-docker.sh
 
 - name: Install Docker pip
   become: yes
   pip:
     name: docker
+  when: "{{ansible_python['executable'] == "/usr/bin/python3"}}
+
+- name: Install Docker pip
+  become: yes
+  pip:
+    name: docker-py
+  when: "{{ansible_python['executable'] == "/usr/bin/python2"}}
+
+#   $ curl -fsSL https://get.docker.com -o get-docker.sh
+#   $ sh get-docker.sh
+
+# - name: add GPG key
+#   become: yes
+#   apt_key:
+#     url: https://download.docker.com/linux/ubuntu/gpg
+#     state: present
+
+# - name: add docker repository to apt
+#   become: yes
+#   apt_repository:
+#     repo: deb https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+#     state: present
+
+# - name: install docker
+#   become: yes
+#   apt:
+#     name: "{{ item }}"
+#     state: latest
+#     update_cache: yes
+#     cache_valid_time: 360
+#   loop:
+#     - docker-ce
+#     - docker-ce-cli
+#     - containerd.io
     
 - name: start docker service
   become: yes

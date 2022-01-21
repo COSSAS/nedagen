@@ -106,6 +106,20 @@
     dest: /etc/containerlab/{{ networkname }}/WANsite.dev.zone
     mode: 0644
 
+- name: Copy NSD httpsDMZsite config
+  become: yes
+  copy:
+    src: httpsDMZsite.dev.zone
+    dest: /etc/containerlab/{{ networkname }}/httpsDMZsite.dev.zone
+    mode: 0644
+
+- name: Copy NSD httpsWANsite config
+  become: yes
+  copy:
+    src: httpsWANsite.dev.zone
+    dest: /etc/containerlab/{{ networkname }}/httpsWANsite.dev.zone
+    mode: 0644
+
 - name: Copy vpn.env
   become: yes
   copy:
