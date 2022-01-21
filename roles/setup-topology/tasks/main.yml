@@ -6,11 +6,11 @@
     path: /etc/containerlab/{{ networkname }}
     state: directory
 
-# - name: Log into DockerHub
-#   become: yes
-#   docker_login:
-#     username: "{{ Dockerhub_Username }}"
-#     password: "{{ Dockerhub_Password }}"    
+- name: Log into DockerHub
+  become: yes
+  docker_login:
+    username: "{{ Dockerhub_Username }}"
+    password: "{{ Dockerhub_Password }}"    
 
 - name: Make router directory
   become: yes
