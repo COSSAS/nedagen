@@ -130,7 +130,7 @@
   poll: 0
   register: WAN_client_script
 
-- name: Run Cron script
-  become: yes
-  shell: /etc/containerlab/{{ networkname }}/Cronjobstemplate.sh
+#- name: Run Cron script
+#  become: yes
+#  shell: /etc/containerlab/{{ networkname }}/Cronjobstemplate.sh
 

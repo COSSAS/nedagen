@@ -88,10 +88,10 @@ topology:
         - /etc/containerlab/{{networkname}}/nsd.conf:/etc/nsd/nsd.conf
         - /etc/containerlab/{{networkname}}/DMZsite.dev.zone:/etc/nsd/DMZsite.dev.zone
         - /etc/containerlab/{{networkname}}/WANsite.dev.zone:/etc/nsd/WANsite.dev.zone
-    #Server4-nginx-WAN:
-    #  image: {{ webservernginximage }}
-    #  binds:
-    #    - /etc/containerlab/{{networkname}}/httpsWANsite.conf:/etc/nginx/conf.d/default.conf
+    Server4-nginx-WAN:
+      image: {{ webservernginximage }}
+      binds:
+        - /etc/containerlab/{{networkname}}/httpsWANsite.conf:/etc/nginx/conf.d/default.conf
 
   links:
 

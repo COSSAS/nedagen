@@ -18,6 +18,7 @@ docker exec clab-{{networkname}}-Server2-alpine-DMZ bash -c 'echo "nameserver 5.
 
 #docker exec clab-{{networkname}}-Server3-nginx-DMZ apt-get update -y
 #docker exec clab-{{networkname}}-Server3-nginx-DMZ apt-get install {{ basic_packages }}
+
 #docker exec clab-{{networkname}}-Server3-nginx-DMZ apt-get install openssl -y
 
 #docker exec -d clab-{{networkname}}-Server3-nginx-DMZ sysctl {{ ipv6_configuration }}

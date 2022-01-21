@@ -75,18 +75,22 @@ topology:
       image: alpine:latest
       binds:
         - /etc/containerlab/network/WANweb.sh:/WANweb.sh
+        - /etc/containerlab/network/Cronjobs.sh:/Cronjobs.sh
     Client2-WANweb:
       image: alpine:latest
       binds:
         - /etc/containerlab/network/WANweb.sh:/WANweb.sh
+        - /etc/containerlab/network/Cronjobs.sh:/Cronjobs.sh
     Client3-WANweb:
       image: alpine:latest
       binds:
         - /etc/containerlab/network/WANweb.sh:/WANweb.sh
+        - /etc/containerlab/network/Cronjobs.sh:/Cronjobs.sh
     Client4-WANweb:
       image: alpine:latest
       binds:
         - /etc/containerlab/network/WANweb.sh:/WANweb.sh
+        - /etc/containerlab/network/Cronjobs.sh:/Cronjobs.sh
     Client1-WANvpn:
       image: alpine:latest
       binds:
@@ -117,10 +121,10 @@ topology:
         - /etc/containerlab/network/nsd.conf:/etc/nsd/nsd.conf
         - /etc/containerlab/network/DMZsite.dev.zone:/etc/nsd/DMZsite.dev.zone
         - /etc/containerlab/network/WANsite.dev.zone:/etc/nsd/WANsite.dev.zone
-    #Server4-nginx-WAN:
-    #  image: nginx:latest
-    #  binds:
-    #    - /etc/containerlab/network/httpsWANsite.conf:/etc/nginx/conf.d/default.conf
+    Server4-nginx-WAN:
+      image: nginx:latest
+      binds:
+        - /etc/containerlab/network/httpsWANsite.conf:/etc/nginx/conf.d/default.conf
 
   links:
 

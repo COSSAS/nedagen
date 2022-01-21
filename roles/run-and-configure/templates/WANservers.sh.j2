@@ -26,6 +26,7 @@ docker exec clab-{{networkname}}-Server3-DNS-WAN nsd
 
 #docker exec clab-{{networkname}}-Server4-nginx-WAN apt-get update -y
 #docker exec clab-{{networkname}}-Server4-nginx-WAN apt-get install {{ basic_packages }}
+
 #docker exec clab-{{networkname}}-Server4-nginx-WAN apt-get install openssl -y
 #docker exec clab-{{networkname}}-Server4-nginx-WAN bash -c 'openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout localhost.key -out localhost.crt -config localhost.conf'
 #docker exec clab-{{networkname}}-Server4-nginx-WAN bash -c 'cp localhost.crt /etc/ssl/certs/localhost.crt'
