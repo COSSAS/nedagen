@@ -34,13 +34,13 @@
         prompt: "How long may the network (+-capture) stay running? for example: '6m' (6 minutes) '6h' (6hours) '6d' (6 days), (0 = unlimited)"
         default: 0
         private: no
-      - name: Dockerhub_Username
-        prompt: "Fill in your Dockerhub username"
-        private: no
-      - name: Dockerhub_Password
-        prompt: "Fill in your Dockerhub password"
-        private: yes
-        no_log: True
+      # - name: Dockerhub_Username
+      #   prompt: "Fill in your Dockerhub username"
+      #   private: no
+      # - name: Dockerhub_Password
+      #   prompt: "Fill in your Dockerhub password"
+      #   private: yes
+      #   no_log: True
   vars:
     staticinterfaces_brLan1: 6
     staticinterfaces_brInternet: 8

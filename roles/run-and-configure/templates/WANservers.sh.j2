@@ -3,7 +3,6 @@
 docker exec clab-{{networkname}}-Server1-nginx-WAN apt-get update -y
 docker exec clab-{{networkname}}-Server1-nginx-WAN apt-get install {{ basic_packages }}
 
-docker exec -d clab-{{networkname}}-Server1-nginx-WAN {{ ipv6_configuration }}
 docker exec -d clab-{{networkname}}-Server1-nginx-WAN ip addr add 5.20.0.10/8 dev eth1
 docker exec -d clab-{{networkname}}-Server1-nginx-WAN ip route delete default
 docker exec -d clab-{{networkname}}-Server1-nginx-WAN ip route add 0.0.0.0/0 via 5.0.0.1 dev eth1
@@ -29,7 +28,6 @@ docker exec clab-{{networkname}}-Server4-nginx-WAN apt-get update -y
 docker exec clab-{{networkname}}-Server4-nginx-WAN apt-get install {{ basic_packages }}
 docker exec clab-{{networkname}}-Server4-nginx-WAN apt-get install openssl -y
 
-docker exec -d clab-{{networkname}}-Server4-nginx-WAN {{ ipv6_configuration }}
 docker exec -d clab-{{networkname}}-Server4-nginx-WAN ip addr add 5.20.0.12/8 dev eth1
 docker exec -d clab-{{networkname}}-Server4-nginx-WAN ip route delete default
 docker exec -d clab-{{networkname}}-Server4-nginx-WAN ip route add 0.0.0.0/0 via 5.0.0.1 dev eth1

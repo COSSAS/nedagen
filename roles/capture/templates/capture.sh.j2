@@ -57,42 +57,55 @@ ip netns exec clab-{{networkname}}-br-LAN2 tshark -F pcap -i eth{{i}} -w /etc/co
 
 {% endif %}
 
-SECONDS=0
-vari=1
 
-while $vari
+
+SECONDS=0
+
+echo "voor de loop" >> /etc/containerlab/captures/test.txt
+
+while true
 do
+
+    echo "seconds: $SECONDS" >> /etc/containerlab/captures/test.txt
+
+    processesROUTERwan=$(pgrep -f router-WAN-eth)
+    processesDMZ=$(pgrep -f br-DMZ-eth)
+    processesLAN1=$(pgrep -f br-LAN1-eth)
+    processesLAN2=$(pgrep -f br-LAN2-eth)
+
+    if !( [[ $processesROUTERwan ]] && [[ $processesDMZ ]] && [[ $processesLAN1 ]] && [[ $processesLAN2 ]] )
+    then
+        mergecap /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/*.pcap -w /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/merged.pcap
+        echo "proces kill" >> /etc/containerlab/captures/test.txt
+        break
+    fi
+
     {% if timer != "0" %}
+
+    echo "in timer" >> /etc/containerlab/captures/test.txt
+
+
     if [ {{ timer }} == *"m"* ]
     then
         giventime=$({{ timer }} | sed 's/m//g')
         topotimer=$((giventime * 60))
+        echo "topotimer min: $topotimer" >> /etc/containerlab/captures/test.txt
     elif [ {{ timer }} == *"h"* ]
     then
         giventime=$({{ timer }} | sed 's/h//g')
         topotimer=$((giventime * 3600))
+        echo "topotimer hours: $topotimer" >> /etc/containerlab/captures/test.txt
     elif [ {{ timer }} == *"d"* ]
     then
         giventime=$({{ timer }} | sed 's/d//g')
         topotimer=$((giventime * 86400))
+        echo "topotimer days: $topotimer" >> /etc/containerlab/captures/test.txt
     fi
 
     if [ $SECONDS -ge $topotimer ]
     then
-        clab destroy --topo /etc/containerlab/{{ networkname }}/network.yml
-        {% if savefile == "pcap" or savefile == "both" %}
-        mergecap /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/*.pcap -w /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/merged.pcap
-        {% endif %}
-    fi
-    {% endif %}
+        echo "timer expired" >> /etc/containerlab/captures/test.txt
 
-    {% if capturelimitMB|int != 0  %}
-    capturefoldersize=$(du "/etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}" | awk '{print $1;}')
-    KBtoMB=1000
-    capturefolderMB=$((capturefoldersize / KBtoMB))
-
-    if [ $capturefolderMB -ge {{ capturelimitMB|int }} ]
-    then
         clab destroy --topo /etc/containerlab/{{ networkname }}/network.yml
         {% if savefile == "pcap" or savefile == "both" %}
         mergecap /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/*.pcap -w /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/merged.pcap
@@ -101,15 +114,24 @@ do
     fi
     {% endif %}
 
-    processesROUTERwan=$(pgrep -f router-WAN-eth)
-    processesDMZ=$(pgrep -f br-DMZ-eth)
-    processesLAN1=$(pgrep -f br-LAN1-eth)
-    processesLAN2=$(pgrep -f br-LAN2-eth)
+    {% if capturelimitMB|int != 0  %}
+    capturefoldersize=$(du "/etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}" | awk '{print $1;}')
+    KBtoMB=1000
+    capturefolderMB=$((capturefoldersize / KBtoMB))
 
-    if ( [[ $processesROUTERwan ]] && [[ $processesDMZ ]] && [[ $processesLAN1 ]] && [[ $processesLAN2 ]] )
+    echo "capturefolder: $capturefolderMB" >> /etc/containerlab/captures/test.txt
+
+    if [ $capturefolderMB -ge {{ capturelimitMB|int }} ]
     then
+
+        echo "capturelimit bereikt" >> /etc/containerlab/captures/test.txt
+
+        clab destroy --topo /etc/containerlab/{{ networkname }}/network.yml
+        {% if savefile == "pcap" or savefile == "both" %}
         mergecap /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/*.pcap -w /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/merged.pcap
-        vari=0
+        {% endif %}
+        break
     fi
+    {% endif %}
 
 done

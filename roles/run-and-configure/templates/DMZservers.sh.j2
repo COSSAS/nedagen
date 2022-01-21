@@ -3,7 +3,6 @@
 docker exec clab-{{networkname}}-Server1-nginx-DMZ apt-get update -y
 docker exec clab-{{networkname}}-Server1-nginx-DMZ apt-get install {{ basic_packages }}
 
-docker exec -d clab-{{networkname}}-Server1-nginx-DMZ {{ ipv6_configuration }}
 docker exec -d clab-{{networkname}}-Server1-nginx-DMZ ip addr add 123.123.100.10/24 dev eth1
 docker exec -d clab-{{networkname}}-Server1-nginx-DMZ ip route delete default
 docker exec -d clab-{{networkname}}-Server1-nginx-DMZ ip route add 0.0.0.0/0 via 123.123.100.1 dev eth1
@@ -20,7 +19,6 @@ docker exec clab-{{networkname}}-Server3-nginx-DMZ apt-get update -y
 docker exec clab-{{networkname}}-Server3-nginx-DMZ apt-get install {{ basic_packages }}
 docker exec clab-{{networkname}}-Server3-nginx-DMZ apt-get install openssl -y
 
-docker exec -d clab-{{networkname}}-Server3-nginx-DMZ {{ ipv6_configuration }}
 docker exec -d clab-{{networkname}}-Server3-nginx-DMZ ip addr add 123.123.100.12/24 dev eth1
 docker exec -d clab-{{networkname}}-Server3-nginx-DMZ ip route delete default
 docker exec -d clab-{{networkname}}-Server3-nginx-DMZ ip route add 0.0.0.0/0 via 123.123.100.1 dev eth1

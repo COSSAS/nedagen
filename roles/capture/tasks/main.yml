@@ -85,4 +85,4 @@
 
 - name: Run capture script after config scripts
   become: yes
-  shell: bash /etc/containerlab/captures/capture.sh &
+  shell: nohup bash /etc/containerlab/captures/capture.sh </dev/null >/dev/null 2>&1 &

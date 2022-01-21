@@ -17,6 +17,12 @@
   ignore_errors: yes
   when: cleanupp.user_input == 'yes'
 
+# - name: Docker logout
+#   become: yes
+#   shell: docker logout
+#   ignore_errors: yes
+#   when: cleanupp.user_input == 'yes'
+
 - name: clean the captures 
   pause:
     prompt: "Do you want delete old captures? (yes/no)"
@@ -52,12 +58,6 @@
 - name: Delete network yaml
   become: yes
   shell: if [ -f .network.yaml ]; then rm .network.yaml; fi
-  ignore_errors: yes
-  when: cleanupp.user_input == 'yes'
-
-- name: Docker logout
-  become: yes
-  shell: docker logout
   ignore_errors: yes
   when: cleanupp.user_input == 'yes'
 
