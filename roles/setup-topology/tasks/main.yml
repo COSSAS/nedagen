@@ -65,17 +65,17 @@
     src: DMZsite.conf
     dest: /etc/containerlab/{{ networkname }}/DMZsite.conf
 
-- name: Copy httpsDMZsite config
-  become: yes
-  copy:
-    src: httpsDMZsite.conf
-    dest: /etc/containerlab/{{ networkname }}/httpsDMZsite.conf
+#- name: Copy httpsDMZsite config
+#  become: yes
+#  copy:
+#    src: httpsDMZsite.conf
+#    dest: /etc/containerlab/{{ networkname }}/httpsDMZsite.conf
   
-- name: Copy httpsWANsite config
-  become: yes
-  copy:
-    src: httpsWANsite.conf
-    dest: /etc/containerlab/{{ networkname }}/httpsWANsite.conf
+#- name: Copy httpsWANsite config
+#  become: yes
+#  copy:
+#    src: httpsWANsite.conf
+#    dest: /etc/containerlab/{{ networkname }}/httpsWANsite.conf
 
 - name: Copy WANsite config
   become: yes

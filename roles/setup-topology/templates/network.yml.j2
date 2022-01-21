@@ -52,8 +52,8 @@ topology:
       image: {{ alpineimage }}
     Server3-nginx-DMZ:
       image: {{ webservernginximage }}
-      binds:
-        - /etc/containerlab/{{networkname}}/httpsDMZsite.conf:/etc/nginx/conf.d/default.conf
+      #binds:
+      #  - /etc/containerlab/{{networkname}}/httpsDMZsite.conf:/etc/nginx/conf.d/default.conf
     Server1-samba-LAN:
       image: {{ sambaimage }}
       binds:
@@ -90,8 +90,8 @@ topology:
         - /etc/containerlab/{{networkname}}/WANsite.dev.zone:/etc/nsd/WANsite.dev.zone
     Server4-nginx-WAN:
       image: {{ webservernginximage }}
-      binds:
-        - /etc/containerlab/{{networkname}}/httpsWANsite.conf:/etc/nginx/conf.d/default.conf
+      #binds:
+      #  - /etc/containerlab/{{networkname}}/httpsWANsite.conf:/etc/nginx/conf.d/default.conf
 
   links:
 
