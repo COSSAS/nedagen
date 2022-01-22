@@ -51,9 +51,6 @@
     name: docker-py
   when: "{{ansible_python['executable'] == "/usr/bin/python2"}}
 
-#   $ curl -fsSL https://get.docker.com -o get-docker.sh
-#   $ sh get-docker.sh
-
 # - name: add GPG key
 #   become: yes
 #   apt_key:

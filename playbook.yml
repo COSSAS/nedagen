@@ -26,8 +26,8 @@
         prompt: "Do you want to capture the network traffic? if so, in which fileformat do you want to have it? 'not', 'json', 'pcap', or 'both'"
         default: pcap
         private: no
-      - name: capturelimitMB
-        prompt: "How many MBs may the capture files combined be (the network will automatically be stopped when the capturelimit is reached, this message can be ignored if you do not want a traffic capture)? (0 = unlimited)"
+      - name: capturelimit
+        prompt: "If you chose to capture network traffic, what size may the combined captures take (in MBs or GBs)? The network will automatically be stopped when this limit is reached. '6M' '6G' (0 = unlimited)"
         default: 0
         private: no
       - name: timer

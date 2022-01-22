@@ -65,23 +65,35 @@ SECONDS=0
 
 echo "voor de if timer" >> /etc/containerlab/captures/test.txt
 
-timeset={{timer}}
+timerset={{timer}}
 
-if [ $timerset == *"m"* ]
+if [[ $timerset == *"m"* ]]
 then
     giventime=$( echo $timerset | sed 's/m//g')
     topotimer=$(($giventime * 60))
-    echo "topotimer min: $topotimer" >> /etc/containerlab/captures/test.txt
-elif [ $timerset == *"h"* ]
+elif [[ $timerset == *"h"* ]]
 then
     giventime=$( echo $timerset | sed 's/h//g')
     topotimer=$(($giventime * 3600))
-    echo "topotimer hours: $topotimer" >> /etc/containerlab/captures/test.txt
-elif [ $timerset == *"d"* ]
+elif [[ $timerset == *"d"* ]]
 then
     giventime=$( echo $timerset | sed 's/d//g')
     topotimer=$(($giventime * 86400))
-    echo "topotimer days: $topotimer" >> /etc/containerlab/captures/test.txt
+fi
+{% endif %}
+
+{% if capturelimit != "0"  %}
+
+setcapturelimit={{ capturelimit }}
+
+if [[ $setcapturelimit == *"M"* ]]
+then
+    strippedval=$( echo $setcapturelimit | sed 's/M//g')
+    KBtoMB=1000
+elif [[ $setcapturelimit == *"G"* ]]
+then
+    strippedval=$( echo $setcapturelimit | sed 's/G//g')
+    KBtoGB=1000000
 fi
 {% endif %}
 
@@ -104,7 +116,7 @@ do
 
     {% if timer != "0" %}
 
-    if [ $SECONDS -ge $topotimer ]
+    if [[ $SECONDS -ge $topotimer ]]
     then
         echo "timer expired" >> /etc/containerlab/captures/test.txt
 
@@ -116,18 +128,19 @@ do
     fi
     {% endif %}
 
-    {% if capturelimitMB|int != 0  %}
+    {% if capturelimit != "0"  %}
     capturefoldersize=$(du "/etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}" | awk '{print $1;}')
-    KBtoMB=1000
-    capturefolderMB=$((capturefoldersize / KBtoMB))
 
-    echo "capturefolder: $capturefolderMB" >> /etc/containerlab/captures/test.txt
-
-    if [ $capturefolderMB -ge {{ capturelimitMB|int }} ]
+    if [[ $setcapturelimit == *"M"* ]]
     then
+        parsedcapturefolder=$((capturefoldersize / KBtoMB))
+    elif [[ $setcapturelimit == *"G"* ]]
+    then
+        parsedcapturefolder=$((capturefoldersize / KBtoGB))
+    fi
 
-        echo "capturelimit bereikt" >> /etc/containerlab/captures/test.txt
-
+    if [[ $parsedcapturefolder -ge $strippedval ]]
+    then
         clab destroy --topo /etc/containerlab/{{ networkname }}/network.yml
         {% if savefile == "pcap" or savefile == "both" %}
         mergecap /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/*.pcap -w /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/merged.pcap
