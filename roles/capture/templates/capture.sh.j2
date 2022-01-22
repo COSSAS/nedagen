@@ -61,7 +61,29 @@ ip netns exec clab-{{networkname}}-br-LAN2 tshark -F pcap -i eth{{i}} -w /etc/co
 
 SECONDS=0
 
-echo "voor de loop" >> /etc/containerlab/captures/test.txt
+{% if timer != "0" %}
+
+echo "voor de if timer" >> /etc/containerlab/captures/test.txt
+
+timeset={{timer}}
+
+if [ $timerset == *"m"* ]
+then
+    giventime=$( echo $timerset | sed 's/m//g')
+    topotimer=$(($giventime * 60))
+    echo "topotimer min: $topotimer" >> /etc/containerlab/captures/test.txt
+elif [ $timerset == *"h"* ]
+then
+    giventime=$( echo $timerset | sed 's/h//g')
+    topotimer=$(($giventime * 3600))
+    echo "topotimer hours: $topotimer" >> /etc/containerlab/captures/test.txt
+elif [ $timerset == *"d"* ]
+then
+    giventime=$( echo $timerset | sed 's/d//g')
+    topotimer=$(($giventime * 86400))
+    echo "topotimer days: $topotimer" >> /etc/containerlab/captures/test.txt
+fi
+{% endif %}
 
 while true
 do
@@ -81,26 +103,6 @@ do
     fi
 
     {% if timer != "0" %}
-
-    echo "in timer" >> /etc/containerlab/captures/test.txt
-
-
-    if [ {{ timer }} == *"m"* ]
-    then
-        giventime=$({{ timer }} | sed 's/m//g')
-        topotimer=$((giventime * 60))
-        echo "topotimer min: $topotimer" >> /etc/containerlab/captures/test.txt
-    elif [ {{ timer }} == *"h"* ]
-    then
-        giventime=$({{ timer }} | sed 's/h//g')
-        topotimer=$((giventime * 3600))
-        echo "topotimer hours: $topotimer" >> /etc/containerlab/captures/test.txt
-    elif [ {{ timer }} == *"d"* ]
-    then
-        giventime=$({{ timer }} | sed 's/d//g')
-        topotimer=$((giventime * 86400))
-        echo "topotimer days: $topotimer" >> /etc/containerlab/captures/test.txt
-    fi
 
     if [ $SECONDS -ge $topotimer ]
     then
