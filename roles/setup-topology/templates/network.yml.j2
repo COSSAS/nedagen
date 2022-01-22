@@ -58,7 +58,10 @@ topology:
         - /etc/containerlab/{{networkname}}/SMBconf.sh:/root/SMBconf.sh
     Server2-vpn-LAN:
       image: {{ vpnimage }}
-#      entrypoint: "--env-file /etc/containerlab/{{networkname}}/vpn.env --restart=always -p 500:500/udp -p 4500:4500/udp -d --privileged"
+      env:
+        VPN_IPSEC_PSK: test
+        VPN_USER: test
+        VPN_PASSWORD: test
 {% for i in range(1, NumberofWANwebclients | int +1) %}
     Client{{ i }}-WANweb:
       image: {{ alpineimage }}

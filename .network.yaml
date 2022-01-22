@@ -68,7 +68,10 @@ topology:
         - /etc/containerlab/network/SMBconf.sh:/root/SMBconf.sh
     Server2-vpn-LAN:
       image: hwdsl2/ipsec-vpn-server
-#      entrypoint: "--env-file /etc/containerlab/network/vpn.env --restart=always -p 500:500/udp -p 4500:4500/udp -d --privileged"
+      env:
+        VPN_IPSEC_PSK: test
+        VPN_USER: test
+        VPN_PASSWORD: test
     Client1-WANweb:
       image: alpine:latest
       binds:

@@ -19,6 +19,7 @@ docker exec -d clab-{{networkname}}-br-LAN2 ip link add name bridge4 type bridge
 docker exec -d clab-{{networkname}}-br-LAN2 ip link set dev bridge4 up
 docker exec -d clab-{{networkname}}-br-LAN2 brctl addif bridge4 eth1
 docker exec -d clab-{{networkname}}-br-LAN2 brctl addif bridge4 eth2
+docker exec -d clab-{{networkname}}-br-LAN2 brctl addif bridge4 eth3
 
 docker exec -d clab-{{networkname}}-br-Internet {{ ipv6_configuration }}
 docker exec -d clab-{{networkname}}-br-Internet ip link add name bridge3 type bridge

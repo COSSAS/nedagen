@@ -17,11 +17,11 @@
   ignore_errors: yes
   when: cleanupp.user_input == 'yes'
 
-- name: Docker logout
-  become: yes
-  shell: docker logout
-  ignore_errors: yes
-  when: cleanupp.user_input == 'yes'
+#- name: Docker logout
+#  become: yes
+#  shell: docker logout
+#  ignore_errors: yes
+#  when: cleanupp.user_input == 'yes'
 
 - name: clean the captures 
   pause:
