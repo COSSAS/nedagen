@@ -1,4 +1,4 @@
-name: network
+name: test
 
 topology:
   defaults:
@@ -7,23 +7,23 @@ topology:
     router-WAN:
       image: frrouting/frr:latest
       binds:
-        - /etc/containerlab/network/router-WAN/daemons:/etc/frr/daemons
-        - /etc/containerlab/network/router-WAN/frr.conf:/etc/frr/frr.conf
+        - /etc/containerlab/test/router-WAN/daemons:/etc/frr/daemons
+        - /etc/containerlab/test/router-WAN/frr.conf:/etc/frr/frr.conf
     router-LAN1:
       image: frrouting/frr:latest
       binds:
-        - /etc/containerlab/network/router-LAN1/daemons:/etc/frr/daemons
-        - /etc/containerlab/network/router-LAN1/frr.conf:/etc/frr/frr.conf
+        - /etc/containerlab/test/router-LAN1/daemons:/etc/frr/daemons
+        - /etc/containerlab/test/router-LAN1/frr.conf:/etc/frr/frr.conf
     router-LAN2:
       image: frrouting/frr:latest
       binds:
-        - /etc/containerlab/network/router-LAN2/daemons:/etc/frr/daemons
-        - /etc/containerlab/network/router-LAN2/frr.conf:/etc/frr/frr.conf
+        - /etc/containerlab/test/router-LAN2/daemons:/etc/frr/daemons
+        - /etc/containerlab/test/router-LAN2/frr.conf:/etc/frr/frr.conf
     router-Internet:
       image: frrouting/frr:latest
       binds:
-        - /etc/containerlab/network/router-Internet/daemons:/etc/frr/daemons
-        - /etc/containerlab/network/router-Internet/frr.conf:/etc/frr/frr.conf
+        - /etc/containerlab/test/router-Internet/daemons:/etc/frr/daemons
+        - /etc/containerlab/test/router-Internet/frr.conf:/etc/frr/frr.conf
     br-DMZ:
       image: praqma/network-multitool:latest
     br-LAN1:
@@ -41,23 +41,27 @@ topology:
     Client1-LAN:
       image: praqma/network-multitool:latest
       binds:
-        - /etc/containerlab/network/LANweb.sh:/LANweb.sh
+        - /etc/containerlab/test/LANweb.sh:/LANweb.sh
     Client2-LAN:
       image: praqma/network-multitool:latest
       binds:
-        - /etc/containerlab/network/LANweb.sh:/LANweb.sh
+        - /etc/containerlab/test/LANweb.sh:/LANweb.sh
     Client3-LAN:
       image: praqma/network-multitool:latest
       binds:
-        - /etc/containerlab/network/LANweb.sh:/LANweb.sh
+        - /etc/containerlab/test/LANweb.sh:/LANweb.sh
     Client4-LAN:
       image: praqma/network-multitool:latest
       binds:
-        - /etc/containerlab/network/LANweb.sh:/LANweb.sh
+        - /etc/containerlab/test/LANweb.sh:/LANweb.sh
+    Client5-LAN:
+      image: praqma/network-multitool:latest
+      binds:
+        - /etc/containerlab/test/LANweb.sh:/LANweb.sh
     Server1-nginx-DMZ:
       image: nginx:latest
       binds:
-        - /etc/containerlab/network/DMZsite.conf:/etc/nginx/conf.d/default.conf
+        - /etc/containerlab/test/DMZsite.conf:/etc/nginx/conf.d/default.conf
     Server2-alpine-DMZ:
       image: alpine:latest
     Server3-nginx-DMZ:
@@ -65,7 +69,7 @@ topology:
     Server1-samba-LAN:
       image: dperson/samba
       binds:
-        - /etc/containerlab/network/SMBconf.sh:/root/SMBconf.sh
+        - /etc/containerlab/test/SMBconf.sh:/root/SMBconf.sh
     Server2-vpn-LAN:
       image: hwdsl2/ipsec-vpn-server
       env:
@@ -75,55 +79,64 @@ topology:
     Client1-WANweb:
       image: alpine:latest
       binds:
-        - /etc/containerlab/network/WANweb.sh:/WANweb.sh
-        - /etc/containerlab/network/Cronjobs.sh:/Cronjobs.sh
+        - /etc/containerlab/test/WANweb.sh:/WANweb.sh
+        - /etc/containerlab/test/Cronjobs.sh:/Cronjobs.sh
     Client2-WANweb:
       image: alpine:latest
       binds:
-        - /etc/containerlab/network/WANweb.sh:/WANweb.sh
-        - /etc/containerlab/network/Cronjobs.sh:/Cronjobs.sh
+        - /etc/containerlab/test/WANweb.sh:/WANweb.sh
+        - /etc/containerlab/test/Cronjobs.sh:/Cronjobs.sh
     Client3-WANweb:
       image: alpine:latest
       binds:
-        - /etc/containerlab/network/WANweb.sh:/WANweb.sh
-        - /etc/containerlab/network/Cronjobs.sh:/Cronjobs.sh
+        - /etc/containerlab/test/WANweb.sh:/WANweb.sh
+        - /etc/containerlab/test/Cronjobs.sh:/Cronjobs.sh
     Client4-WANweb:
       image: alpine:latest
       binds:
-        - /etc/containerlab/network/WANweb.sh:/WANweb.sh
-        - /etc/containerlab/network/Cronjobs.sh:/Cronjobs.sh
+        - /etc/containerlab/test/WANweb.sh:/WANweb.sh
+        - /etc/containerlab/test/Cronjobs.sh:/Cronjobs.sh
+    Client5-WANweb:
+      image: alpine:latest
+      binds:
+        - /etc/containerlab/test/WANweb.sh:/WANweb.sh
+        - /etc/containerlab/test/Cronjobs.sh:/Cronjobs.sh
     Client1-WANvpn:
       image: alpine:latest
       binds:
-        - /etc/containerlab/network/WANvpn.sh:/WANvpn.sh
+        - /etc/containerlab/test/WANvpn.sh:/WANvpn.sh
     Client2-WANvpn:
       image: alpine:latest
       binds:
-        - /etc/containerlab/network/WANvpn.sh:/WANvpn.sh
+        - /etc/containerlab/test/WANvpn.sh:/WANvpn.sh
     Client3-WANvpn:
       image: alpine:latest
       binds:
-        - /etc/containerlab/network/WANvpn.sh:/WANvpn.sh
+        - /etc/containerlab/test/WANvpn.sh:/WANvpn.sh
     Client4-WANvpn:
       image: alpine:latest
       binds:
-        - /etc/containerlab/network/WANvpn.sh:/WANvpn.sh
+        - /etc/containerlab/test/WANvpn.sh:/WANvpn.sh
+    Client5-WANvpn:
+      image: alpine:latest
+      binds:
+        - /etc/containerlab/test/WANvpn.sh:/WANvpn.sh
     Attacker-WAN:
       image: python:3.7-slim
     Server1-nginx-WAN:
       image: nginx:latest
       binds:
-        - /etc/containerlab/network/WANsite.conf:/etc/nginx/conf.d/default.conf
+        - /etc/containerlab/test/WANsite.conf:/etc/nginx/conf.d/default.conf
     Server2-alpine-WAN:
       image: alpine:latest
     Server3-DNS-WAN:
       image: alpine:latest
       binds:
-        - /etc/containerlab/network/nsd.conf:/etc/nsd/nsd.conf
-        - /etc/containerlab/network/DMZsite.dev.zone:/etc/nsd/DMZsite.dev.zone
-        - /etc/containerlab/network/WANsite.dev.zone:/etc/nsd/WANsite.dev.zone
-        - /etc/containerlab/network/httpsDMZsite.dev.zone:/etc/nsd/httpsDMZsite.dev.zone
-        - /etc/containerlab/network/httpsWANsite.dev.zone:/etc/nsd/httpsWANsite.dev.zone
+        - /etc/containerlab/test/nsd.conf:/etc/nsd/nsd.conf
+        - /etc/containerlab/test/DMZsite.dev.zone:/etc/nsd/DMZsite.dev.zone
+        - /etc/containerlab/test/WANsite.dev.zone:/etc/nsd/WANsite.dev.zone
+        - /etc/containerlab/test/httpsDMZsite.dev.zone:/etc/nsd/httpsDMZsite.dev.zone
+        - /etc/containerlab/test/httpsWANsite.dev.zone:/etc/nsd/httpsWANsite.dev.zone
     Server4-nginx-WAN:
       image: nginx:latest
 
@@ -159,11 +172,13 @@ topology:
     - endpoints: ["Client2-WANweb:eth1", "br-Internet:eth10"]
     - endpoints: ["Client3-WANweb:eth1", "br-Internet:eth11"]
     - endpoints: ["Client4-WANweb:eth1", "br-Internet:eth12"]
+    - endpoints: ["Client5-WANweb:eth1", "br-Internet:eth13"]
 
-    - endpoints: ["Client1-WANvpn:eth1", "br-Internet:eth13"]
-    - endpoints: ["Client2-WANvpn:eth1", "br-Internet:eth14"]
-    - endpoints: ["Client3-WANvpn:eth1", "br-Internet:eth15"]
-    - endpoints: ["Client4-WANvpn:eth1", "br-Internet:eth16"]
+    - endpoints: ["Client1-WANvpn:eth1", "br-Internet:eth14"]
+    - endpoints: ["Client2-WANvpn:eth1", "br-Internet:eth15"]
+    - endpoints: ["Client3-WANvpn:eth1", "br-Internet:eth16"]
+    - endpoints: ["Client4-WANvpn:eth1", "br-Internet:eth17"]
+    - endpoints: ["Client5-WANvpn:eth1", "br-Internet:eth18"]
 
     - endpoints: ["Server1-nginx-DMZ:eth1", "br-DMZ:eth2"]
     - endpoints: ["Server2-alpine-DMZ:eth1", "br-DMZ:eth3"]
@@ -180,5 +195,6 @@ topology:
     - endpoints: ["Client2-LAN:eth1", "br-LAN1:eth8"]
     - endpoints: ["Client3-LAN:eth1", "br-LAN1:eth9"]
     - endpoints: ["Client4-LAN:eth1", "br-LAN1:eth10"]
+    - endpoints: ["Client5-LAN:eth1", "br-LAN1:eth11"]
 
 
