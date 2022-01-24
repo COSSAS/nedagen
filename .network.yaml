@@ -33,7 +33,11 @@ topology:
     br-Internet:
       image: praqma/network-multitool:latest
     Standalone-Client-LAN:
-      image: praqma/network-multitool:latest
+      image: linuxserver/wireguard
+      env:
+        PUID: 1000
+        PGID: 1000
+        TZ: Europe/Amsterdam
     alpine-Client-LAN:
       image: alpine:latest
     Attacker-LAN:
@@ -67,11 +71,11 @@ topology:
       binds:
         - /etc/containerlab/network/SMBconf.sh:/root/SMBconf.sh
     Server2-vpn-LAN:
-      image: hwdsl2/ipsec-vpn-server
+      image: linuxserver/wireguard
       env:
-        VPN_IPSEC_PSK: test
-        VPN_USER: test
-        VPN_PASSWORD: test
+        PUID: 1000
+        PGID: 1000
+        TZ: Europe/Amsterdam
     Client1-WANweb:
       image: alpine:latest
       binds:
@@ -94,20 +98,12 @@ topology:
         - /etc/containerlab/network/Cronjobs.sh:/Cronjobs.sh
     Client1-WANvpn:
       image: alpine:latest
-      binds:
-        - /etc/containerlab/network/WANvpn.sh:/WANvpn.sh
     Client2-WANvpn:
       image: alpine:latest
-      binds:
-        - /etc/containerlab/network/WANvpn.sh:/WANvpn.sh
     Client3-WANvpn:
       image: alpine:latest
-      binds:
-        - /etc/containerlab/network/WANvpn.sh:/WANvpn.sh
     Client4-WANvpn:
       image: alpine:latest
-      binds:
-        - /etc/containerlab/network/WANvpn.sh:/WANvpn.sh
     Attacker-WAN:
       image: python:3.7-slim
     Server1-nginx-WAN:
@@ -145,6 +141,8 @@ topology:
     - endpoints: ["router-LAN1:eth5", "br-LAN1:eth3"]
 
     - endpoints: ["router-LAN2:eth3", "br-LAN2:eth1"]
+    - endpoints: ["router-LAN2:eth4", "br-LAN2:eth2"]
+
 
     # client and server links
 
@@ -169,9 +167,9 @@ topology:
     - endpoints: ["Server2-alpine-DMZ:eth1", "br-DMZ:eth3"]
     - endpoints: ["Server3-nginx-DMZ:eth1", "br-DMZ:eth4"]
 
-    - endpoints: ["Server1-samba-LAN:eth1", "br-LAN2:eth2"]
-    - endpoints: ["Server2-vpn-LAN:eth1", "br-LAN2:eth3"]
-    
+    - endpoints: ["Server1-samba-LAN:eth1", "br-LAN2:eth3"]
+    - endpoints: ["Server2-vpn-LAN:eth1", "br-LAN2:eth4"]
+
     - endpoints: ["Attacker-LAN:eth1", "br-LAN1:eth4"]
     - endpoints: ["Standalone-Client-LAN:eth1", "br-LAN1:eth5"]
     - endpoints: ["alpine-Client-LAN:eth1", "br-LAN1:eth6"]

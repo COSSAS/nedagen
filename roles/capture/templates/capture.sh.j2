@@ -8,7 +8,7 @@
 # define number of interfaces to loop through
 {% set brDMZinterfaces = 3 %}
 {% set brLAN1interfaces = NumberofLANclients|int + staticinterfaces_brLan1|int %}
-{% set brLAN2interfaces = 2 %}
+{% set brLAN2interfaces = 3 %}
 {% set routerWANeth123 = 3 %}
 
 # tshark capture on the router-WAN internet and router-LAN1 interfaces
@@ -56,8 +56,6 @@ ip netns exec clab-{{networkname}}-br-LAN2 tshark -F pcap -i eth{{i}} -w /etc/co
 {% endfor %}
 
 {% endif %}
-
-
 
 SECONDS=0
 

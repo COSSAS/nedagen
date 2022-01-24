@@ -33,7 +33,11 @@ topology:
     br-Internet:
       image: {{ bridgeclientimage }}
     Standalone-Client-LAN:
-      image: {{ bridgeclientimage }}
+      image: {{ vpnimage }}
+      env:
+        PUID: 1000
+        PGID: 1000
+        TZ: Europe/Amsterdam
     alpine-Client-LAN:
       image: {{ alpineimage }}
     Attacker-LAN:
@@ -59,9 +63,9 @@ topology:
     Server2-vpn-LAN:
       image: {{ vpnimage }}
       env:
-        VPN_IPSEC_PSK: test
-        VPN_USER: test
-        VPN_PASSWORD: test
+        PUID: 1000
+        PGID: 1000
+        TZ: Europe/Amsterdam
 {% for i in range(1, NumberofWANwebclients | int +1) %}
     Client{{ i }}-WANweb:
       image: {{ alpineimage }}
@@ -72,8 +76,6 @@ topology:
 {% for i in range(1, NumberofWANvpnclients | int +1) %}
     Client{{ i }}-WANvpn:
       image: {{ alpineimage }}
-      binds:
-        - /etc/containerlab/{{networkname}}/WANvpn.sh:/WANvpn.sh
 {% endfor %}
     Attacker-WAN:
       image: {{ pythonimage }}
@@ -112,6 +114,8 @@ topology:
     - endpoints: ["router-LAN1:eth5", "br-LAN1:eth3"]
 
     - endpoints: ["router-LAN2:eth3", "br-LAN2:eth1"]
+    - endpoints: ["router-LAN2:eth4", "br-LAN2:eth2"]
+
 
     # client and server links
 
@@ -134,9 +138,9 @@ topology:
     - endpoints: ["Server2-alpine-DMZ:eth1", "br-DMZ:eth3"]
     - endpoints: ["Server3-nginx-DMZ:eth1", "br-DMZ:eth4"]
 
-    - endpoints: ["Server1-samba-LAN:eth1", "br-LAN2:eth2"]
-    - endpoints: ["Server2-vpn-LAN:eth1", "br-LAN2:eth3"]
-    
+    - endpoints: ["Server1-samba-LAN:eth1", "br-LAN2:eth3"]
+    - endpoints: ["Server2-vpn-LAN:eth1", "br-LAN2:eth4"]
+
     - endpoints: ["Attacker-LAN:eth1", "br-LAN1:eth4"]
     - endpoints: ["Standalone-Client-LAN:eth1", "br-LAN1:eth5"]
     - endpoints: ["alpine-Client-LAN:eth1", "br-LAN1:eth6"]

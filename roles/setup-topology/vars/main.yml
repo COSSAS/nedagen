@@ -5,6 +5,6 @@ webservernginximage: nginx:latest
 alpineimage: alpine:latest
 ubuntuimage: ubuntu:latest
 frrimage: frrouting/frr:latest
-vpnimage: hwdsl2/ipsec-vpn-server
+vpnimage: linuxserver/wireguard
 sambaimage: dperson/samba
 pythonimage: python:3.7-slim
