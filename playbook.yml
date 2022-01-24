@@ -2,7 +2,7 @@
 
 - hosts: localhost
   roles:
-    - cleanup
+    - 1_cleanup
 
 - hosts: localhost
   vars_prompt:
@@ -46,8 +46,8 @@
     staticinterfaces_brInternet: 8
     staticinterfaces_brDMZ: 4
   roles:
-#    - docker
-#    - setup-containerlab
-    - setup-topology
-    - run-and-configure
-    - capture
+#    - 0_docker
+#    - 2_setup-containerlab
+    - 3_setup-topology
+    - 4_run-and-configure
+    - 5_capture

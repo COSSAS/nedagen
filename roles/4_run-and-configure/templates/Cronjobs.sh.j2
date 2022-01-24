@@ -1,0 +1,44 @@
+#!/bin/sh
+
+
+# Bash random variable
+bash_start_time=$((RANDOM%30))
+bash_end_time=$((RANDOM%30))
+
+
+# Random Start Time Cronjob 'WANweb.sh'
+croncmd="bash /WANweb.sh"
+if [ $bash_start_time >= 15 ]
+then
+cronjob="$bash_start_time 9 * * 1-5 $croncmd"
+else
+cronjob="$((45+$bash_end_time)) 8 * * 1-5 $croncmd"
+fi
+
+
+# Random End Time for all Cronjobs
+killcroncmd="crontab -r"
+if [ $bash_end_time >= 15 ]
+then
+killcronjobs="$bash_end_time 17 * * 1-5 $killcroncmd"
+else
+killcronjobs="$((45 + $bash_end_time)) 16 * * 1-5 $killcroncmd"
+fi
+
+# Adding Cronjob Entries
+( crontab -l | grep -v -F "$croncmd" ; echo "$cronjob" ) | crontab -
+( crontab -l | grep -v -F "$killcroncmd" ; echo "$killcronjobs" ) | crontab -
+
+
+
+# --------------------------------------------------------------------------- #
+{# Jinja: #}
+# Random variable declaration for start/end time (Jinja)
+{# {% set random_start_time = range(1, 30) | random %}
+{% set random_end_time = range(1, 30) | random %} #}
+{# {% if random_start_time >= 15 %}
+cronjob="{{range(1, 15) | random }} 9 * * 1-5 $croncmd"
+{% else %}
+cronjob="{{45 + range(1, 15) | random }} 8 * * 1-5 $croncmd"
+{% endif %}  #}
+
