@@ -1,11 +1,13 @@
 ##################################################################
 #!/bin/bash
 
+
+# Looping over clients and creating directories (only if not currently exist)
 for clients in {1..{{ NumberofLANclients }}}
 do
 [ ! -d /var/www/html/clients$clients ] && mkdir -p /var/www/html/clients$clients
 
-# append these lines at the end of the /etc/samba/smb.conf file
+# append SMB user configuration at the end of the /etc/samba/smb.conf file
 tee -a /etc/samba/smb.conf << EOF
 [client$clients]
 
@@ -17,7 +19,22 @@ read only = no
 EOF
 username=clients$clients
 
+# Creating Users based upon total number of LAN clients
 useradd -m $username
-(echo "password"; sleep 1; echo "password$clients";) | passwd $username
-(echo "password"; sleep 1; echo "password$clients" ) | smbpasswd -s -a $username
+(echo "password$clients"; sleep 1; echo "password$clients";) | passwd $username
+(echo "password$clients"; sleep 1; echo "password$clients" ) | smbpasswd -s -a $username
 done
+
+
+# Developers Share
+[ ! -d /var/www/html/developers ] && mkdir -p /var/www/html/developers
+tee -a /etc/samba/smb.conf << EOF
+[developers]
+
+comment = Developers
+path = /var/www/html/developers
+browsable = yes
+valid users = {{ NumberofLANclients }}
+read only = no
+EOF
+
