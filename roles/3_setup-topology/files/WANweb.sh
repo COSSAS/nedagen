@@ -13,7 +13,7 @@ vpn=$(bc<<<"$vpn_weight*10")
 
 
 ip route delete default
-echo "nameserver 5.5.5.5" > /etc/resolv.conf
+echo "nameserver 10.0.0.2" > /etc/resolv.conf
 
 
 # Sleep statements to account for traffic distribution (based upon input weights)

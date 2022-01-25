@@ -72,24 +72,11 @@
     src: DMZsite.conf
     dest: /etc/containerlab/{{ networkname }}/DMZsite.conf
 
-- name: Copy WANsite config
-  become: yes
-  copy:
-    src: WANsite.conf
-    dest: /etc/containerlab/{{ networkname }}/WANsite.conf
-
 - name: Copy httpsDMZ config
   become: yes
   copy:
     src: httpsDMZsite.conf
     dest: /etc/containerlab/{{ networkname }}/httpsDMZsite.conf
-    mode: '0744'
-
-- name: Copy httpsWAN config
-  become: yes
-  copy:
-    src: httpsWANsite.conf
-    dest: /etc/containerlab/{{ networkname }}/httpsWANsite.conf
     mode: '0744'
 
 - name: Copy NSD config
@@ -106,25 +93,11 @@
     dest: /etc/containerlab/{{ networkname }}/DMZsite.dev.zone
     mode: 0644
 
-- name: Copy NSD WANsite config
-  become: yes
-  copy:
-    src: WANsite.dev.zone
-    dest: /etc/containerlab/{{ networkname }}/WANsite.dev.zone
-    mode: 0644
-
 - name: Copy NSD httpsDMZsite config
   become: yes
   copy:
     src: httpsDMZsite.dev.zone
     dest: /etc/containerlab/{{ networkname }}/httpsDMZsite.dev.zone
-    mode: 0644
-
-- name: Copy NSD httpsWANsite config
-  become: yes
-  copy:
-    src: httpsWANsite.dev.zone
-    dest: /etc/containerlab/{{ networkname }}/httpsWANsite.dev.zone
     mode: 0644
 
 - name: Copy LANweb.sh

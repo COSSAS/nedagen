@@ -1,6 +1,6 @@
 #!/bin/sh
 
-sshpass -p passsword ssh sshuser@123.123.100.11
+sshpass -p passsword ssh sshuser@172.16.0.3
 
 while true
 do

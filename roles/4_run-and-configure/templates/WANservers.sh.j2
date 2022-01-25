@@ -1,38 +1,16 @@
 #!/bin/sh
 
-docker exec clab-{{networkname}}-Server1-nginx-WAN apt-get update -y
-docker exec clab-{{networkname}}-Server1-nginx-WAN apt-get install {{ basic_packages }}
-
-docker exec -d clab-{{networkname}}-Server1-nginx-WAN ip addr add 5.20.0.10/8 dev eth1
-docker exec -d clab-{{networkname}}-Server1-nginx-WAN ip route delete default
-docker exec -d clab-{{networkname}}-Server1-nginx-WAN ip route add 0.0.0.0/0 via 5.0.0.1 dev eth1
-docker exec -d clab-{{networkname}}-Server1-nginx-WAN bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
+docker exec clab-{{networkname}}-Server1-DNS-WAN apk --no-cache add bash curl nsd unbound
+docker exec -d clab-{{networkname}}-Server1-DNS-WAN ip addr add 10.0.0.2/8 dev eth1
+docker exec clab-{{networkname}}-Server1-DNS-WAN ip route add 172.16.0.0/24 via 10.0.0.1 dev eth1
+docker exec clab-{{networkname}}-Server1-DNS-WAN ip route add 172.16.1.0/24 via 10.0.0.1 dev eth1
+docker exec -d clab-{{networkname}}-Server1-DNS-WAN iptables -t nat -A POSTROUTING -s 172.16.0.0/16 -o eth0 -j MASQUERADE
+docker exec clab-{{networkname}}-Server1-DNS-WAN bash -c 'echo "nameserver 1.1.1.1" > /etc/resolv.conf'
+docker exec clab-{{networkname}}-Server1-DNS-WAN nsd
 
 docker exec clab-{{networkname}}-Server2-alpine-WAN apk --no-cache add bash openssh samba-client curl
-
-docker exec -d clab-{{networkname}}-Server2-alpine-WAN ip addr add 5.20.0.11/8 dev eth1
+docker exec -d clab-{{networkname}}-Server2-alpine-WAN ip addr add 10.0.0.3/8 dev eth1
 docker exec -d clab-{{networkname}}-Server2-alpine-WAN ip route delete default
-docker exec -d clab-{{networkname}}-Server2-alpine-WAN ip route add 0.0.0.0/0 via 5.0.0.1 dev eth1
-docker exec clab-{{networkname}}-Server2-alpine-WAN bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
+docker exec -d clab-{{networkname}}-Server2-alpine-WAN ip route add 0.0.0.0/0 via 10.0.0.1 dev eth1
+docker exec clab-{{networkname}}-Server2-alpine-WAN bash -c 'echo "nameserver 10.0.0.2" > /etc/resolv.conf'
  
-docker exec clab-{{networkname}}-Server3-DNS-WAN apk --no-cache add bash curl nsd
-
-docker exec -d clab-{{networkname}}-Server3-DNS-WAN ip addr add 5.5.5.5/8 dev eth1
-docker exec clab-{{networkname}}-Server3-DNS-WAN ip route delete default
-docker exec clab-{{networkname}}-Server3-DNS-WAN ip route add 0.0.0.0/0 via 5.0.0.1 dev eth1
-docker exec clab-{{networkname}}-Server3-DNS-WAN bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
-
-docker exec clab-{{networkname}}-Server3-DNS-WAN nsd
-
-docker exec clab-{{networkname}}-Server4-nginx-WAN apt-get update -y
-docker exec clab-{{networkname}}-Server4-nginx-WAN apt-get install {{ basic_packages }}
-docker exec clab-{{networkname}}-Server4-nginx-WAN apt-get install openssl -y
-
-docker exec -d clab-{{networkname}}-Server4-nginx-WAN ip addr add 5.20.0.12/8 dev eth1
-docker exec -d clab-{{networkname}}-Server4-nginx-WAN ip route delete default
-docker exec -d clab-{{networkname}}-Server4-nginx-WAN ip route add 0.0.0.0/0 via 5.0.0.1 dev eth1
-docker exec -d clab-{{networkname}}-Server4-nginx-WAN bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
-
-docker exec clab-{{networkname}}-Server4-nginx-WAN bash -c 'openssl req -x509 -newkey rsa:4096 -nodes -out /etc/ssl/certs/localhost.crt -keyout /etc/ssl/private/localhost.key -days 365 -subj "/C=NL/O=httpsWANsite/OU=Domain Control Validated/CN=*.httpsWANsite.dev"'
-docker cp /etc/containerlab/{{networkname}}/httpsWANsite.conf clab-{{networkname}}-Server4-nginx-WAN:/etc/nginx/conf.d/default.conf
-docker exec clab-{{networkname}}-Server4-nginx-WAN bash -c 'service nginx reload'
