@@ -15,7 +15,7 @@ docker exec -d clab-{{networkname}}-Client{{k}}-LAN bash -c 'echo "nameserver 5.
 docker exec -d clab-{{networkname}}-Client{{k}}-LAN nohup bash LANweb.sh
 {% endfor %}
 
-docker exec clab-{{networkname}}-alpine-Client-LAN apk --no-cache add bash curl
+docker exec clab-{{networkname}}-alpine-Client-LAN apk --no-cache add bash openssh sshpass vim lftp
 
 docker exec -d clab-{{networkname}}-alpine-Client-LAN ip addr add 192.168.30.3/24 dev eth1
 docker exec -d clab-{{networkname}}-alpine-Client-LAN ip route delete default
