@@ -17,11 +17,11 @@
   ignore_errors: yes
   when: cleanupp.user_input == 'yes'
 
-- name: Docker logout
-  become: yes
-  shell: docker logout
-  ignore_errors: yes
-  when: cleanupp.user_input == 'yes'
+# - name: Docker logout
+#   become: yes
+#   shell: docker logout
+#   ignore_errors: yes
+#   when: cleanupp.user_input == 'yes'
 
 - name: clean the captures 
   pause:
@@ -52,6 +52,18 @@
 - name: Delete network files
   become: yes
   shell: find . -type d -name 'clab-*' -exec rm -r {} \; -type d 2> /dev/null
+  ignore_errors: yes
+  when: cleanupp.user_input == 'yes'
+
+- name: Delete client vpn keys files
+  become: yes
+  shell: find . -type d -name '.Client*' -exec rm -r {} \; -type d 2> /dev/null
+  ignore_errors: yes
+  when: cleanupp.user_input == 'yes'
+
+- name: Delete server vpn key file
+  become: yes
+  shell: rm pubkeyvpnserver
   ignore_errors: yes
   when: cleanupp.user_input == 'yes'
 

@@ -82,13 +82,13 @@
   become: yes
   shell: /etc/containerlab/{{ networkname }}/Bridges.sh
 
-- name: Run Attackers script
+- name: Run WAN Server script
   become: yes
-  shell: /etc/containerlab/{{ networkname }}/Attackers.sh
+  shell: /etc/containerlab/{{ networkname }}/WANservers.sh
   ignore_errors: True
   async: 1000
   poll: 0
-  register: Attackers_script
+  register: WAN_server_script
 
 - name: Run LAN Server script
   become: yes
@@ -98,13 +98,13 @@
   poll: 0
   register: LAN_server_script
 
-- name: Run WAN Server script
+- name: Run Attackers script
   become: yes
-  shell: /etc/containerlab/{{ networkname }}/WANservers.sh
+  shell: /etc/containerlab/{{ networkname }}/Attackers.sh
   ignore_errors: True
   async: 1000
   poll: 0
-  register: WAN_server_script
+  register: Attackers_script
 
 - name: Run DMZ Server script
   become: yes
@@ -121,6 +121,13 @@
   async: 1000
   poll: 0
   register: LAN_client_script
+
+- name: Check status LAN server async script
+  become: yes
+  async_status: jid={{ LAN_server_script.ansible_job_id }}
+  register: job_result_LAN_server
+  until: job_result_LAN_server.finished
+  retries: 500
 
 - name: Run WAN Client script
   become: yes

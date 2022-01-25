@@ -8,12 +8,12 @@ docker exec -d clab-{{networkname}}-Server1-nginx-WAN ip route delete default
 docker exec -d clab-{{networkname}}-Server1-nginx-WAN ip route add 0.0.0.0/0 via 5.0.0.1 dev eth1
 docker exec -d clab-{{networkname}}-Server1-nginx-WAN bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
 
-#docker exec clab-{{networkname}}-Server2-alpine-WAN apk --no-cache add bash openssh samba-client curl
+docker exec clab-{{networkname}}-Server2-alpine-WAN apk --no-cache add bash openssh samba-client curl
 
-#docker exec -d clab-{{networkname}}-Server2-alpine-WAN ip addr add 5.20.0.11/8 dev eth1
-#docker exec -d clab-{{networkname}}-Server2-alpine-WAN ip route delete default
-#docker exec -d clab-{{networkname}}-Server2-alpine-WAN ip route add 0.0.0.0/0 via 5.0.0.1 dev eth1
-#docker exec clab-{{networkname}}-Server2-alpine-WAN bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
+docker exec -d clab-{{networkname}}-Server2-alpine-WAN ip addr add 5.20.0.11/8 dev eth1
+docker exec -d clab-{{networkname}}-Server2-alpine-WAN ip route delete default
+docker exec -d clab-{{networkname}}-Server2-alpine-WAN ip route add 0.0.0.0/0 via 5.0.0.1 dev eth1
+docker exec clab-{{networkname}}-Server2-alpine-WAN bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
  
 docker exec clab-{{networkname}}-Server3-DNS-WAN apk --no-cache add bash curl nsd
 

@@ -6,11 +6,12 @@
     path: /etc/containerlab/{{ networkname }}
     state: directory
 
-- name: Log into DockerHub
-  become: yes
-  docker_login:
-    username: "{{ Dockerhub_Username }}"
-    password: "{{ Dockerhub_Password }}"    
+# - name: Log into DockerHub
+#   become: yes
+#   docker_login:
+#     username: "{{ Dockerhub_Username }}"
+#     password: "{{ Dockerhub_Password }}"    
+#     reauthorize: yes
 
 - name: Make router directory
   become: yes
@@ -138,13 +139,6 @@
   copy:
     src: WANweb.sh
     dest: /etc/containerlab/{{ networkname }}/WANweb.sh
-    mode: 0744
-
-- name: Copy WANvpn.sh
-  become: yes
-  copy:
-    src: WANvpn.sh
-    dest: /etc/containerlab/{{ networkname }}/WANvpn.sh
     mode: 0744
 
 - name: Configure network topology

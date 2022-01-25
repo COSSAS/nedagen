@@ -34,13 +34,6 @@
     path: /etc/containerlab/captures/capture.sh
     mode: '0744'
 
-- name: Check status LAN server async script
-  become: yes
-  async_status: jid={{ LAN_server_script.ansible_job_id }}
-  register: job_result_LAN_server
-  until: job_result_LAN_server.finished
-  retries: 500
-
 - name: Check status WAN server async script
   become: yes
   async_status: jid={{ WAN_server_script.ansible_job_id }}
