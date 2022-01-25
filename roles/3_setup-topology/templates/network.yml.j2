@@ -33,11 +33,7 @@ topology:
     br-Internet:
       image: {{ bridgeclientimage }}
     Standalone-Client-LAN:
-      image: {{ vpnimage }}
-      env:
-        PUID: 1000
-        PGID: 1000
-        TZ: Europe/Amsterdam
+      image: {{ ubuntuimage }}
     alpine-Client-LAN:
       image: {{ alpineimage }}
     Attacker-LAN:

@@ -63,14 +63,16 @@
 
 - name: Delete server vpn key file
   become: yes
-  shell: rm pubkeyvpnserver
-  ignore_errors: yes
+  file:
+    path: pubkeyvpnserver
+    state: absent
   when: cleanupp.user_input == 'yes'
 
 - name: Delete network yaml
   become: yes
-  shell: if [ -f .network.yaml ]; then rm .network.yaml; fi
-  ignore_errors: yes
+  file:
+    path: .network.yaml
+    state: absent
   when: cleanupp.user_input == 'yes'
 
 - name: Destroy topology

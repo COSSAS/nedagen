@@ -20,7 +20,7 @@ docker exec -d clab-{{networkname}}-Server2-vpn-LAN ip route add 0.0.0.0/0 via 1
 docker exec -d clab-{{networkname}}-Server2-vpn-LAN bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
 
 docker exec clab-{{networkname}}-Server2-vpn-LAN bash -c 'echo "[Interface]
-Address = 192.1.50.2
+Address = 192.168.50.2
 PrivateKey = $(cat /etc/wireguard/privatekey)
 ListenPort = 51820
 PostUp   = iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -o eth1 -j MASQUERADE

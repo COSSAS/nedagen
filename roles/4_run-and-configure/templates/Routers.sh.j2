@@ -30,5 +30,5 @@ docker exec -d clab-{{networkname}}-router-WAN iptables -A FORWARD -d 123.123.10
 docker exec -d clab-{{networkname}}-router-WAN iptables -A FORWARD -s 123.123.100.12 -p tcp -j ACCEPT
 docker exec -d clab-{{networkname}}-router-WAN iptables -A FORWARD -s 123.123.100.11 -j ACCEPT
 docker exec -d clab-{{networkname}}-router-WAN iptables -A FORWARD -d 123.123.100.11 -j ACCEPT
-docker exec -d clab-{{networkname}}-router-WAN iptables --table nat --append POSTROUTING -s 192.168.50.2 --out-interface eth1 -p udp --dport 51820 -j SNAT --to-source 2.3.4.6
+docker exec -d clab-{{networkname}}-router-WAN iptables -t nat -A PREROUTING -i eth1 -p udp --dport 51820 -j DNAT --to-destination 192.168.50.2
 docker exec -d clab-{{networkname}}-router-WAN iptables --table nat --append POSTROUTING -s 192.168.0.0/16 --out-interface eth1 -j MASQUERADE
