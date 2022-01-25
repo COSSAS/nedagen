@@ -29,7 +29,7 @@ PrivateKey = $(cat /etc/wireguard/privatekey)
 [Peer]
 PublicKey = ${PublicKeys}
 Endpoint = 2.3.4.6:51820
-AllowedIPs = 0.0.0.0/0
+AllowedIPs = 192.168.0.0/16
 
 PersistentKeepalive = 25" > /etc/wireguard/wg0.conf'
 
