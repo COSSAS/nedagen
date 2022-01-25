@@ -1,7 +1,51 @@
 #!/bin/bash
 
+# Catching Input from main config
+web_weight=$1
+smb_weight=$2
+vpn_weight=$3
+
+# Bash only accept integers, using BC to multiply decimals to 0-100% representation
+web=$(bc<<<"$web_weight*10")
+smb=$(bc<<<"$smb_weight*10")
+vpn=$(bc<<<"$vpn_weight*10")
+
+
+
 ip route delete default
 echo "nameserver 5.5.5.5" > /etc/resolv.conf
+
+
+# Sleep statements to account for traffic distribution (based upon input weights)
+
+# Randomly query HTTP or HTTPS sites
+web_traffic () {
+    if [ $(($2 % 2)) -eq 0 ]
+    then
+        curl DMZsite.dev &
+        sleep $web
+    else
+        curl -k https://httpsDMZsite.dev &
+        sleep $web
+    fi
+}
+
+# Query static Samba Sever with Dynamic shares
+smb_traffic () {
+for clients in {1..{{ NumberofLANclients }}}
+do
+smbclient //192.168.40.5/$clients -U $clients &
+sleep $smb
+done
+}
+
+# Query services while connected over WireGuard VPN
+vpn_traffic () {
+# TODO
+
+# make_traffic &
+# sleep $vpn
+}
 
 
 while true
@@ -24,12 +68,12 @@ do
 
     sleep 1
 
-    if [ $(($2 % 2)) -eq 0 ]
-    then
-        curl DMZsite.dev
-    else
-        curl -k https://httpsDMZsite.dev
-    fi
+
+
+    web_traffic
+    smb_traffic
+    vpn_traffic
+
 
     sleep 1
 
@@ -38,4 +82,6 @@ do
     sleep 1
 
     macchanger -r eth1
+
+    sleep 1
 done
