@@ -1,6 +1,6 @@
 #!/bin/sh
 
-docker exec clab-{{networkname}}-Server1-DNS-WAN apk --no-cache add bash curl nsd unbound
+docker exec clab-{{networkname}}-Server1-DNS-WAN apk --no-cache add bash openrc curl nsd unbound
 docker exec -d clab-{{networkname}}-Server1-DNS-WAN ip addr add 10.0.0.2/8 dev eth1
 docker exec clab-{{networkname}}-Server1-DNS-WAN ip route add 172.16.0.0/24 via 10.0.0.1 dev eth1
 docker exec clab-{{networkname}}-Server1-DNS-WAN ip route add 172.16.1.0/24 via 10.0.0.1 dev eth1
