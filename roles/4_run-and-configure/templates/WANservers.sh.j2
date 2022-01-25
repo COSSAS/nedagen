@@ -5,7 +5,7 @@ docker exec -d clab-{{networkname}}-Server1-DNS-WAN ip addr add 10.0.0.2/8 dev e
 docker exec clab-{{networkname}}-Server1-DNS-WAN ip route add 172.16.0.0/24 via 10.0.0.1 dev eth1
 docker exec clab-{{networkname}}-Server1-DNS-WAN ip route add 172.16.1.0/24 via 10.0.0.1 dev eth1
 docker exec -d clab-{{networkname}}-Server1-DNS-WAN iptables -t nat -A POSTROUTING -s 172.16.0.0/16 -o eth0 -j MASQUERADE
-docker exec clab-{{networkname}}-Server1-DNS-WAN bash -c 'echo "nameserver 1.1.1.1" > /etc/resolv.conf'
+#docker exec clab-{{networkname}}-Server1-DNS-WAN bash -c 'echo "nameserver 127.0.0.1" > /etc/resolv.conf'
 docker exec clab-{{networkname}}-Server1-DNS-WAN nsd
 
 docker exec clab-{{networkname}}-Server2-alpine-WAN apk --no-cache add bash openssh samba-client curl
