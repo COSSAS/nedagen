@@ -38,12 +38,33 @@ topology:
       image: {{ alpineimage }}
     Attacker-LAN:
       image: {{ alpineimage }}
-{% for i in range(1, NumberofLANclients | int +1) %}
-    Client{{ i }}-LAN:
+
+# Converting Department Percentages to Number of Clients
+{% set devs = (NumberofLANclients | int *DevsPercentage | int *0.01)|int %}
+{% set admins = (NumberofLANclients | int *AdminPercentage | int *0.01)|int %}
+{% set ops = (NumberofLANclients | int *OpsPercentage | int *0.01)|int %}
+
+# Creating Departments + Clients
+{% for i in range(1, devs | int +1) %}
+    Client{{ i }}-DEVS-LAN:
       image: {{ bridgeclientimage }}
       binds:
         - /etc/containerlab/{{networkname}}/LANweb.sh:/LANweb.sh
 {% endfor %}
+{% for i in range(1, admins | int +1) %}
+    Client{{ i }}-ADMINS-LAN:
+      image: {{ bridgeclientimage }}
+      binds:
+        - /etc/containerlab/{{networkname}}/LANweb.sh:/LANweb.sh
+{% endfor %}
+{% for i in range(1, ops | int +1) %}
+    Client{{ i }}-OPS-LAN:
+      image: {{ bridgeclientimage }}
+      binds:
+        - /etc/containerlab/{{networkname}}/LANweb.sh:/LANweb.sh
+{% endfor %}
+
+
     Server1-nginx-DMZ:
       image: {{ webservernginximage }}
       binds:
@@ -141,7 +162,14 @@ topology:
     - endpoints: ["Standalone-Client-LAN:eth1", "br-LAN1:eth5"]
     - endpoints: ["alpine-Client-LAN:eth1", "br-LAN1:eth6"]
 
-{% for y in range(1, NumberofLANclients | int +1) %}
-    - endpoints: ["Client{{ y }}-LAN:eth1", "br-LAN1:eth{{ y + staticinterfaces_brLan1|int }}"]
+{% for y in range(1, devs | int +1) %}
+    - endpoints: ["Client{{ y }}-DEVS-LAN:eth1", "br-LAN1:eth{{ y + staticinterfaces_brLan1|int }}"]
 {% endfor %}
 
+{% for y in range(1, admins | int +1) %}
+    - endpoints: ["Client{{ y }}-ADMINS-LAN:eth1", "br-LAN1:eth{{ devs + y + staticinterfaces_brLan1|int }}"]
+{% endfor %}
+
+{% for y in range(1, ops | int +1) %}
+    - endpoints: ["Client{{ y }}-OPS-LAN:eth1", "br-LAN1:eth{{ devs + admins + y + staticinterfaces_brLan1|int }}"]
+{% endfor %}

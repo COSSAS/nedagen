@@ -14,6 +14,18 @@
         prompt: "How many LAN clients do you want to simulate?"
         default: "{{ 250 | random +1}}"
         private: no
+      - name: DevsPercentage
+        prompt: "What percentage of your LAN makes up Development (0-100)"
+        default: "40"
+        private: no
+      - name: AdminPercentage
+        prompt: "What percentage of your LAN makes up Administration (0-100)?"
+        default: "20"
+        private: no
+      - name: OpsPercentage
+        prompt: "What percentage of your LAN makes up Operations (0-100)"
+        default: "40"
+        private: no
       - name: NumberofWANwebclients
         prompt: "How many WAN web clients do you want to simulate?"
         default: "{{ 500 | random +1}}"
@@ -37,9 +49,11 @@
       - name: Dockerhub_Username
         prompt: "Fill in your Dockerhub username"
         private: no
+        default: jeroenvansaane
       - name: Dockerhub_Password
         prompt: "Fill in your Dockerhub password"
         private: yes
+        default: gK1P1yddY7teOZxzbOn
         no_log: True
   vars:
     staticinterfaces_brLan1: 6
