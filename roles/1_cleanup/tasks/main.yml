@@ -6,6 +6,12 @@
     echo: yes
   register: cleanupp
 
+- name: clean the captures 
+  pause:
+    prompt: "Do you want delete old captures? (yes/no)"
+    echo: yes
+  register: cleancapture
+
 - name: Find folders to delete
   become: yes
   find:
@@ -22,12 +28,6 @@
 #   shell: docker logout
 #   ignore_errors: yes
 #   when: cleanupp.user_input == 'yes'
-
-- name: clean the captures 
-  pause:
-    prompt: "Do you want delete old captures? (yes/no)"
-    echo: yes
-  register: cleancapture
 
 - name: Find capture folders to delete
   become: yes
@@ -57,20 +57,15 @@
 
 - name: Delete client vpn keys files
   become: yes
-  shell: find . -type d -name '.Client*' -exec rm -r {} \; -type d 2> /dev/null
+  shell: find . -type f -name '.Client*' -exec rm -r {} \; -type d 2> /dev/null
   ignore_errors: yes
   when: cleanupp.user_input == 'yes'
 
 - name: Delete server vpn key file
   become: yes
-  shell: rm pubkeyvpnserver
-  ignore_errors: yes
-  when: cleanupp.user_input == 'yes'
-
-- name: Delete network yaml
-  become: yes
-  shell: if [ -f .network.yaml ]; then rm .network.yaml; fi
-  ignore_errors: yes
+  file:
+    path: pubkeyvpnserver
+    state: absent
   when: cleanupp.user_input == 'yes'
 
 - name: Destroy topology
@@ -78,6 +73,13 @@
   command: clab destroy --topo {{ item.path }}/network.yml
   ignore_errors: yes
   with_items: "{{ folders['files'] }}"
+  when: cleanupp.user_input == 'yes'
+
+- name: Delete network yaml
+  become: yes
+  file:
+    path: .network.yaml
+    state: absent
   when: cleanupp.user_input == 'yes'
 
 - name: Delete folders except captures

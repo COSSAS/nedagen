@@ -4,6 +4,22 @@ Private repo to keep track of code for Research Project "Purple Container Lab"
 Support: 
 (kernel, distro, python versie)
 
+Protocols in the dataset:
+- ICMP
+- OSPF
+- BGP
+- ARP
+- DNS
+- HTTP
+- HTTPS
+- SSH
+- WG
+- SMB
+
+Profiles:
+- Developer
+- Management
+
 [Dockerhub](https://hub.docker.com/) credentials are required
 
 - Clone this repo:
