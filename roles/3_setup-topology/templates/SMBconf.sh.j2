@@ -1,0 +1,47 @@
+##################################################################
+#!/bin/bash
+
+
+# Looping over clients and creating directories (only if not currently exist)
+for clients in {1..{{ NumberofLANclients }}}
+do
+[ ! -d /var/www/html/client$clients ] && mkdir -p /var/www/html/client$clients
+
+# append SMB user configuration at the end of the /etc/samba/smb.conf file
+tee -a /etc/samba/smb.conf << EOF
+[Sambaclient$clients]
+
+comment = clients$clients personal folder
+path = /var/www/html/client$clients
+writeable = yes
+browseable = yes
+valid users = client$clients
+create mask = 0777
+directory mask = 0777
+read only = no
+force user = client$clients
+EOF
+
+# Creating Users based upon total number of LAN clients
+username=client$clients
+useradd -m $username
+(echo "password$clients"; sleep 1; echo "password$clients";) | passwd $username
+(echo "password$clients"; sleep 1; echo "password$clients" ) | smbpasswd -s -a $username
+
+done
+
+
+# Developers Share
+# Can add user group in linux to only grant access to users part of the developers group
+[ ! -d /var/www/html/developers ] && mkdir -p /var/www/html/developers
+tee -a /etc/samba/smb.conf << EOF
+[Sambadevelopers]
+
+comment = Developers Collaborative Share
+path = /var/www/html/developers
+writeable = yes
+browseable = yes
+create mask = 0777
+directory mask = 0777
+EOF
+

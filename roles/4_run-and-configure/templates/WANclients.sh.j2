@@ -1,0 +1,43 @@
+#!/bin/sh
+
+{% for k in range(1, NumberofWANwebclients | int +1) %}
+docker exec clab-{{networkname}}-Client{{k}}-WANweb apk --no-cache add bash macchanger curl
+docker exec -d clab-{{networkname}}-Client{{k}}-WANweb bash -c 'nohup bash WANweb.sh &'
+{% endfor %}
+
+{% for k in range(1, NumberofWANvpnclients | int +1) %}
+docker exec clab-{{networkname}}-Client{{k}}-WANvpn apk --no-cache add bash wireguard-tools
+docker exec clab-{{networkname}}-Client{{k}}-WANvpn bash -c 'modprobe wireguard'
+docker exec clab-{{networkname}}-Client{{k}}-WANvpn bash -c 'wg genkey | tee /etc/wireguard/privatekey | wg pubkey > /etc/wireguard/publickey'
+docker exec -d clab-{{networkname}}-Client{{k}}-WANvpn ip addr add 193.166.1.{{k+1}}/16 dev eth1
+docker exec -d clab-{{networkname}}-Client{{k}}-WANvpn bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
+docker exec -d clab-{{networkname}}-Client{{k}}-WANvpn ip route delete default
+docker exec -d clab-{{networkname}}-Client{{k}}-WANvpn ip route add 0.0.0.0/0 via 193.166.0.1 dev eth1
+
+docker exec clab-{{networkname}}-Server2-vpn-LAN bash -c 'cat /etc/wireguard/publickey' > pubkeyvpnserver
+
+docker exec clab-{{networkname}}-Client{{k}}-WANvpn bash -c 'cat /etc/wireguard/publickey' > .Client{{k}}
+
+docker exec -e PublicKeyc=$(cat .Client{{k}}) clab-{{networkname}}-Server2-vpn-LAN bash -c 'echo "[Peer]
+PublicKey = ${PublicKeyc}
+AllowedIPs = 192.168.50.{{k+2}}/32" >> /etc/wireguard/wg0.conf'
+
+docker exec -e PublicKeys=$(cat pubkeyvpnserver) clab-{{networkname}}-Client{{k}}-WANvpn bash -c 'echo "[Interface]
+Address = 192.168.50.{{k+2}}
+PrivateKey = $(cat /etc/wireguard/privatekey)
+
+[Peer]
+PublicKey = ${PublicKeys}
+Endpoint = 2.3.4.6:51820
+AllowedIPs = 192.168.0.0/16
+
+PersistentKeepalive = 25" > /etc/wireguard/wg0.conf'
+
+docker exec clab-{{networkname}}-Client{{k}}-WANvpn bash -c 'iptables -A FORWARD -i wg0-client -j ACCEPT'
+docker exec clab-{{networkname}}-Client{{k}}-WANvpn bash -c 'iptables -t nat -A POSTROUTING -o eth1 -j MASQUERADE'
+
+docker exec clab-{{networkname}}-Server2-vpn-LAN bash -c 'wg-quick up wg0'
+
+docker exec clab-{{networkname}}-Client{{k}}-WANvpn bash -c 'wg-quick up wg0'
+
+{% endfor %}

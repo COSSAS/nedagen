@@ -1,0 +1,96 @@
+---
+
+- name: clean the network 
+  pause:
+    prompt: "Do you want to clean up the network? (yes/no)"
+    echo: yes
+  register: cleanupp
+
+- name: clean the captures 
+  pause:
+    prompt: "Do you want delete old captures? (yes/no)"
+    echo: yes
+  register: cleancapture
+
+- name: Find folders to delete
+  become: yes
+  find:
+    paths: /etc/containerlab
+    file_type: directory
+    excludes: 
+      - "captures"
+  register: folders
+  ignore_errors: yes
+  when: cleanupp.user_input == 'yes'
+
+# - name: Docker logout
+#   become: yes
+#   shell: docker logout
+#   ignore_errors: yes
+#   when: cleanupp.user_input == 'yes'
+
+- name: Find capture folders to delete
+  become: yes
+  find:
+    paths: /etc/containerlab/captures
+    file_type: directory
+  register: capfolders
+  ignore_errors: yes
+  when: cleancapture.user_input == 'yes'
+
+- name: Delete capfolders
+  become: yes
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ capfolders['files'] }}"
+  ignore_errors: yes
+  async: 1000
+  poll: 0
+  when: cleancapture.user_input == 'yes'
+
+- name: Delete network files
+  become: yes
+  shell: find . -type d -name 'clab-*' -exec rm -r {} \; -type d 2> /dev/null
+  ignore_errors: yes
+  when: cleanupp.user_input == 'yes'
+
+- name: Delete client vpn keys files
+  become: yes
+  shell: find . -type f -name '.Client*' -exec rm -r {} \; -type d 2> /dev/null
+  ignore_errors: yes
+  when: cleanupp.user_input == 'yes'
+
+- name: Delete server vpn key file
+  become: yes
+  file:
+    path: pubkeyvpnserver
+    state: absent
+  when: cleanupp.user_input == 'yes'
+
+- name: Destroy topology
+  become: yes
+  command: clab destroy --topo {{ item.path }}/network.yml
+  ignore_errors: yes
+  with_items: "{{ folders['files'] }}"
+  when: cleanupp.user_input == 'yes'
+
+- name: Delete network yaml
+  become: yes
+  file:
+    path: .network.yaml
+    state: absent
+  when: cleanupp.user_input == 'yes'
+
+- name: Delete folders except captures
+  become: yes
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ folders['files'] }}"
+  ignore_errors: yes
+  when: cleanupp.user_input == 'yes'
+
+- name: Exit here to not build the network 
+  pause:
+    prompt: "Stop the playbook with 'Ctrl+C' followed by 'A' if you only wanted to stop and delete the network or press enter to continue"

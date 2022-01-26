@@ -1,0 +1,147 @@
+---
+
+- name: Copy Router script
+  become: yes
+  template:
+    src: Routers.sh.j2
+    dest: /etc/containerlab/{{ networkname }}/Routers.sh
+    mode: '0744'
+
+- name: Copy LAN Server script
+  become: yes
+  template:
+    src: LANservers.sh.j2
+    dest: /etc/containerlab/{{ networkname }}/LANservers.sh
+    mode: '0744'
+
+- name: Copy DMZ Server script
+  become: yes
+  template:
+    src: DMZservers.sh.j2
+    dest: /etc/containerlab/{{ networkname }}/DMZservers.sh
+    mode: '0744'
+
+- name: Copy WAN Server script
+  become: yes
+  template:
+    src: WANservers.sh.j2
+    dest: /etc/containerlab/{{ networkname }}/WANservers.sh
+    mode: '0744'
+
+- name: Copy LAN Client script
+  become: yes
+  template:
+    src: LANclients.sh.j2
+    dest: /etc/containerlab/{{ networkname }}/LANclients.sh
+    mode: '0744'
+
+- name: Copy WAN Client script
+  become: yes
+  template:
+    src: WANclients.sh.j2
+    dest: /etc/containerlab/{{ networkname }}/WANclients.sh
+    mode: '0744'
+
+- name: Copy Bridge script
+  become: yes
+  template:
+    src: Bridges.sh.j2
+    dest: /etc/containerlab/{{ networkname }}/Bridges.sh
+    mode: '0744'
+
+- name: Copy Attackers script
+  become: yes
+  template:
+    src: Attackers.sh.j2
+    dest: /etc/containerlab/{{ networkname }}/Attackers.sh
+    mode: '0744'
+
+- name: Copy Cronjob Template
+  become: yes
+  template:
+    src: Cronjobstemplate.sh.j2
+    dest: /etc/containerlab/{{ networkname }}/Cronjobstemplate.sh
+    mode: '0744'
+
+- name: Copy Cronjob script
+  become: yes
+  template:
+    src: Cronjobs.sh.j2
+    dest: /etc/containerlab/{{ networkname }}/Cronjobs.sh
+    mode: '0744'
+
+- name: Deploy topology
+  become: yes
+  command: clab deploy --topo /etc/containerlab/{{ networkname }}/network.yml    
+
+- name: Run Router script
+  become: yes
+  shell: /etc/containerlab/{{ networkname }}/Routers.sh
+
+- name: Run Bridge script
+  become: yes
+  shell: /etc/containerlab/{{ networkname }}/Bridges.sh
+
+- name: Run WAN Server script
+  become: yes
+  shell: /etc/containerlab/{{ networkname }}/WANservers.sh
+  ignore_errors: True
+  async: 1000
+  poll: 0
+  register: WAN_server_script
+
+- name: Run LAN Server script
+  become: yes
+  shell: /etc/containerlab/{{ networkname }}/LANservers.sh
+  ignore_errors: True
+  async: 1000
+  poll: 0
+  register: LAN_server_script
+
+- name: Run Attackers script
+  become: yes
+  shell: /etc/containerlab/{{ networkname }}/Attackers.sh
+  ignore_errors: True
+  async: 1000
+  poll: 0
+  register: Attackers_script
+
+- name: Run DMZ Server script
+  become: yes
+  shell: /etc/containerlab/{{ networkname }}/DMZservers.sh
+  ignore_errors: True
+  async: 1000
+  poll: 0
+  register: DMZ_server_script  
+
+- name: Run LAN Client script
+  become: yes
+  shell: /etc/containerlab/{{ networkname }}/LANclients.sh
+  ignore_errors: True
+  async: 1000
+  poll: 0
+  register: LAN_client_script
+
+- name: Check status LAN server async script
+  become: yes
+  async_status: jid={{ LAN_server_script.ansible_job_id }}
+  register: job_result_LAN_server
+  until: job_result_LAN_server.finished
+  retries: 500
+
+- name: Run WAN Client script
+  become: yes
+  shell: /etc/containerlab/{{ networkname }}/WANclients.sh
+  ignore_errors: True
+  async: 1000
+  poll: 0
+  register: WAN_client_script
+
+- name: Run Cron script
+  become: yes
+  shell: /etc/containerlab/{{ networkname }}/Cronjobstemplate.sh
+  ignore_errors: True
+  async: 1000
+  poll: 0
+  register: CRON_client_script
+

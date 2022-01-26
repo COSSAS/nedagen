@@ -1,0 +1,37 @@
+#!/bin/bash
+
+
+smb=$1
+smb_traffic () {
+cd /tmp
+
+for clients in {1..{{ NumberofLANclients }}}
+do
+# Series of smbclient commands to list and retrieve all files from directory
+smbclient //192.168.40.5/Sambaclient$clients -U 'client$clients%password$clients' << SMBCLIENTCOMMANDS
+ls
+mask ""
+recurse
+prompt
+mget *
+exit
+SMBCLIENTCOMMANDS
+
+
+# Traffic Distribution
+sleep $smb
+
+
+
+smbclient //192.168.40.5/$clients -U $clients &
+sleep $smb
+done
+}
+
+
+smb_traffic
+
+
+cd /tmp
+
+

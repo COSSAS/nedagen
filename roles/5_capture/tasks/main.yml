@@ -1,0 +1,81 @@
+---
+
+- name: install tshark
+  become: yes
+  apt:
+    name: tshark
+    state: present
+    update_cache: yes
+  async: 1000
+  poll: 0
+  register: install_tshark
+
+- name: Make capture directory
+  become: yes
+  file:
+    path: /etc/containerlab/captures
+    state: directory
+
+- name: Make network specific capture directory
+  become: yes
+  file:
+    path: /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}
+    state: directory
+
+- name: Copy Capture script
+  become: yes
+  template:
+    src: capture.sh.j2
+    dest: /etc/containerlab/captures/capture.sh
+
+- name: Change file permissions Capture script
+  become: yes
+  file:
+    path: /etc/containerlab/captures/capture.sh
+    mode: '0744'
+
+- name: Check status WAN server async script
+  become: yes
+  async_status: jid={{ WAN_server_script.ansible_job_id }}
+  register: job_result_WAN_server
+  until: job_result_WAN_server.finished
+  retries: 500
+
+- name: Check status DMZ server async script
+  become: yes
+  async_status: jid={{ DMZ_server_script.ansible_job_id }}
+  register: job_result_DMZ_server
+  until: job_result_DMZ_server.finished
+  retries: 500  
+
+- name: Check status LAN client async script
+  become: yes
+  async_status: jid={{ LAN_client_script.ansible_job_id }}
+  register: job_result_LAN_client
+  until: job_result_LAN_client.finished
+  retries: 500
+
+- name: Check status WAN client async script
+  become: yes
+  async_status: jid={{ WAN_client_script.ansible_job_id }}
+  register: job_result_WAN_client
+  until: job_result_WAN_client.finished
+  retries: 500
+
+- name: Check status attackers async script
+  become: yes
+  async_status: jid={{ Attackers_script.ansible_job_id }}
+  register: job_result_attackers
+  until: job_result_attackers.finished
+  retries: 500
+
+- name: Check status install tshark
+  become: yes
+  async_status: jid={{ install_tshark.ansible_job_id }}
+  register: job_result_tshark
+  until: job_result_tshark.finished
+  retries: 500
+
+- name: Run capture script after config scripts
+  become: yes
+  shell: nohup bash /etc/containerlab/captures/capture.sh </dev/null >/dev/null 2>&1 &
