@@ -56,12 +56,6 @@
     dest: /etc/containerlab/{{ networkname }}/Attackers.sh
     mode: '0744'
 
-- name: Copy Cronjob Template
-  become: yes
-  template:
-    src: Cronjobstemplate.sh.j2
-    dest: /etc/containerlab/{{ networkname }}/Cronjobstemplate.sh
-    mode: '0744'
 
 - name: Copy Cronjob script
   become: yes
@@ -137,11 +131,10 @@
   poll: 0
   register: WAN_client_script
 
-- name: Run Cron script
+- name: Run ALS script
   become: yes
-  shell: /etc/containerlab/{{ networkname }}/Cronjobstemplate.sh
+  shell: /etc/containerlab/{{ networkname }}/ALS_profiles.sh
   ignore_errors: True
   async: 1000
   poll: 0
-  register: CRON_client_script
-
+  register: ALS_client_script

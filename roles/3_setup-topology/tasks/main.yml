@@ -141,8 +141,18 @@
     dest: /etc/containerlab/{{ networkname }}/WANweb.sh
     mode: 0744
 
+
 - name: Configure network topology
   become: yes
   template:
     src: network.yml.j2
     dest: /etc/containerlab/{{ networkname }}/network.yml
+
+
+- name: Copy ALS_profiles.sh
+  become: yes
+  template:
+    src: ALS_profiles.sh.j2
+    dest: /etc/containerlab/{{ networkname }}/ALS_profiles.sh
+    mode: 0744
+    

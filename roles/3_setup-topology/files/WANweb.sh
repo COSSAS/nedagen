@@ -1,14 +1,7 @@
 #!/bin/bash
 
-# Catching Input from main config
+# Catching Input from main Cronjob
 web_weight=$1
-smb_weight=$2
-vpn_weight=$3
-
-# Bash only accept integers, using BC to multiply decimals to 0-100% representation
-web=$(bc<<<"$web_weight*10")
-smb=$(bc<<<"$smb_weight*10")
-vpn=$(bc<<<"$vpn_weight*10")
 
 
 
@@ -23,23 +16,14 @@ web_traffic () {
     if [ $(($2 % 2)) -eq 0 ]
     then
         curl DMZsite.dev &
-        sleep $web
+        sleep $web_weight
     else
         curl -k https://httpsDMZsite.dev &
-        sleep $web
+        sleep $web_weight
     fi
 }
 
-# Query static Samba Sever with Dynamic shares
 
-
-# Query services while connected over WireGuard VPN
-vpn_traffic () {
-# TODO
-
-# make_traffic &
-# sleep $vpn
-}
 
 
 while true
@@ -65,9 +49,7 @@ do
     sleep 1
 
     # Calling Traffic Generation Functions
-    bash web_traffic &
-    bash smb_traffic &
-    bash vpn_traffic
+    bash web_traffic 
 
     sleep 1
 

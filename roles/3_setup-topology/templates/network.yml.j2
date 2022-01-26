@@ -50,18 +50,21 @@ topology:
       image: {{ bridgeclientimage }}
       binds:
         - /etc/containerlab/{{networkname}}/LANweb.sh:/LANweb.sh
+        - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
 {% endfor %}
 {% for i in range(1, admins | int +1) %}
     Client{{ i }}-ADMINS-LAN:
       image: {{ bridgeclientimage }}
       binds:
         - /etc/containerlab/{{networkname}}/LANweb.sh:/LANweb.sh
+        - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
 {% endfor %}
 {% for i in range(1, ops | int +1) %}
     Client{{ i }}-OPS-LAN:
       image: {{ bridgeclientimage }}
       binds:
         - /etc/containerlab/{{networkname}}/LANweb.sh:/LANweb.sh
+        - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
 {% endfor %}
 
 
@@ -88,7 +91,6 @@ topology:
       image: {{ alpineimage }}
       binds:
         - /etc/containerlab/{{networkname}}/WANweb.sh:/WANweb.sh
-        - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
 {% endfor %}
 {% for i in range(1, NumberofWANvpnclients | int +1) %}
     Client{{ i }}-WANvpn:
@@ -162,6 +164,7 @@ topology:
     - endpoints: ["Standalone-Client-LAN:eth1", "br-LAN1:eth5"]
     - endpoints: ["alpine-Client-LAN:eth1", "br-LAN1:eth6"]
 
+# Departments
 {% for y in range(1, devs | int +1) %}
     - endpoints: ["Client{{ y }}-DEVS-LAN:eth1", "br-LAN1:eth{{ y + staticinterfaces_brLan1|int }}"]
 {% endfor %}
