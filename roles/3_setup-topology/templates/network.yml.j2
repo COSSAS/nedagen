@@ -110,7 +110,6 @@ topology:
     # client and server links
 
     - endpoints: ["Attacker-WAN:eth1", "br-Internet:eth4"]
-
     - endpoints: ["Server1-alpine-WAN:eth1", "br-Internet:eth5"]
 
 {% for k in range(1, NumberofWANwebclients | int +1) %}

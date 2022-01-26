@@ -1,7 +1,7 @@
 #!/bin/sh
 
 docker exec clab-{{networkname}}-Server1-alpine-WAN apk --no-cache add bash openssh samba-client curl
-docker exec -d clab-{{networkname}}-Server1-alpine-WAN ip addr add 10.0.0.3/8 dev eth1
+docker exec clab-{{networkname}}-Server1-alpine-WAN ip addr add 10.0.0.2/8 dev eth1
 docker exec -d clab-{{networkname}}-Server1-alpine-WAN ip route delete default
 docker exec -d clab-{{networkname}}-Server1-alpine-WAN ip route add 0.0.0.0/0 via 10.0.0.1 dev eth1
 docker exec clab-{{networkname}}-Server1-alpine-WAN bash -c 'echo "nameserver 172.16.0.5
