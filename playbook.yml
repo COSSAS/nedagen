@@ -49,11 +49,9 @@
       - name: Dockerhub_Username
         prompt: "Fill in your Dockerhub username"
         private: no
-        default: jeroenvansaane
       - name: Dockerhub_Password
         prompt: "Fill in your Dockerhub password"
         private: yes
-        default: gK1P1yddY7teOZxzbOn
         no_log: True
   vars:
     staticinterfaces_brLan1: 6
