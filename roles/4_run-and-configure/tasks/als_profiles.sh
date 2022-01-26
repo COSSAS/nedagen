@@ -5,7 +5,7 @@
 # developers=0.5
 # operations=0.5
 
-
+# Runs local scripts
 developers () {
    web=0.8
    smb=0.3

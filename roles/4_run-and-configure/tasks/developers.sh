@@ -11,12 +11,18 @@ smb=$(bc<<<"$smb_weight*10")
 vpn=$(bc<<<"$vpn_weight*10")
 
 
-# Configuring Traffic Distribution on Developers:
+# Applying Traffic Distribution for Developers:
+
+# ( Should execute these on the container groups )
 developers () {
-     echo "this is web $web"
-     echo "this is smb $smb"
-     echo "this is vpn $vpn"
-#    bash /WANweb.sh $web
+     while true 
+     do
+     # docker exec -it {{ department }} bash /WANweb.sh $web
+     
+     # bash /WANweb.sh $web
+     # bash /SMBtraffic.sh $web
+     # bash /WANweb.sh $web
+     done
 }
 # fi
 

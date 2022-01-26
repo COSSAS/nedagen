@@ -25,9 +25,13 @@ else
 killcronjobs="$((45 + $bash_end_time)) 16 * * 1-5 $killcroncmd"
 fi
 
+
 # Adding Cronjob Entries
 ( crontab -l | grep -v -F "$croncmd" ; echo "$cronjob" ) | crontab -
 ( crontab -l | grep -v -F "$killcroncmd" ; echo "$killcronjobs" ) | crontab -
+
+
+
 
 
 
