@@ -33,3 +33,16 @@ Profiles:
 
 
 *This tool uses containerlab which is made by Nokia and licensed under the BSD 3-Clause License*
+
+
+vi /etc/unbound/unbound.conf
+
+        interface: 0.0.0.0
+
+forward-zone:      
+        name: "."
+        forward-addr: 1.1.1.1
+        forward-addr: 8.8.8.8
+
+
+unbound # start unbound

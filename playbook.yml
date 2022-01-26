@@ -43,8 +43,8 @@
         no_log: True
   vars:
     staticinterfaces_brLan1: 6
-    staticinterfaces_brInternet: 6
-    staticinterfaces_brDMZ: 4
+    staticinterfaces_brInternet: 5
+    staticinterfaces_brDMZ: 5
   roles:
 #    - 0_docker
 #    - 2_setup-containerlab

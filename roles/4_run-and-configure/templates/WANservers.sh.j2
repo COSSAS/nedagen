@@ -1,16 +1,9 @@
 #!/bin/sh
 
-docker exec clab-{{networkname}}-Server1-DNS-WAN apk --no-cache add bash openrc curl nsd unbound
-docker exec -d clab-{{networkname}}-Server1-DNS-WAN ip addr add 10.0.0.2/8 dev eth1
-docker exec clab-{{networkname}}-Server1-DNS-WAN ip route add 172.16.0.0/24 via 10.0.0.1 dev eth1
-docker exec clab-{{networkname}}-Server1-DNS-WAN ip route add 172.16.1.0/24 via 10.0.0.1 dev eth1
-docker exec -d clab-{{networkname}}-Server1-DNS-WAN iptables -t nat -A POSTROUTING -s 172.16.0.0/16 -o eth0 -j MASQUERADE
-#docker exec clab-{{networkname}}-Server1-DNS-WAN bash -c 'echo "nameserver 127.0.0.1" > /etc/resolv.conf'
-docker exec clab-{{networkname}}-Server1-DNS-WAN nsd
-
-docker exec clab-{{networkname}}-Server2-alpine-WAN apk --no-cache add bash openssh samba-client curl
-docker exec -d clab-{{networkname}}-Server2-alpine-WAN ip addr add 10.0.0.3/8 dev eth1
-docker exec -d clab-{{networkname}}-Server2-alpine-WAN ip route delete default
-docker exec -d clab-{{networkname}}-Server2-alpine-WAN ip route add 0.0.0.0/0 via 10.0.0.1 dev eth1
-docker exec clab-{{networkname}}-Server2-alpine-WAN bash -c 'echo "nameserver 10.0.0.2" > /etc/resolv.conf'
- 
+docker exec clab-{{networkname}}-Server1-alpine-WAN apk --no-cache add bash openssh samba-client curl
+docker exec -d clab-{{networkname}}-Server1-alpine-WAN ip addr add 10.0.0.3/8 dev eth1
+docker exec -d clab-{{networkname}}-Server1-alpine-WAN ip route delete default
+docker exec -d clab-{{networkname}}-Server1-alpine-WAN ip route add 0.0.0.0/0 via 10.0.0.1 dev eth1
+docker exec clab-{{networkname}}-Server1-alpine-WAN bash -c 'echo "nameserver 172.16.0.5
+nameserver 1.1.1.1
+nameserver 8.8.8.8" > /etc/resolv.conf'

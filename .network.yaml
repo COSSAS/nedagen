@@ -1,5 +1,9 @@
 name: network
 
+mgmt:
+  network: custom_mgmt                # management network name
+  ipv4_subnet: 172.30.0.0/16       # ipv4 range
+
 topology:
   defaults:
     kind: linux
@@ -54,6 +58,16 @@ topology:
       image: alpine:latest
     Server3-nginx-DMZ:
       image: nginx:latest
+    Server4-UNBOUND-DMZ:
+      image: alpine:latest
+      binds:
+        - /etc/containerlab/network/unbound.conf:/etc/unbound/unbound.conf
+    Server5-NSD-DMZ:
+      image: alpine:latest
+      binds:
+        - /etc/containerlab/network/nsd.conf:/etc/nsd/nsd.conf
+        - /etc/containerlab/network/DMZsite.dev.zone:/etc/nsd/DMZsite.dev.zone
+        - /etc/containerlab/network/httpsDMZsite.dev.zone:/etc/nsd/httpsDMZsite.dev.zone
     Server1-samba-LAN:
       image: dperson/samba
       binds:
@@ -80,13 +94,7 @@ topology:
       image: alpine:latest
     Attacker-WAN:
       image: python:3.7-slim
-    Server1-DNS-WAN:
-      image: alpine:latest
-      binds:
-        - /etc/containerlab/network/nsd.conf:/etc/nsd/nsd.conf
-        - /etc/containerlab/network/DMZsite.dev.zone:/etc/nsd/DMZsite.dev.zone
-        - /etc/containerlab/network/httpsDMZsite.dev.zone:/etc/nsd/httpsDMZsite.dev.zone
-    Server2-alpine-WAN:
+    Server1-alpine-WAN:
       image: alpine:latest
 
   links:
@@ -112,18 +120,19 @@ topology:
 
     - endpoints: ["Attacker-WAN:eth1", "br-Internet:eth4"]
 
-    - endpoints: ["Server1-DNS-WAN:eth1", "br-Internet:eth5"]
-    - endpoints: ["Server2-alpine-WAN:eth1", "br-Internet:eth6"]
+    - endpoints: ["Server1-alpine-WAN:eth1", "br-Internet:eth5"]
 
-    - endpoints: ["Client1-WANweb:eth1", "br-Internet:eth7"]
-    - endpoints: ["Client2-WANweb:eth1", "br-Internet:eth8"]
+    - endpoints: ["Client1-WANweb:eth1", "br-Internet:eth6"]
+    - endpoints: ["Client2-WANweb:eth1", "br-Internet:eth7"]
 
-    - endpoints: ["Client1-WANvpn:eth1", "br-Internet:eth9"]
-    - endpoints: ["Client2-WANvpn:eth1", "br-Internet:eth10"]
+    - endpoints: ["Client1-WANvpn:eth1", "br-Internet:eth8"]
+    - endpoints: ["Client2-WANvpn:eth1", "br-Internet:eth9"]
 
     - endpoints: ["Server1-nginx-DMZ:eth1", "br-DMZ:eth2"]
     - endpoints: ["Server2-alpine-DMZ:eth1", "br-DMZ:eth3"]
     - endpoints: ["Server3-nginx-DMZ:eth1", "br-DMZ:eth4"]
+    - endpoints: ["Server4-UNBOUND-DMZ:eth1", "br-DMZ:eth5"]    
+    - endpoints: ["Server5-NSD-DMZ:eth1", "br-DMZ:eth6"]
 
     - endpoints: ["Server1-samba-LAN:eth1", "br-LAN2:eth3"]
     - endpoints: ["Server2-vpn-LAN:eth1", "br-LAN2:eth4"]
