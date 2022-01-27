@@ -15,10 +15,12 @@ Protocols in the dataset:
 - SSH
 - WG
 - SMB
+- FTP
 
 Profiles:
-- Developer
-- Management
+- Developers
+- Admins
+- Operations
 
 [Dockerhub](https://hub.docker.com/) credentials are required
 
@@ -32,7 +34,8 @@ Profiles:
 ```ansible-playbook playbook.yml --ask-become-pass```
 
 
-*This tool uses containerlab which is made by Nokia and licensed under the BSD 3-Clause License*
 
 WAN clients do not have internet access
 Attackers do not have internet access after initialization
+
+*This tool uses containerlab which is made by Nokia and licensed under the BSD 3-Clause License*
