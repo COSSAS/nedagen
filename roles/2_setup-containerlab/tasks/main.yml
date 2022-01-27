@@ -1,6 +1,7 @@
 ---
 
 - name: Install Containerlab
+  become: yes
   shell: bash -c "$(curl -sL https://get-clab.srlinux.dev)"
 
 # Y
