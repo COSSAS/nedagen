@@ -36,36 +36,31 @@ topology:
       image: {{ bridgeclientimage }}
     br-Internet:
       image: {{ bridgeclientimage }}
-    Standalone-Client-LAN:
-      image: {{ ubuntuimage }}
-    alpine-Client-LAN:
-      image: {{ alpineimage }}
     Attacker-LAN:
       image: {{ alpineimage }}
-
 # Converting Department Percentages to Number of Clients
-{% set devs = (NumberofLANclients | int *DevsPercentage | int *0.01)|int %}
-{% set admins = (NumberofLANclients | int *AdminPercentage | int *0.01)|int %}
-{% set ops = (NumberofLANclients | int *OpsPercentage | int *0.01)|int %}
+{% set LANdevs = (NumberofLANclients | int *DevsPercentage | int *0.01)|int %}
+{% set LANadmins = (NumberofLANclients | int *AdminPercentage | int *0.01)|int %}
+{% set LANops = (NumberofLANclients | int *OpsPercentage | int *0.01)|int %}
 
 # Creating Departments + Clients
-{% for i in range(1, devs | int +1) %}
+{% for i in range(1, LANdevs | int +1) %}
     Client{{ i }}-DEVS-LAN:
-      image: {{ bridgeclientimage }}
+      image: {{ alpineimage }}
       binds:
         - /etc/containerlab/{{networkname}}/LANweb.sh:/LANweb.sh
         - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
 {% endfor %}
-{% for i in range(1, admins | int +1) %}
+{% for i in range(1, LANadmins | int +1) %}
     Client{{ i }}-ADMINS-LAN:
-      image: {{ bridgeclientimage }}
+      image: {{ alpineimage }}
       binds:
         - /etc/containerlab/{{networkname}}/LANweb.sh:/LANweb.sh
         - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
 {% endfor %}
-{% for i in range(1, ops | int +1) %}
+{% for i in range(1, LANops | int +1) %}
     Client{{ i }}-OPS-LAN:
-      image: {{ bridgeclientimage }}
+      image: {{ alpineimage }}
       binds:
         - /etc/containerlab/{{networkname}}/LANweb.sh:/LANweb.sh
         - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
@@ -96,15 +91,32 @@ topology:
         PUID: 1000
         PGID: 1000
         TZ: Europe/Amsterdam
-{% for i in range(1, NumberofWANwebclients | int +1) %}
-    Client{{ i }}-WANweb:
+# Converting Department Percentages to Number of Clients
+{% set WANdevs = (NumberofWANclients | int *DevsPercentage | int *0.01)|int %}
+{% set WANadmins = (NumberofWANclients | int *AdminPercentage | int *0.01)|int %}
+{% set WANops = (NumberofWANclients | int *OpsPercentage | int *0.01)|int %}
+
+# Creating Departments + Clients
+{% for i in range(1, WANdevs | int +1) %}
+    Client{{ i }}-DEVS-WAN:
+      image: {{ alpineimage }}
+      binds:
+        - /etc/containerlab/{{networkname}}/LANweb.sh:/LANweb.sh
+        - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
+{% endfor %}
+{% for i in range(1, WANadmins | int +1) %}
+    Client{{ i }}-ADMINS-WAN:
       image: {{ alpineimage }}
       binds:
         - /etc/containerlab/{{networkname}}/WANweb.sh:/WANweb.sh
+        - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
 {% endfor %}
-{% for i in range(1, NumberofWANvpnclients | int +1) %}
-    Client{{ i }}-WANvpn:
+{% for i in range(1, WANops | int +1) %}
+    Client{{ i }}-OPS-WAN:
       image: {{ alpineimage }}
+      binds:
+        - /etc/containerlab/{{networkname}}/WANweb.sh:/WANweb.sh
+        - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
 {% endfor %}
     Attacker-WAN:
       image: {{ pythonimage }}
@@ -135,14 +147,6 @@ topology:
     - endpoints: ["Attacker-WAN:eth1", "br-Internet:eth4"]
     - endpoints: ["Server1-alpine-WAN:eth1", "br-Internet:eth5"]
 
-{% for k in range(1, NumberofWANwebclients | int +1) %}
-    - endpoints: ["Client{{ k }}-WANweb:eth1", "br-Internet:eth{{ k + staticinterfaces_brInternet|int }}"]
-{% endfor %}
-
-{% for j in range(1, NumberofWANvpnclients | int +1) %}
-    - endpoints: ["Client{{ j }}-WANvpn:eth1", "br-Internet:eth{{ j + staticinterfaces_brInternet|int + NumberofWANwebclients|int }}"]
-{% endfor %}
-
     - endpoints: ["Server1-nginx-DMZ:eth1", "br-DMZ:eth2"]
     - endpoints: ["Server2-alpine-DMZ:eth1", "br-DMZ:eth3"]
     - endpoints: ["Server3-nginx-DMZ:eth1", "br-DMZ:eth4"]
@@ -152,18 +156,29 @@ topology:
     - endpoints: ["Server2-vpn-LAN:eth1", "br-LAN2:eth4"]
 
     - endpoints: ["Attacker-LAN:eth1", "br-LAN1:eth4"]
-    - endpoints: ["Standalone-Client-LAN:eth1", "br-LAN1:eth5"]
-    - endpoints: ["alpine-Client-LAN:eth1", "br-LAN1:eth6"]
 
-# Departments
-{% for y in range(1, devs | int +1) %}
+# Departments LAN
+{% for y in range(1, LANdevs | int +1) %}
     - endpoints: ["Client{{ y }}-DEVS-LAN:eth1", "br-LAN1:eth{{ y + staticinterfaces_brLan1|int }}"]
 {% endfor %}
 
-{% for y in range(1, admins | int +1) %}
-    - endpoints: ["Client{{ y }}-ADMINS-LAN:eth1", "br-LAN1:eth{{ devs + y + staticinterfaces_brLan1|int }}"]
+{% for y in range(1, LANadmins | int +1) %}
+    - endpoints: ["Client{{ y }}-ADMINS-LAN:eth1", "br-LAN1:eth{{ LANdevs|int + y + staticinterfaces_brLan1|int }}"]
 {% endfor %}
 
-{% for y in range(1, ops | int +1) %}
-    - endpoints: ["Client{{ y }}-OPS-LAN:eth1", "br-LAN1:eth{{ devs + admins + y + staticinterfaces_brLan1|int }}"]
+{% for y in range(1, LANops | int +1) %}
+    - endpoints: ["Client{{ y }}-OPS-LAN:eth1", "br-LAN1:eth{{ LANdevs|int + LANadmins|int + y + staticinterfaces_brLan1|int }}"]
+{% endfor %}
+
+# Departments WAN
+{% for y in range(1, WANdevs | int +1) %}
+    - endpoints: ["Client{{ y }}-DEVS-WAN:eth1", "br-Internet:eth{{ y + staticinterfaces_brInternet|int }}"]
+{% endfor %}
+
+{% for y in range(1, WANadmins | int +1) %}
+    - endpoints: ["Client{{ y }}-ADMINS-WAN:eth1", "br-Internet:eth{{ WANdevs|int + y + staticinterfaces_brInternet|int }}"]
+{% endfor %}
+
+{% for y in range(1, WANops | int +1) %}
+    - endpoints: ["Client{{ y }}-OPS-WAN:eth1", "br-Internet:eth{{ WANdevs|int + WANadmins|int + y + staticinterfaces_brInternet|int }}"]
 {% endfor %}

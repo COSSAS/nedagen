@@ -6,8 +6,9 @@ web_weight=$1
 
 
 ip route delete default
-echo "nameserver 10.0.0.2" > /etc/resolv.conf
-
+echo "nameserver 127.0.0.1
+nameserver 1.1.1.1
+nameserver 8.8.8.8" > /etc/resolv.conf
 
 # Sleep statements to account for traffic distribution (based upon input weights)
 
@@ -23,9 +24,6 @@ web_traffic () {
     fi
 }
 
-
-
-
 while true
 do  
 
@@ -33,8 +31,8 @@ do
     while true
     do
         set $(dd if=/dev/urandom bs=4 count=1 2>/dev/null | od -An -tu1)
-        ip_address=96.$2.$3.$4 # Outside client
-        if [ $4 -ne 0 ] && [ $4 -ne 1 ] && [ $4 -ne 255 ]
+        ip_address=10.$2.$3.$4 # Outside client
+        if ([ $2 -ne 0 ] && [ $3 -ne 0 ] && ([ $4 -ne 0 ] || [ $4 -ne 1 ] || [ $4 -ne 2 ]) || ([ $2 -ne 255 ] && [ $3 -ne 255 ] && [ $4 -ne 255 ]))
         then
             break
         fi
@@ -45,7 +43,7 @@ do
     sleep 1
 
     # Add IP route
-    ip route add 0.0.0.0/0 via 96.0.0.1 dev eth1
+    ip route add 0.0.0.0/0 via 10.0.0.1 dev eth1
     sleep 1
 
     # Calling Traffic Generation Functions

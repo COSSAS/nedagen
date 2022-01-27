@@ -36,20 +36,38 @@ topology:
       image: praqma/network-multitool:latest
     br-Internet:
       image: praqma/network-multitool:latest
-    Standalone-Client-LAN:
-      image: ubuntu:latest
-    alpine-Client-LAN:
-      image: alpine:latest
     Attacker-LAN:
       image: alpine:latest
-    Client1-LAN:
-      image: praqma/network-multitool:latest
+# Converting Department Percentages to Number of Clients
+
+# Creating Departments + Clients
+    Client1-DEVS-LAN:
+      image: alpine:latest
       binds:
         - /etc/containerlab/network/LANweb.sh:/LANweb.sh
-    Client2-LAN:
-      image: praqma/network-multitool:latest
+        - /etc/containerlab/network/Cronjobs.sh:/Cronjobs.sh
+    Client2-DEVS-LAN:
+      image: alpine:latest
       binds:
         - /etc/containerlab/network/LANweb.sh:/LANweb.sh
+        - /etc/containerlab/network/Cronjobs.sh:/Cronjobs.sh
+    Client1-ADMINS-LAN:
+      image: alpine:latest
+      binds:
+        - /etc/containerlab/network/LANweb.sh:/LANweb.sh
+        - /etc/containerlab/network/Cronjobs.sh:/Cronjobs.sh
+    Client1-OPS-LAN:
+      image: alpine:latest
+      binds:
+        - /etc/containerlab/network/LANweb.sh:/LANweb.sh
+        - /etc/containerlab/network/Cronjobs.sh:/Cronjobs.sh
+    Client2-OPS-LAN:
+      image: alpine:latest
+      binds:
+        - /etc/containerlab/network/LANweb.sh:/LANweb.sh
+        - /etc/containerlab/network/Cronjobs.sh:/Cronjobs.sh
+
+
     Server1-nginx-DMZ:
       image: nginx:latest
       binds:
@@ -74,20 +92,34 @@ topology:
         PUID: 1000
         PGID: 1000
         TZ: Europe/Amsterdam
-    Client1-WANweb:
+# Converting Department Percentages to Number of Clients
+
+# Creating Departments + Clients
+    Client1-DEVS-WAN:
+      image: alpine:latest
+      binds:
+        - /etc/containerlab/network/LANweb.sh:/LANweb.sh
+        - /etc/containerlab/network/Cronjobs.sh:/Cronjobs.sh
+    Client2-DEVS-WAN:
+      image: alpine:latest
+      binds:
+        - /etc/containerlab/network/LANweb.sh:/LANweb.sh
+        - /etc/containerlab/network/Cronjobs.sh:/Cronjobs.sh
+    Client1-ADMINS-WAN:
       image: alpine:latest
       binds:
         - /etc/containerlab/network/WANweb.sh:/WANweb.sh
         - /etc/containerlab/network/Cronjobs.sh:/Cronjobs.sh
-    Client2-WANweb:
+    Client1-OPS-WAN:
       image: alpine:latest
       binds:
         - /etc/containerlab/network/WANweb.sh:/WANweb.sh
         - /etc/containerlab/network/Cronjobs.sh:/Cronjobs.sh
-    Client1-WANvpn:
+    Client2-OPS-WAN:
       image: alpine:latest
-    Client2-WANvpn:
-      image: alpine:latest
+      binds:
+        - /etc/containerlab/network/WANweb.sh:/WANweb.sh
+        - /etc/containerlab/network/Cronjobs.sh:/Cronjobs.sh
     Attacker-WAN:
       image: python:3.7-slim
     Server1-alpine-WAN:
@@ -117,12 +149,6 @@ topology:
     - endpoints: ["Attacker-WAN:eth1", "br-Internet:eth4"]
     - endpoints: ["Server1-alpine-WAN:eth1", "br-Internet:eth5"]
 
-    - endpoints: ["Client1-WANweb:eth1", "br-Internet:eth6"]
-    - endpoints: ["Client2-WANweb:eth1", "br-Internet:eth7"]
-
-    - endpoints: ["Client1-WANvpn:eth1", "br-Internet:eth8"]
-    - endpoints: ["Client2-WANvpn:eth1", "br-Internet:eth9"]
-
     - endpoints: ["Server1-nginx-DMZ:eth1", "br-DMZ:eth2"]
     - endpoints: ["Server2-alpine-DMZ:eth1", "br-DMZ:eth3"]
     - endpoints: ["Server3-nginx-DMZ:eth1", "br-DMZ:eth4"]
@@ -132,10 +158,22 @@ topology:
     - endpoints: ["Server2-vpn-LAN:eth1", "br-LAN2:eth4"]
 
     - endpoints: ["Attacker-LAN:eth1", "br-LAN1:eth4"]
-    - endpoints: ["Standalone-Client-LAN:eth1", "br-LAN1:eth5"]
-    - endpoints: ["alpine-Client-LAN:eth1", "br-LAN1:eth6"]
 
-    - endpoints: ["Client1-LAN:eth1", "br-LAN1:eth7"]
-    - endpoints: ["Client2-LAN:eth1", "br-LAN1:eth8"]
+# Departments LAN
+    - endpoints: ["Client1-DEVS-LAN:eth1", "br-LAN1:eth5"]
+    - endpoints: ["Client2-DEVS-LAN:eth1", "br-LAN1:eth6"]
 
+    - endpoints: ["Client1-ADMINS-LAN:eth1", "br-LAN1:eth7"]
+
+    - endpoints: ["Client1-OPS-LAN:eth1", "br-LAN1:eth8"]
+    - endpoints: ["Client2-OPS-LAN:eth1", "br-LAN1:eth9"]
+
+# Departments WAN
+    - endpoints: ["Client1-DEVS-WAN:eth1", "br-Internet:eth6"]
+    - endpoints: ["Client2-DEVS-WAN:eth1", "br-Internet:eth7"]
+
+    - endpoints: ["Client1-ADMINS-WAN:eth1", "br-Internet:eth8"]
+
+    - endpoints: ["Client1-OPS-WAN:eth1", "br-Internet:eth9"]
+    - endpoints: ["Client2-OPS-WAN:eth1", "br-Internet:eth10"]
 
