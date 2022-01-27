@@ -3,11 +3,11 @@
 {% set devs = (NumberofLANclients | int *DevsPercentage | int *0.01)|int %}
 {% set admins = (NumberofLANclients | int *AdminPercentage | int *0.01)|int %}
 {% set ops = (NumberofLANclients | int *OpsPercentage | int *0.01)|int %}
-# Assign distribution 0-1
-# developers=0.5
-# operations=0.5
 
-# Runs local scripts
+
+
+# Functions to run Cronjobs on Departments - Assign distribution 0-1
+# These Cronjobs run the actual traffic generation scripts as defined in Cronjobs.sh.j2
 developers () {
    web=0.8
    smb=0.3
