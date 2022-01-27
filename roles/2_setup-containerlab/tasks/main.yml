@@ -4,4 +4,3 @@
   become: yes
   shell: echo -ne "-Y\n" | sleep 2 | bash -c "$(curl -sL https://get-clab.srlinux.dev/)"
 
-# Y
