@@ -1,24 +1,54 @@
-#!/bin/sh
+#!/bin/bash
 
+# Catching Input from ALS Profiles
+web=$1
+smb=$2
+vpn=$3
+
+# Bash only accept integers, using BC to multiply decimals to 0-100% representation
+web_weight=$(bc<<<"$web*10")
+smb_weight=$(bc<<<"$smb*10")
+vpn_weight=$(bc<<<"$vpn*10")
 
 # Bash random variable
 bash_start_time=$((RANDOM%30))
 bash_end_time=$((RANDOM%30))
 
+echo "start times $bash_start_time"
+echo "end times $bash_end_time"
+
 
 # Random Start Time Cronjob 'WANweb.sh'
-croncmd="bash /WANweb.sh"
+croncmd="nohup bash /LANweb.sh $web_weight &"
+if [ $bash_start_time -ge 15 ]
+then
+cronjob="$bash_start_time 9 * * 1-5 $croncmd"
+else
+cronjob="$((45+$bash_start_time)) 8 * * 1-5 $croncmd"
+fi
+
+# Random Start Time Cronjob 'SMBtraffic.sh'
+{# croncmd="nohup bash /SMBtraffic.sh $smb_weight &"
 if [ $bash_start_time >= 15 ]
 then
 cronjob="$bash_start_time 9 * * 1-5 $croncmd"
 else
-cronjob="$((45+$bash_end_time)) 8 * * 1-5 $croncmd"
-fi
+cronjob="$((45+$bash_start_time)) 8 * * 1-5 $croncmd"
+fi #}
+
+# Random Start Time Cronjob 'FTPtraffic.sh'
+{# croncmd="nohup bash /FTPtraffic.sh $ftp_weight &"
+if [ $bash_start_time >= 15 ]
+then
+cronjob="$bash_start_time 9 * * 1-5 $croncmd"
+else
+cronjob="$((45+$bash_start_time)) 8 * * 1-5 $croncmd"
+fi #}
 
 
 # Random End Time for all Cronjobs
 killcroncmd="crontab -r"
-if [ $bash_end_time >= 15 ]
+if [ $bash_end_time -ge 15 ]
 then
 killcronjobs="$bash_end_time 17 * * 1-5 $killcroncmd"
 else
