@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ip route delete default
-# echo "nameserver 5.5.5.5" > /etc/resolv.conf
+# echo "nameserver 10.0.0.2" > /etc/resolv.conf
 
 # while true
 # do

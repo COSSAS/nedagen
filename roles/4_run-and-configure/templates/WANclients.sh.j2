@@ -9,10 +9,12 @@ docker exec -d clab-{{networkname}}-Client{{k}}-WANweb bash -c 'nohup bash WANwe
 docker exec clab-{{networkname}}-Client{{k}}-WANvpn apk --no-cache add bash wireguard-tools
 docker exec clab-{{networkname}}-Client{{k}}-WANvpn bash -c 'modprobe wireguard'
 docker exec clab-{{networkname}}-Client{{k}}-WANvpn bash -c 'wg genkey | tee /etc/wireguard/privatekey | wg pubkey > /etc/wireguard/publickey'
-docker exec -d clab-{{networkname}}-Client{{k}}-WANvpn ip addr add 193.166.1.{{k+1}}/16 dev eth1
-docker exec -d clab-{{networkname}}-Client{{k}}-WANvpn bash -c 'echo "nameserver 5.5.5.5" > /etc/resolv.conf'
+docker exec -d clab-{{networkname}}-Client{{k}}-WANvpn ip addr add 10.0.1.{{k+1}}/8 dev eth1
+docker exec -d clab-{{networkname}}-Client{{k}}-WANvpn bash -c 'echo "nameserver 172.16.0.5
+nameserver 1.1.1.1
+nameserver 8.8.8.8" > /etc/resolv.conf'
 docker exec -d clab-{{networkname}}-Client{{k}}-WANvpn ip route delete default
-docker exec -d clab-{{networkname}}-Client{{k}}-WANvpn ip route add 0.0.0.0/0 via 193.166.0.1 dev eth1
+docker exec -d clab-{{networkname}}-Client{{k}}-WANvpn ip route add 0.0.0.0/0 via 10.0.0.1 dev eth1
 
 docker exec clab-{{networkname}}-Server2-vpn-LAN bash -c 'cat /etc/wireguard/publickey' > pubkeyvpnserver
 
@@ -28,7 +30,7 @@ PrivateKey = $(cat /etc/wireguard/privatekey)
 
 [Peer]
 PublicKey = ${PublicKeys}
-Endpoint = 2.3.4.6:51820
+Endpoint = 172.16.0.2:51820
 AllowedIPs = 192.168.0.0/16
 
 PersistentKeepalive = 25" > /etc/wireguard/wg0.conf'

@@ -91,6 +91,9 @@
   ignore_errors: yes
   when: cleanupp.user_input == 'yes'
 
+ # clean /etc/hosts
+ # when: cleanupp.user_input == 'yes'
+
 - name: Exit here to not build the network 
   pause:
     prompt: "Stop the playbook with 'Ctrl+C' followed by 'A' if you only wanted to stop and delete the network or press enter to continue"
