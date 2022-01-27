@@ -48,21 +48,21 @@ topology:
     Client{{ i }}-DEVS-LAN:
       image: {{ alpineimage }}
       binds:
-        - /etc/containerlab/{{networkname}}/LANweb.sh:/LANweb.sh
+        - /etc/containerlab/{{networkname}}/traffic-generation/LANweb.sh:/LANweb.sh
         - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
 {% endfor %}
 {% for i in range(1, LANadmins | int +1) %}
     Client{{ i }}-ADMINS-LAN:
       image: {{ alpineimage }}
       binds:
-        - /etc/containerlab/{{networkname}}/LANweb.sh:/LANweb.sh
+        - /etc/containerlab/{{networkname}}/traffic-generation/LANweb.sh:/LANweb.sh
         - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
 {% endfor %}
 {% for i in range(1, LANops | int +1) %}
     Client{{ i }}-OPS-LAN:
       image: {{ alpineimage }}
       binds:
-        - /etc/containerlab/{{networkname}}/LANweb.sh:/LANweb.sh
+        - /etc/containerlab/{{networkname}}/traffic-generation/LANweb.sh:/LANweb.sh
         - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
 {% endfor %}
 
@@ -70,7 +70,7 @@ topology:
     Server1-nginx-DMZ:
       image: {{ webservernginximage }}
       binds:
-        - /etc/containerlab/{{networkname}}/DMZsite.conf:/etc/nginx/conf.d/default.conf
+        - /etc/containerlab/{{networkname}}/nginx/DMZsite.conf:/etc/nginx/conf.d/default.conf
     Server2-alpine-DMZ:
       image: {{ alpineimage }}
     Server3-nginx-DMZ:
@@ -78,9 +78,9 @@ topology:
     Server4-NSD-DMZ:
       image: {{ alpineimage }}
       binds:
-        - /etc/containerlab/{{networkname}}/nsd.conf:/etc/nsd/nsd.conf
-        - /etc/containerlab/{{networkname}}/DMZsite.dev.zone:/etc/nsd/DMZsite.dev.zone
-        - /etc/containerlab/{{networkname}}/httpsDMZsite.dev.zone:/etc/nsd/httpsDMZsite.dev.zone
+        - /etc/containerlab/{{networkname}}/dns/nsd.conf:/etc/nsd/nsd.conf
+        - /etc/containerlab/{{networkname}}/dns/DMZsite.dev.zone:/etc/nsd/DMZsite.dev.zone
+        - /etc/containerlab/{{networkname}}/dns/httpsDMZsite.dev.zone:/etc/nsd/httpsDMZsite.dev.zone
     Server1-samba-LAN:
       image: {{ sambaimage }}
       binds:
@@ -101,21 +101,21 @@ topology:
     Client{{ i }}-DEVS-WAN:
       image: {{ alpineimage }}
       binds:
-        - /etc/containerlab/{{networkname}}/LANweb.sh:/LANweb.sh
+        - /etc/containerlab/{{networkname}}/traffic-generation/LANweb.sh:/LANweb.sh
         - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
 {% endfor %}
 {% for i in range(1, WANadmins | int +1) %}
     Client{{ i }}-ADMINS-WAN:
       image: {{ alpineimage }}
       binds:
-        - /etc/containerlab/{{networkname}}/WANweb.sh:/WANweb.sh
+        - /etc/containerlab/{{networkname}}/traffic-generation/WANweb.sh:/WANweb.sh
         - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
 {% endfor %}
 {% for i in range(1, WANops | int +1) %}
     Client{{ i }}-OPS-WAN:
       image: {{ alpineimage }}
       binds:
-        - /etc/containerlab/{{networkname}}/WANweb.sh:/WANweb.sh
+        - /etc/containerlab/{{networkname}}/traffic-generation/WANweb.sh:/WANweb.sh
         - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
 {% endfor %}
     Attacker-WAN:
