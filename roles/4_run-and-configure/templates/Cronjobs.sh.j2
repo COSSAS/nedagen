@@ -1,9 +1,10 @@
 #!/bin/bash
 
 # Catching Input from ALS Profiles
-web=$1
-smb=$2
-vpn=$3
+department=$1
+web=$2
+smb=$3
+vpn=$4
 
 # Bash only accept integers, using BC to multiply decimals to 0-100% representation
 web_weight=$(bc<<<"$web*10")
@@ -14,11 +15,9 @@ vpn_weight=$(bc<<<"$vpn*10")
 bash_start_time=$((RANDOM%30))
 bash_end_time=$((RANDOM%30))
 
-echo "start times $bash_start_time"
-echo "end times $bash_end_time"
 
-
-# Random Start Time Cronjob 'WANweb.sh'
+# Random Start Time Cronjob 'LANweb.sh'
+lan_web () {
 croncmd="nohup bash /LANweb.sh $web_weight &"
 if [ $bash_start_time -ge 15 ]
 then
@@ -26,6 +25,8 @@ cronjob="$bash_start_time 9 * * 1-5 $croncmd"
 else
 cronjob="$((45+$bash_start_time)) 8 * * 1-5 $croncmd"
 fi
+}
+
 
 # Random Start Time Cronjob 'SMBtraffic.sh'
 {# croncmd="nohup bash /SMBtraffic.sh $smb_weight &"
@@ -47,6 +48,7 @@ fi #}
 
 
 # Random End Time for all Cronjobs
+kill_cronjobs () {
 killcroncmd="crontab -r"
 if [ $bash_end_time -ge 15 ]
 then
@@ -54,25 +56,38 @@ killcronjobs="$bash_end_time 17 * * 1-5 $killcroncmd"
 else
 killcronjobs="$((45 + $bash_end_time)) 16 * * 1-5 $killcroncmd"
 fi
-
+}
 
 # Adding Cronjob Entries
+add_entries () {
 ( crontab -l | grep -v -F "$croncmd" ; echo "$cronjob" ) | crontab -
 ( crontab -l | grep -v -F "$killcroncmd" ; echo "$killcronjobs" ) | crontab -
+}
 
 
 
+case $department in 
+	developers)
+    lan_web
+    kill_cronjobs
+    add_entries
+	echo "matched developers"	
+	;;
+
+	operations)
+    lan_web
+    kill_cronjobs
+    add_entries
+	echo "matches ops"
+	;;
 
 
+	administration)
+    lan_web
+    kill_cronjobs
+    add_entries
+	echo "matches admin" 
+	;;
 
-# --------------------------------------------------------------------------- #
-{# Jinja: #}
-# Random variable declaration for start/end time (Jinja)
-{# {% set random_start_time = range(1, 30) | random %}
-{% set random_end_time = range(1, 30) | random %} #}
-{# {% if random_start_time >= 15 %}
-cronjob="{{range(1, 15) | random }} 9 * * 1-5 $croncmd"
-{% else %}
-cronjob="{{45 + range(1, 15) | random }} 8 * * 1-5 $croncmd"
-{% endif %}  #}
+esac
 
