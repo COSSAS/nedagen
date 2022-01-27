@@ -61,8 +61,6 @@ SECONDS=0
 
 {% if timer != "0" %}
 
-echo "voor de if timer" >> /etc/containerlab/captures/test.txt
-
 timerset={{timer}}
 
 if [[ $timerset == *"m"* ]]
@@ -98,8 +96,6 @@ fi
 while true
 do
 
-    echo "seconds: $SECONDS" >> /etc/containerlab/captures/test.txt
-
     processesROUTERwan=$(pgrep -f router-WAN-eth)
     processesDMZ=$(pgrep -f br-DMZ-eth)
     processesLAN1=$(pgrep -f br-LAN1-eth)
@@ -108,7 +104,6 @@ do
     if !( [[ $processesROUTERwan ]] && [[ $processesDMZ ]] && [[ $processesLAN1 ]] && [[ $processesLAN2 ]] )
     then
         mergecap /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/*.pcap -w /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/merged.pcap
-        echo "proces kill" >> /etc/containerlab/captures/test.txt
         break
     fi
 
@@ -116,8 +111,6 @@ do
 
     if [[ $SECONDS -ge $topotimer ]]
     then
-        echo "timer expired" >> /etc/containerlab/captures/test.txt
-
         clab destroy --topo /etc/containerlab/{{ networkname }}/network.yml
         {% if savefile == "pcap" or savefile == "both" %}
         mergecap /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/*.pcap -w /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}/merged.pcap
