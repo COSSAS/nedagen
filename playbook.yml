@@ -6,57 +6,19 @@
 
 - hosts: localhost
   vars_prompt:
-      - name: networkname
-        prompt: "How should the new network be called"
-        default: network
-        private: no        
-      - name: NumberofLANclients
-        prompt: "How many LAN clients do you want to simulate?"
-        default: "{{ 250 | random +1}}"
-        private: no
-      - name: DevsPercentage
-        prompt: "What percentage of your LAN makes up Development (0-100)"
-        default: "40"
-        private: no
-      - name: AdminPercentage
-        prompt: "What percentage of your LAN makes up Administration (0-100)?"
-        default: "20"
-        private: no
-      - name: OpsPercentage
-        prompt: "What percentage of your LAN makes up Operations (0-100)"
-        default: "40"
-        private: no
-      - name: NumberofWANwebclients
-        prompt: "How many WAN web clients do you want to simulate?"
-        default: "{{ 500 | random +1}}"
-        private: no
-      - name: NumberofWANvpnclients
-        prompt: "How many WAN vpn clients do you want to simulate?"
-        default: "{{ 500 | random +1}}"
-        private: no
-      - name: savefile
-        prompt: "Do you want to capture the network traffic? if so, in which fileformat do you want to have it? 'not', 'json', 'pcap', or 'both'"
-        default: pcap
-        private: no
-      - name: capturelimit
-        prompt: "If you chose to capture network traffic, what size may the combined captures take (in MBs or GBs)? The network will automatically be stopped when this limit is reached. '6M' '6G' (0 = unlimited)"
-        default: 0
-        private: no
-      - name: timer
-        prompt: "How long may the network (+-capture) stay running? for example: '6m' (6 minutes) '6h' (6hours) '6d' (6 days), (0 = unlimited)"
-        default: 0
-        private: no
-      - name: Dockerhub_Username
-        prompt: "Fill in your Dockerhub username"
-        private: no
-      - name: Dockerhub_Password
-        prompt: "Fill in your Dockerhub password"
-        private: yes
-        no_log: True
+    - name: Dockerhub_Username
+      prompt: "Fill in your Dockerhub username"
+      private: no
+    - name: Dockerhub_Password
+      prompt: "Fill in your Dockerhub password"
+      private: yes
+      no_log: True 
   vars:
-    staticinterfaces_brLan1: 6
+    staticinterfaces_brLan1: 4
     staticinterfaces_brInternet: 5
     staticinterfaces_brDMZ: 5
+  vars_files:
+    - config.yml
   roles:
 #    - 0_docker
 #    - 2_setup-containerlab

@@ -10,7 +10,7 @@ docker exec -d clab-{{networkname}}-Server1-nginx-DMZ bash -c 'echo "nameserver 
 nameserver 1.1.1.1
 nameserver 8.8.8.8" > /etc/resolv.conf'
 
-docker exec clab-{{networkname}}-Server2-alpine-DMZ apk --no-cache add openssh vim openrc vsftpd
+docker exec clab-{{networkname}}-Server2-alpine-DMZ apk --no-cache add openssh vim openrc vsftpd 
 docker exec -d clab-{{networkname}}-Server2-alpine-DMZ ip addr add 172.16.0.3/24 dev eth1
 docker exec -d clab-{{networkname}}-Server2-alpine-DMZ ip route delete default
 docker exec -d clab-{{networkname}}-Server2-alpine-DMZ ip route add 0.0.0.0/0 via 172.16.0.1 dev eth1
@@ -18,8 +18,12 @@ docker exec -d clab-{{networkname}}-Server2-alpine-DMZ sh -c 'echo "nameserver 1
 nameserver 1.1.1.1
 nameserver 8.8.8.8" > /etc/resolv.conf'
 docker exec clab-{{networkname}}-Server2-alpine-DMZ adduser sshuser
-docker exec clab-{{networkname}}-Server2-alpine-DMZ sh -c '(echo "password"; sleep 1; echo "password";) | passwd sshuser'
-docker exec clab-{{networkname}}-Server2-alpine-DMZ sshd
+docker exec clab-{{networkname}}-Server2-alpine-DMZ sh -c '(echo "sshuserpassword"; sleep 1; echo "sshuserpassword";) | passwd sshuser'
+docker exec clab-{{networkname}}-Server2-alpine-DMZ sh -c "echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config"
+docker exec clab-{{networkname}}-Server2-alpine-DMZ sh -c 'ssh-keygen -A'
+docker exec clab-{{networkname}}-Server2-alpine-DMZ sh -c 'rc-status'
+docker exec clab-{{networkname}}-Server2-alpine-DMZ sh -c 'touch /run/openrc/softlevel'
+docker exec clab-{{networkname}}-Server2-alpine-DMZ sh -c '/etc/init.d/sshd restart'
 
 docker exec clab-{{networkname}}-Server3-nginx-DMZ apt-get update -y
 docker exec clab-{{networkname}}-Server3-nginx-DMZ apt-get install {{ basic_packages }}

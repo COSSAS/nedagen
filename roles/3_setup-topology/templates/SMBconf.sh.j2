@@ -22,7 +22,7 @@ read only = no
 force user = client$clients
 EOF
 
-# Creating Users based upon total number of LAN clients
+# Creating Users based upon total number of LAN clients (so each user has own share)
 username=client$clients
 useradd -m $username
 (echo "password$clients"; sleep 1; echo "password$clients";) | passwd $username
