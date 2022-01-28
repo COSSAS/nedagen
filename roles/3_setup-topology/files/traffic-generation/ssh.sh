@@ -2,7 +2,7 @@
 
 ssh_weight=$1
 
-sshpass -p sshuserpassword ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no  sshuser@172.30.0.24
+sshpass -p sshuserpassword ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no  sshuser@172.16.0.3
 
 while true
 do
