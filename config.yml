@@ -14,6 +14,8 @@ OpsPercentage: "40"             # What percentage of your LAN makes up Operation
 savefile: "pcap"                  # Do you want to capture the network traffic? if so, in which fileformat do you want to have it? 'not', 'json', 'pcap', or 'both'
 capturelimit: "0"              # If you chose to capture network traffic, what size may the combined captures take (in MBs or GBs)? The network will automatically be stopped when this limit is reached. '6M' '6G' (0 = unlimited)
 timer: "0"                     # How long may the network (+-capture) stay running? for example: '6m' (6 minutes) '6h' (6hours) '6d' (6 days), (0 = unlimited)
+
+### Departments and corresponding ALS Profiles weights 
 ALS_developers_weight_web: "0.4"      # Set WEB Traffic Generation Weight
 ALS_developers_weight_smb: "0.4"      # Set SMB Traffic Generation Weight
 ALS_developers_weight_ssh: "0.2"      # Set SSH Traffic Generation Weight
