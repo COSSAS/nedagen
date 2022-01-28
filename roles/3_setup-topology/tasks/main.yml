@@ -112,6 +112,20 @@
     src: config.yml
     dest: /etc/containerlab/{{ networkname }}/config.yml
 
+- name: Copy SSH Traffic Generation Script
+  become: yes
+  copy:
+    src: traffic-generation/ssh.sh
+    dest: /etc/containerlab/{{ networkname }}/traffic-generation/ssh.sh
+    mode: 0744
+
+- name: Copy ICMP Traffic Generation Script
+  become: yes
+  copy:
+    src: traffic-generation/pingServers.sh
+    dest: /etc/containerlab/{{ networkname }}/traffic-generation/pingServers.sh
+    mode: 0744
+
 - name: Copy LANweb.sh
   become: yes
   copy:

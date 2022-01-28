@@ -38,6 +38,7 @@
     - { src: 'LANclients/ADMINS.sh.j2', dest: '/etc/containerlab/{{ networkname }}/LANclient_scripts/ADMINS.sh' }
     - { src: 'LANclients/DEVS.sh.j2', dest: '/etc/containerlab/{{ networkname }}/LANclient_scripts/DEVS.sh' }
     - { src: 'LANclients/OPS.sh.j2', dest: '/etc/containerlab/{{ networkname }}/LANclient_scripts/OPS.sh' }
+    - { src: 'LANclients/Attacker.sh.j2', dest: '/etc/containerlab/{{ networkname }}/LANclient_scripts/Attacker.sh' }
 
 - name: Copy WAN Client scripts
   become: yes
@@ -50,6 +51,7 @@
     - { src: 'WANclients/DEVS.sh.j2', dest: '/etc/containerlab/{{ networkname }}/WANclient_scripts/DEVS.sh' }
     - { src: 'WANclients/OPS.sh.j2', dest: '/etc/containerlab/{{ networkname }}/WANclient_scripts/OPS.sh' }
     - { src: 'WANclients/enableVPN.sh.j2', dest: '/etc/containerlab/{{ networkname }}/WANclient_scripts/enableVPN.sh' }
+    - { src: 'WANclients/Attacker.sh.j2', dest: '/etc/containerlab/{{ networkname }}/WANclient_scripts/Attacker.sh' }
 
 - name: Copy Bridge script
   become: yes
@@ -57,14 +59,6 @@
     src: Bridges.sh.j2
     dest: /etc/containerlab/{{ networkname }}/Bridges.sh
     mode: '0744'
-
-- name: Copy Attackers script
-  become: yes
-  template:
-    src: Attackers.sh.j2
-    dest: /etc/containerlab/{{ networkname }}/Attackers.sh
-    mode: '0744'
-
 
 - name: Copy Cronjob script
   become: yes
@@ -103,13 +97,21 @@
   poll: 0
   register: LAN_server_script
 
-- name: Run Attackers script
+- name: Run Attacker LAN script
   become: yes
-  shell: /etc/containerlab/{{ networkname }}/Attackers.sh
+  shell: /etc/containerlab/{{ networkname }}/LANclient_scripts/Attacker.sh
   ignore_errors: True
   async: 1000
   poll: 0
-  register: Attackers_script
+  register: AttackerLAN_script
+
+- name: Run Attacker WAN script
+  become: yes
+  shell: /etc/containerlab/{{ networkname }}/WANclient_scripts/Attacker.sh
+  ignore_errors: True
+  async: 1000
+  poll: 0
+  register: AttackerWAN_script
 
 - name: Run DMZ Server script
   become: yes
