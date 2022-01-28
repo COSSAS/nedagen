@@ -11,6 +11,7 @@ docker exec clab-{{networkname}}-Client{{i}}-ADMINS-WAN bash -c 'wg genkey | tee
 docker exec -d clab-{{networkname}}-Client{{i}}-ADMINS-WAN ip addr add 10.0.2.{{i+1}}/8 dev eth1
 docker exec -d clab-{{networkname}}-Client{{i}}-ADMINS-WAN bash -c 'echo "nameserver 172.16.0.5" > /etc/resolv.conf'
 docker exec -d clab-{{networkname}}-Client{{i}}-ADMINS-WAN ip route delete default
+docker exec -d clab-{{networkname}}-Client{{i}}-ADMINS-WAN sysctl net.ipv6.conf.all.disable_ipv6=1
 docker exec -d clab-{{networkname}}-Client{{i}}-ADMINS-WAN ip route add 0.0.0.0/0 via 10.0.0.1 dev eth1
 
 docker exec clab-{{networkname}}-Server2-vpn-LAN bash -c 'cat /etc/wireguard/publickey' > pubkeyvpnserver

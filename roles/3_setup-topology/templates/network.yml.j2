@@ -37,7 +37,7 @@ topology:
     br-Internet:
       image: {{ bridgeclientimage }}
     Attacker-LAN:
-      image: {{ alpineimage }}
+      image: {{ pythonimage }}
 # Converting Department Percentages to Number of Clients
 {% set LANdevs = (NumberofLANclients | int *DevsPercentage | int *0.01)|int %}
 {% set LANadmins = (NumberofLANclients | int *AdminPercentage | int *0.01)|int %}
