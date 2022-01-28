@@ -2,14 +2,14 @@
 
 # Catching Input from ALS Profiles
 department=$1
-web=$2
-smb=$3
-ssh=$4
+web=$((1-$2))
+smb=$((1-$3))
+ssh=$((1-$4))
 
 # Bash only accept integers, using BC to multiply decimals to 0-100% representation
-web_weight=$(bc<<<"$web*10")
+web_weight=$(bc<<<"$web*10") 
 smb_weight=$(bc<<<"$smb*10")
-ssh_weight=$(bc<<<"$ssh*10")
+ssh_weight=$(bc<<<"$ssh*10") 
 
 # Bash random variable
 bash_start_time=$((RANDOM%30))
@@ -28,34 +28,36 @@ kill_entries() {
 
 # Random Start Time Cronjob 'LANweb.sh'
 lan_web () {
-croncmd="nohup bash /LANweb.sh $web_weight &"
+croncmd="nohup bash /LANweb.sh $web_weight &> webNohup.out &"
 if [ $bash_start_time -ge 15 ]
 then
-cronjob="$(($bash_end_time - 14)) 9 * * 1-5 $croncmd"
+cronjob="$(($bash_start_time - 14)) 9 * * 1-5 $croncmd"
 else
 cronjob="$((45+$bash_start_time)) 8 * * 1-5 $croncmd"
 fi
 add_entries
 }
 
-
-
+# Random Start Time SSH Traffic Generation
 lan_ssh () {
-croncmd="nohup bash /ssh.sh $ssh_weight &"
+croncmd="nohup bash /ssh.sh $ssh_weight &> sshNohup.out &"
 if [ $bash_start_time -ge 15 ]
 then
-cronjob="$(($bash_end_time - 14)) 9 * * 1-5 $croncmd"
+cronjob="$(($bash_start_time - 14)) 9 * * 1-5 $croncmd"
 else
 cronjob="$((45+$bash_start_time)) 8 * * 1-5 $croncmd"
 fi
 add_entries
 }
 
+
+
+# Random Start Time ICMP Health Status Traffic Generation
 lan_icmp () {
-croncmd="nohup bash /pingServers.sh $ssh_weight &"
+croncmd="nohup bash /pingServers.sh &> icmpNohup.out &"
 if [ $bash_start_time -ge 15 ]
 then
-cronjob="$(($bash_end_time - 15)) 9 * * 1-5 $croncmd"
+cronjob="$(($bash_start_time - 14)) 9 * * 1-5 $croncmd"
 else
 cronjob="$((45+$bash_start_time)) 8 * * 1-5 $croncmd"
 fi
@@ -82,6 +84,7 @@ case $department in
 	developers)
     lan_web
     lan_ssh
+    lan_icmp
     kill_cronjobs
 	;;
 
