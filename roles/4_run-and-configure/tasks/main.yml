@@ -133,6 +133,13 @@
   poll: 0
   register: WAN_client_script
 
+- name: Check status LAN client async script
+  become: yes
+  async_status: jid={{ LAN_client_script.ansible_job_id }}
+  register: job_result_LAN_client
+  until: job_result_LAN_client.finished
+  retries: 1000
+
 - name: Run ALS on LAN
   become: yes
   shell: /etc/containerlab/{{ networkname }}/profiles/ALS_profiles_LAN.sh
@@ -140,6 +147,13 @@
   async: 1000
   poll: 0
   register: ALS_LAN_client_script
+
+- name: Check status WAN client async script
+  become: yes
+  async_status: jid={{ WAN_client_script.ansible_job_id }}
+  register: job_result_WAN_client
+  until: job_result_WAN_client.finished
+  retries: 1000
 
 - name: Run ALS on WAN
   become: yes
