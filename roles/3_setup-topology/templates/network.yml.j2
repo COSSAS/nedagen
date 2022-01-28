@@ -43,7 +43,7 @@ topology:
 {% set LANadmins = (NumberofLANclients | int *AdminPercentage | int *0.01)|int %}
 {% set LANops = (NumberofLANclients | int *OpsPercentage | int *0.01)|int %}
 
-# Creating Departments + Clients
+# Creating Departments + LAN Clients
 {% for i in range(1, LANdevs | int +1) %}
     Client{{ i }}-DEVS-LAN:
       image: {{ alpineimage }}
@@ -70,7 +70,7 @@ topology:
         - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
 {% endfor %}
 
-
+# DMZ servers
     Server1-nginx-DMZ:
       image: {{ webservernginximage }}
       binds:
@@ -85,6 +85,8 @@ topology:
         - /etc/containerlab/{{networkname}}/dns/nsd.conf:/etc/nsd/nsd.conf
         - /etc/containerlab/{{networkname}}/dns/DMZsite.dev.zone:/etc/nsd/DMZsite.dev.zone
         - /etc/containerlab/{{networkname}}/dns/httpsDMZsite.dev.zone:/etc/nsd/httpsDMZsite.dev.zone
+
+# LAN servers
     Server1-samba-LAN:
       image: {{ sambaimage }}
       binds:
@@ -100,7 +102,7 @@ topology:
 {% set WANadmins = (NumberofWANclients | int *AdminPercentage | int *0.01)|int %}
 {% set WANops = (NumberofWANclients | int *OpsPercentage | int *0.01)|int %}
 
-# Creating Departments + Clients
+# Creating Departments + WAN Clients
 {% for i in range(1, WANdevs | int +1) %}
     Client{{ i }}-DEVS-WAN:
       image: {{ alpineimage }}
@@ -147,7 +149,6 @@ topology:
 
 
     # client and server links
-
     - endpoints: ["Attacker-WAN:eth1", "br-Internet:eth4"]
     - endpoints: ["Server1-alpine-WAN:eth1", "br-Internet:eth5"]
 

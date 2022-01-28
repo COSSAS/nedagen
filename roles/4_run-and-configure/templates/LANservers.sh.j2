@@ -1,13 +1,8 @@
 #!/bin/sh
 
-docker exec clab-{{networkname}}-Server1-samba-LAN apt-get update -y
-docker exec clab-{{networkname}}-Server1-samba-LAN apt-get install {{ basic_packages }}
-docker exec clab-{{networkname}}-Server1-samba-LAN apt-get install ssh smb -y
-
 docker exec -d clab-{{networkname}}-Server1-samba-LAN chmod u+x /root/SMBconf.sh
 docker exec -d clab-{{networkname}}-Server1-samba-LAN bash /root/SMBconf.sh
 
-docker exec -d clab-{{networkname}}-Server1-samba-LAN {{ ipv6_configuration }}
 docker exec -d clab-{{networkname}}-Server1-samba-LAN ip addr add 192.168.40.5/24 dev eth1
 docker exec -d clab-{{networkname}}-Server1-samba-LAN ip route delete default
 docker exec -d clab-{{networkname}}-Server1-samba-LAN ip route add 0.0.0.0/0 via 192.168.40.1 dev eth1

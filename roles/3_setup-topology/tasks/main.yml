@@ -27,6 +27,8 @@
     - dns
     - traffic-generation
     - profiles
+    - LANclient_scripts
+    - WANclient_scripts
 
 - name: Set router WAN files
   become: yes
@@ -103,6 +105,12 @@
     src: dns/httpsDMZsite.dev.zone
     dest: /etc/containerlab/{{ networkname }}/dns/httpsDMZsite.dev.zone
     mode: 0644
+
+- name: Copy config variables
+  become: yes
+  copy:
+    src: config.yml
+    dest: /etc/containerlab/{{ networkname }}/config.yml
 
 - name: Copy SSH Traffic Generation Script
   become: yes

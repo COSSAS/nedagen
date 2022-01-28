@@ -1,0 +1,35 @@
+#!/bin/sh
+
+{% set WANadmins = (NumberofWANclients | int *AdminPercentage | int *0.01)|int %}
+{% set WANdevs = (NumberofWANclients | int *DevsPercentage | int *0.01)|int %}
+{% set WANops = (NumberofWANclients | int *OpsPercentage | int *0.01)|int %}
+
+{% for k in range(1, WANdevs | int +1) %}
+docker exec clab-{{networkname}}-Client{{k}}-DEVS-WAN apk --no-cache add bash wireguard-tools curl macchanger
+docker exec clab-{{networkname}}-Client{{k}}-DEVS-WAN bash -c 'modprobe wireguard'
+docker exec clab-{{networkname}}-Client{{k}}-DEVS-WAN bash -c 'wg genkey | tee /etc/wireguard/privatekey | wg pubkey > /etc/wireguard/publickey'
+docker exec -d clab-{{networkname}}-Client{{k}}-DEVS-WAN ip addr add 10.0.1.{{k+1}}/8 dev eth1
+docker exec -d clab-{{networkname}}-Client{{k}}-DEVS-WAN bash -c 'echo "nameserver 172.16.0.5" > /etc/resolv.conf'
+docker exec -d clab-{{networkname}}-Client{{k}}-DEVS-WAN ip route delete default
+docker exec -d clab-{{networkname}}-Client{{k}}-DEVS-WAN ip route add 0.0.0.0/0 via 10.0.0.1 dev eth1
+
+docker exec clab-{{networkname}}-Server2-vpn-LAN bash -c 'cat /etc/wireguard/publickey' > pubkeyvpnserver
+
+docker exec clab-{{networkname}}-Client{{k}}-DEVS-WAN bash -c 'cat /etc/wireguard/publickey' > .ClientDEVS{{k}}
+
+docker exec -e PublicKeyc=$(cat .ClientDEVS{{k}}) clab-{{networkname}}-Server2-vpn-LAN bash -c 'echo "[Peer]
+PublicKey = ${PublicKeyc}
+AllowedIPs = 192.168.50.{{k+2}}/32" >> /etc/wireguard/wg0.conf'
+
+docker exec -e PublicKeys=$(cat pubkeyvpnserver) clab-{{networkname}}-Client{{k}}-DEVS-WAN bash -c 'echo "[Interface]
+Address = 192.168.50.{{k+2}}
+PrivateKey = $(cat /etc/wireguard/privatekey)
+
+[Peer]
+PublicKey = ${PublicKeys}
+Endpoint = 172.16.1.2:51820
+AllowedIPs = 192.168.0.0/16
+
+PersistentKeepalive = 25" > /etc/wireguard/wg0.conf'
+
+{% endfor %}
