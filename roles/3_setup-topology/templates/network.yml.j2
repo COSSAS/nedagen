@@ -43,11 +43,7 @@ topology:
 {% set LANadmins = (NumberofLANclients | int *AdminPercentage | int *0.01)|int %}
 {% set LANops = (NumberofLANclients | int *OpsPercentage | int *0.01)|int %}
 
-<<<<<<< HEAD
 # Creating Departments + LAN Clients
-=======
-# Creating Departments + Clients
->>>>>>> test
 {% for i in range(1, LANdevs | int +1) %}
     Client{{ i }}-DEVS-LAN:
       image: {{ alpineimage }}

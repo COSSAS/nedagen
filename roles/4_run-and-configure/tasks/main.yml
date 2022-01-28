@@ -125,7 +125,7 @@
   ignore_errors: True
   async: 1000
   poll: 0
-  register: LAN_client_ADMIN
+  register: LAN_client_ADMINS
 
 - name: Run LAN Client DEVS script
   become: yes
@@ -156,7 +156,7 @@
   ignore_errors: True
   async: 1000
   poll: 0
-  register: WAN_client_ADMIN
+  register: WAN_client_ADMINS
 
 - name: Run WAN Client DEVS script
   become: yes
@@ -174,13 +174,26 @@
   poll: 0
   register: WAN_client_OPS
 
-- name: Run WAN Client enableVPN script
+- name: Check status LAN client ADMIN async script
   become: yes
-  shell: /etc/containerlab/{{ networkname }}/WANclient_scripts/enableVPN.sh
-  ignore_errors: True
-  async: 1000
-  poll: 0
-  register: WAN_client_enableVPN
+  async_status: jid={{ LAN_client_ADMINS.ansible_job_id }}
+  register: job_result_LAN_ADMINS
+  until: job_result_LAN_ADMINS.finished
+  retries: 1000
+
+- name: Check status LAN client DEVS async script
+  become: yes
+  async_status: jid={{ LAN_client_DEVS.ansible_job_id }}
+  register: job_result_LAN_DEVS
+  until: job_result_LAN_DEVS.finished
+  retries: 1000
+
+- name: Check status LAN client OPS async script
+  become: yes
+  async_status: jid={{ LAN_client_OPS.ansible_job_id }}
+  register: job_result_LAN_OPS
+  until: job_result_LAN_OPS.finished
+  retries: 1000
 
 - name: Run ALS on LAN
   become: yes
@@ -189,6 +202,32 @@
   async: 1000
   poll: 0
   register: ALS_LAN_client_script
+
+- name: Check status WAN client ADMINS async script
+  become: yes
+  async_status: jid={{ WAN_client_ADMINS.ansible_job_id }}
+  register: job_result_WAN_ADMINS
+  until: job_result_WAN_ADMINS.finished
+  retries: 1000
+
+- name: Check status WAN client DEVS async script
+  become: yes
+  async_status: jid={{ WAN_client_DEVS.ansible_job_id }}
+  register: job_result_WAN_DEVS
+  until: job_result_WAN_DEVS.finished
+  retries: 1000
+
+- name: Check status WAN client OPS async script
+  become: yes
+  async_status: jid={{ WAN_client_OPS.ansible_job_id }}
+  register: job_result_WAN_OPS
+  until: job_result_WAN_OPS.finished
+  retries: 1000
+
+- name: Run WAN Client enableVPN script
+  become: yes
+  shell: /etc/containerlab/{{ networkname }}/WANclient_scripts/enableVPN.sh
+  ignore_errors: True
 
 - name: Run ALS on WAN
   become: yes
