@@ -43,7 +43,11 @@ topology:
 {% set LANadmins = (NumberofLANclients | int *AdminPercentage | int *0.01)|int %}
 {% set LANops = (NumberofLANclients | int *OpsPercentage | int *0.01)|int %}
 
+<<<<<<< HEAD
 # Creating Departments + LAN Clients
+=======
+# Creating Departments + Clients
+>>>>>>> test
 {% for i in range(1, LANdevs | int +1) %}
     Client{{ i }}-DEVS-LAN:
       image: {{ alpineimage }}
@@ -93,7 +97,6 @@ topology:
         PUID: 1000
         PGID: 1000
         TZ: Europe/Amsterdam
-
 # Converting Department Percentages to Number of Clients
 {% set WANdevs = (NumberofWANclients | int *DevsPercentage | int *0.01)|int %}
 {% set WANadmins = (NumberofWANclients | int *AdminPercentage | int *0.01)|int %}
