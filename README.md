@@ -1,6 +1,8 @@
 #### NeDaGe
 
-Network Dataset Generator based on Docker
+NeDaGen
+
+Network Dataset Generator
 
 This tool builds a network with a user defined size and profile, and incorperates Atomic-operator to generate malicious traffic (based on the MITRE ATT&CK framework) into the network in order to generate PCAPs/ JSON network data in combination with the timestamps of the attacks to use them for identifying attacker traffic.
 

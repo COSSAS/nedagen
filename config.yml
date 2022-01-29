@@ -6,8 +6,8 @@
 # the actual number of clients could be slighly less since they are rounded down with the percentages 
 
 networkname: "network"               # How should the new network be called
-NumberofLANclients: "20"        # How many LAN clients do you want to simulate?
-NumberofWANclients: "20"        # How many WAN clients do you want to simulate?
+NumberofLANclients: "6"        # How many LAN clients do you want to simulate?
+NumberofWANclients: "6"        # How many WAN clients do you want to simulate?
 DevsPercentage: "40"            # What percentage of your LAN makes up Development?
 AdminPercentage: "20"           # What percentage of your LAN makes up Administration?
 OpsPercentage: "40"             # What percentage of your LAN makes up Operations?

@@ -20,6 +20,9 @@ docker exec -d clab-{{networkname}}-router-Internet iptables -A FORWARD -s 192.1
 docker exec -d clab-{{networkname}}-router-Internet iptables -A FORWARD -s 127.0.0.0/8 -j DROP
 docker exec -d clab-{{networkname}}-router-Internet iptables -A FORWARD -s 169.254.0.0/16 -j DROP
 
+docker exec -d clab-{{networkname}}-router-Internet iptables -I FORWARD -p udp --dport 53 -d 1.1.1.1,8.8.8.8 -m string --hex-string “|07|DMZsite|03|dev|” --algo bm -j DROP
+docker exec -d clab-{{networkname}}-router-Internet iptables -I FORWARD -p udp --dport 53 -s 1.1.1.1,8.8.8.8 -m string --hex-string “|12|httpsDMZsite|03|dev|” --algo bm -j DROP
+
 docker exec -d clab-{{networkname}}-router-WAN iptables -A FORWARD -d 172.16.0.2 -p tcp --dport 80 -j ACCEPT
 docker exec -d clab-{{networkname}}-router-WAN iptables -A FORWARD -s 172.16.0.2 -p tcp -j ACCEPT
 docker exec -d clab-{{networkname}}-router-WAN iptables -A FORWARD -s 172.16.0.3 -j ACCEPT
