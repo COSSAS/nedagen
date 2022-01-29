@@ -1,0 +1,192 @@
+name: {{ networkname }}
+
+mgmt:
+  network: custom_mgmt                # management network name
+  ipv4_subnet: 172.30.0.0/16       # ipv4 range
+
+topology:
+  defaults:
+    kind: linux
+  nodes:
+    router-WAN:
+      image: {{ frrimage }}
+      binds:
+        - /etc/containerlab/{{networkname}}/router-WAN/daemons:/etc/frr/daemons
+        - /etc/containerlab/{{networkname}}/router-WAN/frr.conf:/etc/frr/frr.conf
+    router-LAN1:
+      image: {{ frrimage }}
+      binds:
+        - /etc/containerlab/{{networkname}}/router-LAN1/daemons:/etc/frr/daemons
+        - /etc/containerlab/{{networkname}}/router-LAN1/frr.conf:/etc/frr/frr.conf
+    router-LAN2:
+      image: {{ frrimage }}
+      binds:
+        - /etc/containerlab/{{networkname}}/router-LAN2/daemons:/etc/frr/daemons
+        - /etc/containerlab/{{networkname}}/router-LAN2/frr.conf:/etc/frr/frr.conf
+    router-Internet:
+      image: {{ frrimage }}
+      binds:
+        - /etc/containerlab/{{networkname}}/router-Internet/daemons:/etc/frr/daemons
+        - /etc/containerlab/{{networkname}}/router-Internet/frr.conf:/etc/frr/frr.conf
+    br-DMZ:
+      image: {{ bridgeclientimage }}
+    br-LAN1:
+      image: {{ bridgeclientimage }}
+    br-LAN2:
+      image: {{ bridgeclientimage }}
+    br-Internet:
+      image: {{ bridgeclientimage }}
+    Attacker-LAN:
+      image: {{ pythonimage }}
+# Converting Department Percentages to Number of Clients
+{% set LANdevs = (NumberofLANclients | int *DevsPercentage | int *0.01)|int %}
+{% set LANadmins = (NumberofLANclients | int *AdminPercentage | int *0.01)|int %}
+{% set LANops = (NumberofLANclients | int *OpsPercentage | int *0.01)|int %}
+
+# Creating Departments + LAN Clients
+{% for i in range(1, LANdevs | int +1) %}
+    Client{{ i }}-DEVS-LAN:
+      image: {{ alpineimage }}
+      binds:
+        - /etc/containerlab/{{networkname}}/traffic-generation/LANweb.sh:/LANweb.sh
+        - /etc/containerlab/{{networkname}}/traffic-generation/pingServers.sh:/pingServers.sh
+        - /etc/containerlab/{{networkname}}/traffic-generation/ssh.sh:/ssh.sh
+        - /etc/containerlab/{{networkname}}/traffic-generation/ftp.sh:/ftp.sh
+        - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
+{% endfor %}
+{% for i in range(1, LANadmins | int +1) %}
+    Client{{ i }}-ADMINS-LAN:
+      image: {{ alpineimage }}
+      binds:
+        - /etc/containerlab/{{networkname}}/traffic-generation/LANweb.sh:/LANweb.sh
+        - /etc/containerlab/{{networkname}}/traffic-generation/ssh.sh:/ssh.sh
+        - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
+{% endfor %}
+{% for i in range(1, LANops | int +1) %}
+    Client{{ i }}-OPS-LAN:
+      image: {{ alpineimage }}
+      binds:
+        - /etc/containerlab/{{networkname}}/traffic-generation/LANweb.sh:/LANweb.sh
+        - /etc/containerlab/{{networkname}}/traffic-generation/ssh.sh:/ssh.sh
+        - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
+{% endfor %}
+
+# DMZ servers
+    Server1-nginx-DMZ:
+      image: {{ webservernginximage }}
+      binds:
+        - /etc/containerlab/{{networkname}}/nginx/DMZsite.conf:/etc/nginx/conf.d/default.conf
+    Server2-control_ftp-DMZ:
+      image: {{ alpineimage }}
+      binds:
+        - /etc/containerlab/{{networkname}}/ftp/conf.sh:/ftp/conf.sh
+    Server3-nginx-DMZ:
+      image: {{ webservernginximage }}
+    Server4-NSD-DMZ:
+      image: {{ alpineimage }}
+      binds:
+        - /etc/containerlab/{{networkname}}/dns/nsd.conf:/etc/nsd/nsd.conf
+        - /etc/containerlab/{{networkname}}/dns/DMZsite.dev.zone:/etc/nsd/DMZsite.dev.zone
+        - /etc/containerlab/{{networkname}}/dns/httpsDMZsite.dev.zone:/etc/nsd/httpsDMZsite.dev.zone
+
+# LAN servers
+    Server1-samba-LAN:
+      image: {{ sambaimage }}
+      binds:
+        - /etc/containerlab/{{networkname}}/SMBconf.sh:/root/SMBconf.sh
+    Server2-vpn-LAN:
+      image: {{ vpnimage }}
+      env:
+        PUID: 1000
+        PGID: 1000
+        TZ: Europe/Amsterdam
+# Converting Department Percentages to Number of Clients
+{% set WANdevs = (NumberofWANclients | int *DevsPercentage | int *0.01)|int %}
+{% set WANadmins = (NumberofWANclients | int *AdminPercentage | int *0.01)|int %}
+{% set WANops = (NumberofWANclients | int *OpsPercentage | int *0.01)|int %}
+
+# Creating Departments + WAN Clients
+{% for i in range(1, WANdevs | int +1) %}
+    Client{{ i }}-DEVS-WAN:
+      image: {{ alpineimage }}
+      binds:
+        - /etc/containerlab/{{networkname}}/traffic-generation/LANweb.sh:/LANweb.sh
+        - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
+{% endfor %}
+{% for i in range(1, WANadmins | int +1) %}
+    Client{{ i }}-ADMINS-WAN:
+      image: {{ alpineimage }}
+      binds:
+        - /etc/containerlab/{{networkname}}/traffic-generation/WANweb.sh:/WANweb.sh
+        - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
+{% endfor %}
+{% for i in range(1, WANops | int +1) %}
+    Client{{ i }}-OPS-WAN:
+      image: {{ alpineimage }}
+      binds:
+        - /etc/containerlab/{{networkname}}/traffic-generation/WANweb.sh:/WANweb.sh
+        - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
+{% endfor %}
+    Attacker-WAN:
+      image: {{ pythonimage }}
+    Server1-alpine-WAN:
+      image: {{ alpineimage }}
+
+  links:
+
+    # router links
+    - endpoints: ["router-Internet:eth1", "router-WAN:eth1"]
+    - endpoints: ["router-Internet:eth2", "br-Internet:eth1"]
+
+    - endpoints: ["router-WAN:eth2", "router-LAN1:eth1"]
+    - endpoints: ["router-WAN:eth3", "router-LAN2:eth1"]
+    - endpoints: ["router-WAN:eth4", "br-DMZ:eth1"]
+
+    - endpoints: ["router-LAN1:eth2", "router-LAN2:eth2"]
+    - endpoints: ["router-LAN1:eth3", "br-LAN1:eth1"]
+    - endpoints: ["router-LAN1:eth4", "br-LAN1:eth2"]
+    - endpoints: ["router-LAN1:eth5", "br-LAN1:eth3"]
+
+    - endpoints: ["router-LAN2:eth3", "br-LAN2:eth1"]
+    - endpoints: ["router-LAN2:eth4", "br-LAN2:eth2"]
+
+
+    # client and server links
+    - endpoints: ["Attacker-WAN:eth1", "br-Internet:eth4"]
+    - endpoints: ["Server1-alpine-WAN:eth1", "br-Internet:eth5"]
+
+    - endpoints: ["Server1-nginx-DMZ:eth1", "br-DMZ:eth2"]
+    - endpoints: ["Server2-control_ftp-DMZ:eth1", "br-DMZ:eth3"]
+    - endpoints: ["Server3-nginx-DMZ:eth1", "br-DMZ:eth4"]
+    - endpoints: ["Server4-NSD-DMZ:eth1", "br-DMZ:eth5"]
+
+    - endpoints: ["Server1-samba-LAN:eth1", "br-LAN2:eth3"]
+    - endpoints: ["Server2-vpn-LAN:eth1", "br-LAN2:eth4"]
+
+    - endpoints: ["Attacker-LAN:eth1", "br-LAN1:eth4"]
+
+# Departments LAN
+{% for y in range(1, LANdevs | int +1) %}
+    - endpoints: ["Client{{ y }}-DEVS-LAN:eth1", "br-LAN1:eth{{ y + staticinterfaces_brLan1|int }}"]
+{% endfor %}
+
+{% for y in range(1, LANadmins | int +1) %}
+    - endpoints: ["Client{{ y }}-ADMINS-LAN:eth1", "br-LAN1:eth{{ LANdevs|int + y + staticinterfaces_brLan1|int }}"]
+{% endfor %}
+
+{% for y in range(1, LANops | int +1) %}
+    - endpoints: ["Client{{ y }}-OPS-LAN:eth1", "br-LAN1:eth{{ LANdevs|int + LANadmins|int + y + staticinterfaces_brLan1|int }}"]
+{% endfor %}
+
+# Departments WAN
+{% for y in range(1, WANdevs | int +1) %}
+    - endpoints: ["Client{{ y }}-DEVS-WAN:eth1", "br-Internet:eth{{ y + staticinterfaces_brInternet|int }}"]
+{% endfor %}
+
+{% for y in range(1, WANadmins | int +1) %}
+    - endpoints: ["Client{{ y }}-ADMINS-WAN:eth1", "br-Internet:eth{{ WANdevs|int + y + staticinterfaces_brInternet|int }}"]
+{% endfor %}
+
+{% for y in range(1, WANops | int +1) %}
+    - endpoints: ["Client{{ y }}-OPS-WAN:eth1", "br-Internet:eth{{ WANdevs|int + WANadmins|int + y + staticinterfaces_brInternet|int }}"]
+{% endfor %}

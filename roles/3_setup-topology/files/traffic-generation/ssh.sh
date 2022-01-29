@@ -11,6 +11,7 @@ do
     rm random.stuff
 EOF
     sleep $((20*$ssh_weight))
+    wait
     
 done
 

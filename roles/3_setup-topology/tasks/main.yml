@@ -25,6 +25,7 @@
     - router-Internet
     - nginx
     - dns
+    - ftp
     - traffic-generation
     - profiles
     - LANclient_scripts
@@ -106,6 +107,13 @@
     dest: /etc/containerlab/{{ networkname }}/dns/httpsDMZsite.dev.zone
     mode: 0644
 
+- name: Copy FTP Config
+  become: yes
+  copy:
+    src: ftp/conf.sh
+    dest: /etc/containerlab/{{ networkname }}/ftp/conf.sh
+    mode: 0644
+
 - name: Copy config variables
   become: yes
   copy:
@@ -117,6 +125,13 @@
   copy:
     src: traffic-generation/ssh.sh
     dest: /etc/containerlab/{{ networkname }}/traffic-generation/ssh.sh
+    mode: 0744
+
+- name: Copy FTP Traffic Generation Script
+  become: yes
+  copy:
+    src: traffic-generation/ftp.sh
+    dest: /etc/containerlab/{{ networkname }}/traffic-generation/ftp.sh
     mode: 0744
 
 - name: Copy ICMP Traffic Generation Script
