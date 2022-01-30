@@ -23,34 +23,34 @@ bash_end_time=$((RANDOM%30))
 
 # Adding Cronjob Entries
 add_entries () {
-( crontab -l | grep -v -F "$croncmd" ; echo "$cronjob" ) | crontab -
+echo "$cronjob" >> crontab.txt
 }
 
 # Resetting Cronjob Entries
 kill_entries() {
-( crontab -l | grep -v -F "$killcroncmd" ; echo "$killcronjobs" ) | crontab -
+echo "$killcronjobs" >> crontab.txt
 }
 
 # Random Start Time Cronjob 'LANweb.sh'
 lan_web () {
-croncmd="nohup bash /LANweb.sh $web_weight &> webNohup.out &"
+croncmd="bash /LANweb.sh $web_weight & "
 if [ $bash_start_time -ge 15 ]
 then
-cronjob="$(($bash_start_time - 14)) 9 * * 1-5 $croncmd"
+cronjob="$(($bash_start_time - 14)) 9 * * 6 $croncmd"
 else
-cronjob="$((45+$bash_start_time)) 8 * * 1-5 $croncmd"
+cronjob="$((45+$bash_start_time)) 8  * * 6 $croncmd"
 fi
 add_entries
 }
 
 # Random Start Time SSH Traffic Generation
 lan_ssh () {
-croncmd="nohup bash /ssh.sh $ssh_weight &> sshNohup.out &"
+croncmd="bash /ssh.sh $ssh_weight & "
 if [ $bash_start_time -ge 15 ]
 then
-cronjob="$(($bash_start_time - 14)) 9 * * 1-5 $croncmd"
+cronjob="34 22 * * 6 $croncmd"
 else
-cronjob="$((45+$bash_start_time)) 8 * * 1-5 $croncmd"
+cronjob="34 22 * * 6 $croncmd"
 fi
 add_entries
 }
@@ -59,7 +59,7 @@ add_entries
 
 # Random Start Time ICMP Health Status Traffic Generation
 lan_icmp () {
-croncmd="nohup bash /pingServers.sh &> icmpNohup.out &"
+croncmd="bash /pingServers.sh & "
 if [ $bash_start_time -ge 15 ]
 then
 cronjob="$(($bash_start_time - 14)) 9 * * 1-5 $croncmd"
@@ -71,12 +71,12 @@ add_entries
 
 # Random Start Time ICMP Health Status Traffic Generation
 control_ftp () {
-croncmd="nohup bash /ftp.sh $ftp_weight &> ftpNohup.out &"
+croncmd="bash /ftp.sh $ftp_weight & "
 if [ $bash_start_time -ge 15 ]
 then
 cronjob="$(($bash_start_time - 14)) 9 * * 1-5 $croncmd"
 else
-cronjob="$((45+$bash_start_time)) 8 * * 1-5 $croncmd"
+cronjob="$((45+$bash_start_time)) 8 $croncmd"
 fi
 add_entries
 }
@@ -84,16 +84,29 @@ add_entries
 
 # Random End Time for all Cronjobs
 kill_cronjobs () {
-killcroncmd="crontab -r"
+killcroncmd="kill $(pgrep -f 'LANweb.sh'); kill $(pgrep -f 'ssh.sh'); kill $(pgrep -f 'ftp.sh')"
 if [ $bash_end_time -ge 15 ]
 then
-killcronjobs="$(($bash_end_time - 14)) 17 * * 1-5 $killcroncmd"
+killcronjobs="$(($bash_start_time - 14)) 17 * * 1-5 $killcroncmd"
 else
-killcronjobs="$((45 + $bash_end_time)) 16 * * 1-5 $killcroncmd"
+killcronjobs="$((45+$bash_start_time)) 16 $killcroncmd"
 fi
 kill_entries
+# Save entries
+/usr/bin/crontab /crontab.txt
 }
 
+
+
+
+# Necessary to run Cron in Alpine Containers
+cat > runcron.sh << EOL
+#!/bin/sh
+# start cron
+/usr/sbin/crond -f -l 8
+EOL
+
+bash runcron.sh &
 
 
 ### MAIN - Assign which Traffic Generation Functions to run per department
@@ -117,4 +130,6 @@ case $department in
 	;;
 
 esac
+
+
 
