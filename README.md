@@ -63,7 +63,7 @@ WAN clients and Attacker nodes do not have internet access after initialization
 
 
 ## License
-*This tool is fully open source. It does rely on containerlab which is made by Nokia and licensed under the BSD 3-Clause License and the open source Atomic Red Team*
+This tool is fully open source. It does rely on containerlab which is made by Nokia and licensed under the BSD 3-Clause License and the open source Atomic Red Team.
 
 
 
