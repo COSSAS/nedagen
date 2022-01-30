@@ -4,7 +4,7 @@ This tool builds a network with a user-defined size and profile. It can be scale
 Protocols in the dataset:
 
 |Protocols|
-|---------|
+|--------|
 | ICMP |
 | OSPF |
 | BGP |
@@ -17,7 +17,8 @@ Protocols in the dataset:
 | SMB |
 | FTP |
 
-Profiles:
+|Profiles |
+|--------|
 |Developers |
 | Admins |
 | Operations |
