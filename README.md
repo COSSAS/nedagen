@@ -1,7 +1,7 @@
 # NeDaGen - A Network Dataset Generator
 This tool builds a network with a user-defined size and profile. It can be scaled to approximately 1000 containers and the characteristics of the network can be easily modified. It also incorporates Atomic-operator to generate malicious network traffic (based on the MITRE ATT&CK framework). All corresponding traffic is captured in PCAP(s)/JSON format for further data analysis. 
 
-Protocols in the dataset:
+## Characteristics
 
 |Protocols|
 |--------|
