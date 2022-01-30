@@ -2,26 +2,26 @@
 This tool builds a network with a user-defined size and profile. It can be scaled to approximately 1000 containers and the characteristics of the network can be easily modified. It also incorporates Atomic-operator to generate malicious network traffic (based on the MITRE ATT&CK framework). All corresponding traffic is captured in PCAP(s)/JSON format for further data analysis. 
 
 Protocols in the dataset:
-***
-- ICMP
-- OSPF
-- BGP
-- ARP
-- DNS
-- HTTP
-- HTTPS
-- SSH
-- WG
-- SMB
-- FTP
-***
+
+|Protocols|
+|---------|
+| ICMP |
+| OSPF |
+| BGP |
+| ARP |
+| DNS |
+| HTTP |
+| HTTPS |
+| SSH |
+| WG |
+| SMB |
+| FTP |
 
 Profiles:
-***
-- Developers
-- Admins
-- Operations
-***
+|Developers |
+| Admins |
+| Operations |
+
 
 ### Support: 
 Verified and tested on:
