@@ -11,4 +11,5 @@ ping -c 1 192.168.50.2 &
 ping -c 1 192.168.40.5 &
 ping -c 1 172.16.1.1 &
 sleep 60
+wait
 done

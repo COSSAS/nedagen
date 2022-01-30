@@ -23,12 +23,16 @@ bash_end_time=$((RANDOM%30))
 
 # Adding Cronjob Entries
 add_entries () {
-echo "$cronjob" >> crontab.txt
+cat >> crontab.txt << EOL
+$cronjob
+EOL
 }
 
 # Resetting Cronjob Entries
 kill_entries() {
-echo "$killcronjobs" >> crontab.txt
+cat >> crontab.txt << EOF
+$killcronjobs
+EOF
 }
 
 # Random Start Time Cronjob 'LANweb.sh'
@@ -36,9 +40,9 @@ lan_web () {
 croncmd="bash /LANweb.sh $web_weight & "
 if [ $bash_start_time -ge 15 ]
 then
-cronjob="$(($bash_start_time - 14)) 9 * * 6 $croncmd"
+cronjob="$(($bash_start_time - 14)) 9 * * 1-5 $croncmd"
 else
-cronjob="$((45+$bash_start_time)) 8  * * 6 $croncmd"
+cronjob="$((45+$bash_start_time)) 8  * * 1-5 $croncmd"
 fi
 add_entries
 }
@@ -48,9 +52,9 @@ lan_ssh () {
 croncmd="bash /ssh.sh $ssh_weight & "
 if [ $bash_start_time -ge 15 ]
 then
-cronjob="34 22 * * 6 $croncmd"
+cronjob="34 22 * * 1-5 $croncmd"
 else
-cronjob="34 22 * * 6 $croncmd"
+cronjob="34 22 * * 1-5 $croncmd"
 fi
 add_entries
 }
@@ -76,20 +80,31 @@ if [ $bash_start_time -ge 15 ]
 then
 cronjob="$(($bash_start_time - 14)) 9 * * 1-5 $croncmd"
 else
-cronjob="$((45+$bash_start_time)) 8 $croncmd"
+cronjob="$((45+$bash_start_time)) 8 * * 1-5 $croncmd"
 fi
 add_entries
 }
 
+# Random Start Time ICMP Health Status Traffic Generation
+lan_smb () {
+croncmd="bash /LANsmb.sh $smb_weight & "
+if [ $bash_start_time -ge 15 ]
+then
+cronjob="$(($bash_start_time - 14)) 9 * * 1-5 $croncmd"
+else
+cronjob="$((45+$bash_start_time)) 8 * * 1-5 $croncmd"
+fi
+add_entries
+}
 
 # Random End Time for all Cronjobs
 kill_cronjobs () {
-killcroncmd="kill $(pgrep -f 'LANweb.sh'); kill $(pgrep -f 'ssh.sh'); kill $(pgrep -f 'ftp.sh')"
+killcroncmd="kill \$(pgrep -f 'LANweb.sh'); kill \$(pgrep -f 'ssh.sh'); kill \$(pgrep -f 'ftp.sh'); kill \$(pgrep -f 'LANsmb.sh')"
 if [ $bash_end_time -ge 15 ]
 then
-killcronjobs="$(($bash_start_time - 14)) 17 * * 1-5 $killcroncmd"
+killcronjobs="$(($bash_end_time - 14)) 17 * * 1-5 $killcroncmd"
 else
-killcronjobs="$((45+$bash_start_time)) 16 $killcroncmd"
+killcronjobs="$((45+$bash_end_time)) 16 * * 1-5 $killcroncmd"
 fi
 kill_entries
 # Save entries

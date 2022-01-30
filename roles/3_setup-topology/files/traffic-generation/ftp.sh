@@ -16,6 +16,7 @@ cd /home/ftpuser/
 put /tmp/random.stuff
 rm random.stuff
 EOF
-
-sleep $((20*$ftp_weight))
+ftp_sleep=$(bc<<<"($ftp_weight*10)") 
+sleep $ftp_sleep
+wait
 done

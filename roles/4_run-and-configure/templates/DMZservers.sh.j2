@@ -20,7 +20,7 @@ nameserver 1.1.1.1
 nameserver 8.8.8.8" > /etc/resolv.conf'
 ### SSH Config
 docker exec clab-{{networkname}}-Server2-control_ftp-DMZ adduser sshuser --gecos "" --disabled-password
-docker exec clab-{{networkname}}-Server2-control_ftp-DMZ sh -c 'echo "sshuser:sshuserpasswordpassword" | chpasswd'
+docker exec clab-{{networkname}}-Server2-control_ftp-DMZ sh -c 'echo "sshuser:sshuserpassword" | chpasswd'
 docker exec clab-{{networkname}}-Server2-control_ftp-DMZ sh -c "echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config"
 docker exec clab-{{networkname}}-Server2-control_ftp-DMZ sh -c 'ssh-keygen -A'
 docker exec clab-{{networkname}}-Server2-control_ftp-DMZ sh -c 'rc-status'

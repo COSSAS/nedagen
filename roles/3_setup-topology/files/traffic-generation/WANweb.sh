@@ -2,7 +2,7 @@
 
 # Catching Input from main Cronjob
 web_weight=$1
-
+web_sleep=$(bc<<<"($web_weight*10)") 
 
 
 ip route delete default
@@ -10,17 +10,18 @@ echo "nameserver 127.0.0.1
 nameserver 1.1.1.1
 nameserver 8.8.8.8" > /etc/resolv.conf
 
-# Sleep statements to account for traffic distribution (based upon input weights)
 
 # Randomly query HTTP or HTTPS sites
 web_traffic () {
     if [ $(($2 % 2)) -eq 0 ]
     then
         curl DMZsite.dev &
-        sleep $web_weight
+        sleep $web_sleep
+        wait
     else
         curl -k https://httpsDMZsite.dev &
-        sleep $web_weight
+        sleep $web_sleep
+        wait
     fi
 }
 

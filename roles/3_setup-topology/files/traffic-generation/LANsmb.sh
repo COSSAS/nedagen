@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # Catch weight
-smb=$1
+smb_weight=$1
 
 
 smb_traffic () {
 cd /tmp
 
-for clients in {1..{{ NumberofLANclients }}}
+while true
 do
 # Series of smbclient commands to list and retrieve all files from directory
 smbclient //192.168.40.5/Sambaclient$clients -U 'client$clients%password$clients' << SMBCLIENTCOMMANDS
@@ -19,20 +19,13 @@ mget *
 exit
 SMBCLIENTCOMMANDS
 
-
-# Traffic Distribution
-sleep $smb
-
-
-
-smbclient //192.168.40.5/$clients -U $clients &
-sleep $smb
-done
+smb_sleep=$(bc<<<"($smb_weight*10)") 
+sleep $smb_sleep
+wait
 }
-
 
 smb_traffic
 
 
-
+# Traffic Distribution
 

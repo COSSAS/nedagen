@@ -52,6 +52,7 @@ topology:
         - /etc/containerlab/{{networkname}}/traffic-generation/pingServers.sh:/pingServers.sh
         - /etc/containerlab/{{networkname}}/traffic-generation/ssh.sh:/ssh.sh
         - /etc/containerlab/{{networkname}}/traffic-generation/ftp.sh:/ftp.sh
+        - /etc/containerlab/{{networkname}}/traffic-generation/LANsmb.sh:/LANsmb.sh
         - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
 {% endfor %}
 {% for i in range(1, LANadmins | int +1) %}
@@ -60,6 +61,7 @@ topology:
       binds:
         - /etc/containerlab/{{networkname}}/traffic-generation/LANweb.sh:/LANweb.sh
         - /etc/containerlab/{{networkname}}/traffic-generation/ssh.sh:/ssh.sh
+        - /etc/containerlab/{{networkname}}/traffic-generation/LANsmb.sh:/LANsmb.sh
         - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
 {% endfor %}
 {% for i in range(1, LANops | int +1) %}
@@ -68,6 +70,7 @@ topology:
       binds:
         - /etc/containerlab/{{networkname}}/traffic-generation/LANweb.sh:/LANweb.sh
         - /etc/containerlab/{{networkname}}/traffic-generation/ssh.sh:/ssh.sh
+        - /etc/containerlab/{{networkname}}/traffic-generation/LANsmb.sh:/LANsmb.sh
         - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
 {% endfor %}
 

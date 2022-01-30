@@ -127,6 +127,14 @@
     dest: /etc/containerlab/{{ networkname }}/traffic-generation/ssh.sh
     mode: 0744
 
+
+- name: Copy FTP Traffic Generation Script
+  become: yes
+  copy:
+    src: traffic-generation/LANsmb.sh
+    dest: /etc/containerlab/{{ networkname }}/traffic-generation/LANsmb.sh
+    mode: 0744
+
 - name: Copy FTP Traffic Generation Script
   become: yes
   copy:
