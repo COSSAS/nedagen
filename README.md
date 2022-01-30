@@ -20,7 +20,7 @@ Profiles:
 - Operations
 
 
-### Support: 
+### Support
 Verified and tested on:
 ```bash
 Distributor ID: Ubuntu
@@ -54,7 +54,7 @@ sudo python -m pip install ansible
 
 
 ## Usage
-
+TODO
 
 ### Notes
 WAN clients and Attacker nodes do not have internet access after initialization
