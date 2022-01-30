@@ -47,8 +47,8 @@ sudo python -m pip install ansible
 2. Clone this repo:
 ```git clone https://ci.tno.nl/gitlab/smd/purplecontainerlab/code nedage```
 
-3. Enter to the directory:
-```cd code```
+3. Enter the cloned directory:
+```cd nedage```
 
 4. Fill in config.yml
 
