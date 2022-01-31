@@ -21,7 +21,6 @@ bash_start_time=$((RANDOM%30))
 bash_end_time=$((RANDOM%30))
 
 
-
 # Adding Cronjob Entries
 add_entries () {
 cat >> crontab.txt << EOL
@@ -60,21 +59,7 @@ fi
 add_entries
 }
 
-
-
-# Random Start Time ICMP Health Status Traffic Generation
-lan_icmp () {
-croncmd="bash /pingServers.sh & "
-if [ $bash_start_time -ge 15 ]
-then
-cronjob="$(($bash_start_time - 14)) 9 * * 1-5 $croncmd"
-else
-cronjob="$((45+$bash_start_time)) 8 * * 1-5 $croncmd"
-fi
-add_entries
-}
-
-# Random Start Time ICMP Health Status Traffic Generation
+# Random Start Time FTP Traffic Generation
 control_ftp () {
 croncmd="bash /ftp.sh $ftp_weight & "
 if [ $bash_start_time -ge 15 ]
@@ -138,7 +123,6 @@ case $department in
     # Execute Cronjobs
     lan_web
     lan_ssh
-    control_ftp
     kill_cronjobs
 	;;
 
@@ -152,7 +136,7 @@ case $department in
 
 	administration)
     bash /LANweb.sh $web_weight 
-    
+
     lan_web
     kill_cronjobs
 	;;
