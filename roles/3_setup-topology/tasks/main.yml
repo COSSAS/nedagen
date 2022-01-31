@@ -163,6 +163,13 @@
     dest: /etc/containerlab/{{ networkname }}/traffic-generation/WANweb.sh
     mode: 0744
 
+- name: Copy Tranco websites
+  become: yes
+  copy:
+    src: traffic-generation/1000000.csv
+    dest: /etc/containerlab/{{ networkname }}/traffic-generation/1000000.csv
+    mode: 0744
+
 - name: Configure network topology
   become: yes
   template:

@@ -5,21 +5,31 @@ web_weight=$1
 
 web_sleep=$(bc<<<"($web_weight*10)") 
 
-
+random_number=$(($RANDOM % 10))
 
 while true
 do
 
-    if [ $(($RANDOM % 2)) -eq 0 ]
+    arr_record2=( $(tail -n +2 1000000.csv | cut -d ',' -f2) )
+
+    if [ random_number -eq 0 ]
     then
-        curl DMZsite.dev
+        echo "nameserver 172.16.0.5" | tee /etc/resolv.conf
+        curl -k -s DMZsite.dev > /dev/null
+        sleep $web_sleep
+        wait
+    elif [ random_number -eq 1 ]
+        echo "nameserver 172.16.0.5" | tee /etc/resolv.conf
+        curl -k -s https://httpsDMZsite.dev > /dev/null
         sleep $web_sleep
         wait
     else
-        curl -k https://httpsDMZsite.dev
+        echo "nameserver 1.1.1.1
+        nameserver 8.8.8.8" | tee /etc/resolv.conf
+        random_site=$(shuf -i 1-1000000 -n1)
+        curl -k -s ${arr_record2[$random_site]} > /dev/null
         sleep $web_sleep
         wait
     fi
 
-    sleep 5
 done

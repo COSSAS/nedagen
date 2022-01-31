@@ -4,7 +4,6 @@
 while true
 do
 ping -c 1 172.16.0.2 &
-ping -c 1 172.16.0.3 &
 ping -c 1 172.16.0.4 &
 ping -c 1 172.16.0.5 &
 ping -c 1 192.168.50.2 &

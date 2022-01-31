@@ -4,13 +4,6 @@
 web_weight=$1
 web_sleep=$(bc<<<"($web_weight*10)") 
 
-
-ip route delete default
-echo "nameserver 127.0.0.1
-nameserver 1.1.1.1
-nameserver 8.8.8.8" > /etc/resolv.conf
-
-
 # Randomly query HTTP or HTTPS sites
 web_traffic () {
     if [ $(($2 % 2)) -eq 0 ]
