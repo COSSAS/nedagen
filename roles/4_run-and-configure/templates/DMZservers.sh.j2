@@ -6,8 +6,10 @@ docker exec -d clab-{{networkname}}-Server1-nginx-DMZ ip addr add 172.16.0.2/24 
 docker exec -d clab-{{networkname}}-Server1-nginx-DMZ ip route delete default
 docker exec clab-{{networkname}}-Server1-nginx-DMZ {{ ipv6_configuration }}
 docker exec -d clab-{{networkname}}-Server1-nginx-DMZ ip route add 0.0.0.0/0 via 172.16.0.1 dev eth1
-docker exec -d clab-{{networkname}}-Server1-nginx-DMZ bash -c 'echo "nameserver 127.0.0.1" > /etc/resolv.conf'
+docker exec -d clab-{{networkname}}-Server1-nginx-DMZ bash -c 'echo "nameserver 172.16.0.5" > /etc/resolv.conf'
 
+docker exec -d clab-{{networkname}}-Server2-control_ftp-DMZ sh -c 'echo "nameserver 1.1.1.1
+nameserver 8.8.8.8" > /etc/resolv.conf'
 docker exec clab-{{networkname}}-Server2-control_ftp-DMZ apk --no-cache add openssh bash vim openrc vsftpd 
 docker exec -d clab-{{networkname}}-Server2-control_ftp-DMZ ip addr add 172.16.0.3/24 dev eth1
 docker exec -d clab-{{networkname}}-Server2-control_ftp-DMZ ip route delete default
@@ -34,11 +36,13 @@ docker exec -d clab-{{networkname}}-Server3-nginx-DMZ ip addr add 172.16.0.4/24 
 docker exec -d clab-{{networkname}}-Server3-nginx-DMZ ip route delete default
 docker exec clab-{{networkname}}-Server3-nginx-DMZ {{ ipv6_configuration }}
 docker exec -d clab-{{networkname}}-Server3-nginx-DMZ ip route add 0.0.0.0/0 via 172.16.0.1 dev eth1
-docker exec -d clab-{{networkname}}-Server3-nginx-DMZ bash -c 'echo "nameserver 127.0.0.1" > /etc/resolv.conf'
+docker exec -d clab-{{networkname}}-Server3-nginx-DMZ bash -c 'echo "nameserver 172.16.0.5" > /etc/resolv.conf'
 docker exec clab-{{networkname}}-Server3-nginx-DMZ bash -c 'openssl req -x509 -newkey rsa:4096 -nodes -out /etc/ssl/certs/localhost.crt -keyout /etc/ssl/private/localhost.key -days 365 -subj "/C=NL/O=httpsDMZsite/OU=Domain Control Validated/CN=*.httpsDMZsite.dev"'
 docker cp /etc/containerlab/{{networkname}}/httpsDMZsite.conf clab-{{networkname}}-Server3-nginx-DMZ:/etc/nginx/conf.d/default.conf
 docker exec clab-{{networkname}}-Server3-nginx-DMZ bash -c 'service nginx reload'
 
+docker exec clab-{{networkname}}-Server4-NSD-DMZ sh -c 'echo "nameserver 1.1.1.1
+nameserver 8.8.8.8" > /etc/resolv.conf'
 docker exec clab-{{networkname}}-Server4-NSD-DMZ apk --no-cache add nsd
 docker exec -d clab-{{networkname}}-Server4-NSD-DMZ ip addr add 172.16.0.5/24 dev eth1
 docker exec -d clab-{{networkname}}-Server4-NSD-DMZ ip route delete default
@@ -46,3 +50,19 @@ docker exec -d clab-{{networkname}}-Server4-NSD-DMZ sysctl net.ipv6.conf.all.dis
 docker exec -d clab-{{networkname}}-Server4-NSD-DMZ ip route add 0.0.0.0/0 via 172.16.0.1 dev eth1
 docker exec -d clab-{{networkname}}-Server4-NSD-DMZ sh -c 'echo "nameserver 127.0.0.1" > /etc/resolv.conf'
 docker exec clab-{{networkname}}-Server4-NSD-DMZ nsd
+
+docker exec -d clab-{{networkname}}-Server5-VULN-DMZ sh -c 'echo "nameserver 1.1.1.1
+nameserver 8.8.8.8" > /etc/resolv.conf'
+docker exec -d clab-{{networkname}}-Server5-VULN-DMZ ip addr add 172.16.0.6/24 dev eth1
+docker exec -d clab-{{networkname}}-Server5-VULN-DMZ ip route delete default
+docker exec -d clab-{{networkname}}-Server5-VULN-DMZ sysctl net.ipv6.conf.all.disable_ipv6=1
+docker exec -d clab-{{networkname}}-Server5-VULN-DMZ ip route add 0.0.0.0/0 via 172.16.0.1 dev eth1
+#docker exec -d clab-{{networkname}}-Server5-VULN-DMZ sh -c 'echo "nameserver 172.16.0.5" > /etc/resolv.conf'
+
+docker exec -d clab-{{networkname}}-Server6-mail-DMZ sh -c 'echo "nameserver 1.1.1.1
+nameserver 8.8.8.8" > /etc/resolv.conf'
+docker exec -d clab-{{networkname}}-Server6-mail-DMZ ip addr add 172.16.0.7/24 dev eth1
+docker exec -d clab-{{networkname}}-Server6-mail-DMZ ip route delete default
+docker exec -d clab-{{networkname}}-Server6-mail-DMZ sysctl net.ipv6.conf.all.disable_ipv6=1
+docker exec -d clab-{{networkname}}-Server6-mail-DMZ ip route add 0.0.0.0/0 via 172.16.0.1 dev eth1
+#docker exec -d clab-{{networkname}}-Server6-mail-DMZ sh -c 'echo "nameserver 172.16.0.5" > /etc/resolv.conf'

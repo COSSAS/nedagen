@@ -1,5 +1,7 @@
 #!/bin/sh
 
+docker exec clab-{{networkname}}-Server1-alpine-WAN sh -c 'echo "nameserver 1.1.1.1
+nameserver 8.8.8.8" > /etc/resolv.conf'
 docker exec clab-{{networkname}}-Server1-alpine-WAN apk --no-cache add openssh samba-client curl
 docker exec clab-{{networkname}}-Server1-alpine-WAN ip addr add 10.0.0.2/8 dev eth1
 docker exec -d clab-{{networkname}}-Server1-alpine-WAN ip route delete default

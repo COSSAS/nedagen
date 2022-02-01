@@ -2,7 +2,7 @@ name: {{ networkname }}
 
 mgmt:
   network: custom_mgmt                # management network name
-  ipv4_subnet: 172.30.0.0/16       # ipv4 range
+  ipv4_subnet: 172.30.0.0/16          # ipv4 range
 
 topology:
   defaults:
@@ -94,6 +94,10 @@ topology:
         - /etc/containerlab/{{networkname}}/dns/nsd.conf:/etc/nsd/nsd.conf
         - /etc/containerlab/{{networkname}}/dns/DMZsite.dev.zone:/etc/nsd/DMZsite.dev.zone
         - /etc/containerlab/{{networkname}}/dns/httpsDMZsite.dev.zone:/etc/nsd/httpsDMZsite.dev.zone
+    Server5-VULN-DMZ:
+      image: {{ log4jimage }}
+    Server6-mail-DMZ:
+      image: {{ postfiximage }}
 
 # LAN servers
     Server1-samba-LAN:

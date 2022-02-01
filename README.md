@@ -1,4 +1,4 @@
-# NeDaGen - A Network Dataset Generator
+# NeDaGen - A Network Traffic Dataset Generator
 This tool builds a network with a user-defined size and profile. It can be scaled to approximately 1000 containers and the characteristics of the network can be easily modified. It also incorporates Atomic-operator to generate malicious network traffic (based on the MITRE ATT&CK framework). All corresponding traffic is captured in PCAP(s)/JSON format for further data analysis. 
 
 Protocols in the dataset:
@@ -68,7 +68,6 @@ WAN clients and Attacker nodes do not have internet access after initialization
 
 ## License
 This tool is fully open source. It does rely on containerlab which is made by Nokia and licensed under the BSD 3-Clause License and the open source Atomic Red Team.
-
 
 
 ## Contact
