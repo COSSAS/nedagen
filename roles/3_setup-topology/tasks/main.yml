@@ -26,6 +26,7 @@
     - nginx
     - dns
     - ftp
+    - log4j
     - traffic-generation
     - profiles
     - LANclient_scripts
@@ -124,6 +125,20 @@
   copy:
     src: ftp/conf.sh
     dest: /etc/containerlab/{{ networkname }}/ftp/conf.sh
+    mode: 0644
+
+- name: Copy Log4j JDK Dependency
+  become: yes
+  copy:
+    src: log4j/jdk-8u20-linux-x64.tar.gz
+    dest: /etc/containerlab/{{ networkname }}/log4j/jdk-8u20-linux-x64.tar.gz
+    mode: 0644
+
+- name: Copy Log4j Vulnerable WebApp
+  become: yes
+  copy:
+    src: log4j/log4shell-1.0-SNAPSHOT.war
+    dest: /etc/containerlab/{{ networkname }}/log4j/log4shell-1.0-SNAPSHOT.war
     mode: 0644
 
 - name: Copy config variables

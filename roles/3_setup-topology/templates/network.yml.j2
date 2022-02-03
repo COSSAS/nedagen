@@ -99,7 +99,9 @@ topology:
         - /etc/containerlab/{{networkname}}/dns/DMZsite.dev.zone:/etc/nsd/DMZsite.dev.zone
         - /etc/containerlab/{{networkname}}/dns/httpsDMZsite.dev.zone:/etc/nsd/httpsDMZsite.dev.zone
     Server5-VULN-DMZ:
-      image: {{ alpineimage }}
+      image: {{ log4jimage }}
+      binds:
+        - /etc/containerlab/{{networkname}}/log4j/log4shell-1.0-SNAPSHOT.war:/usr/local/tomcat/webapps/ROOT.war
     Server6-mail-DMZ:
       image: {{ ubuntuimage }}
 #    Server7-dhcp-DMZ:
@@ -147,11 +149,11 @@ topology:
         - /etc/containerlab/{{networkname}}/traffic-generation/sendingMail.sh:/sendingMail.sh
 {% endfor %}
     Attacker-WAN:
-      image: {{ pythonimage }}
+      image: {{ pythonimage }} # Add jdk
       binds:
         - /etc/containerlab/{{networkname}}/traffic-generation/sendingMail.sh:/sendPhisingmail.sh
         - /etc/containerlab/{{networkname}}/malware.sh:/malware.sh
-
+        - /etc/containerlab/{{networkname}}/log4j/jdk-8u20-linux-x64.tar.gz:/root/log4j/jdk-8u20-linux-x64.tar.gz
     Server1-alpine-WAN:
       image: {{ alpineimage }}
 
