@@ -9,4 +9,4 @@ vpnimage: linuxserver/wireguard
 sambaimage: dperson/samba
 pythonimage: python:3.7-slim
 postfiximage: mailu/postfix
-log4jimage: mlinarik/log4j-log4shell-vulnerable-app:latest
+log4jimage: tomcat:8.0.36-jre8

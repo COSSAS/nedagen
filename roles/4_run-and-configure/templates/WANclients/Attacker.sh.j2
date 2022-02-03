@@ -2,9 +2,22 @@
 
 docker exec clab-{{networkname}}-Attacker-WAN apt-get update -y
 docker exec clab-{{networkname}}-Attacker-WAN apt-get install {{ basic_packages }}
-docker exec clab-{{networkname}}-Attacker-WAN apt-get -yq install pip ssh
+docker exec clab-{{networkname}}-Attacker-WAN apt-get -yq install pip ssh git netcat unzip
 docker exec clab-{{networkname}}-Attacker-WAN pip install atomic-operator
 docker exec clab-{{networkname}}-Attacker-WAN atomic-operator get_atomics --destination "/root/atomic-operator"
+
+### Log4J Attacker Dependencies
+docker exec clab-{{networkname}}-Attacker-WAN curl -o /root/log4j/log4j-shell-poc.zip https://github.com/kozmer/log4j-shell-poc/archive/refs/heads/main.zip -O -J -L; 
+docker exec clab-{{networkname}}-Attacker-WAN chmod 777 /root/log4j/log4j-shell-poc.zip
+docker exec clab-{{networkname}}-Attacker-WAN unzip /root/log4j/log4j-shell-poc.zip -d /root/log4j/
+docker exec clab-{{networkname}}-Attacker-WAN pip install -r /root/log4j/log4j-shell-poc-main/requirements.txt 
+docker exec clab-{{networkname}}-Attacker-WAN cp /root/log4j/jdk-8u20-linux-x64.tar.gz /root/log4j/log4j-shell-poc-main
+docker exec clab-{{networkname}}-Attacker-WAN mv /root/log4j/log4j-shell-poc-main/jdk-8u20-linux-x64.tar.gz /root/log4j/log4j-shell-poc-main/jdk1.8.0_20.tar.gz
+docker exec clab-{{networkname}}-Attacker-WAN tar -xf /root/log4j/log4j-shell-poc-main/jdk1.8.0_20.tar.gz -C /root/log4j/log4j-shell-poc-main/
+{# docker exec clab-{{networkname}}-Attacker-WAN bash exploitlog4j #}
+
+
+
 
 docker exec -d clab-{{networkname}}-Attacker-WAN {{ ipv6_configuration }}
 docker exec -d clab-{{networkname}}-Attacker-WAN ip addr add 10.0.0.3/8 dev eth1

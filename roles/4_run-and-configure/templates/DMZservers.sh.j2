@@ -51,13 +51,18 @@ docker exec -d clab-{{networkname}}-Server4-NSD-DMZ ip route add 0.0.0.0/0 via 1
 docker exec -d clab-{{networkname}}-Server4-NSD-DMZ sh -c 'echo "nameserver 127.0.0.1" > /etc/resolv.conf'
 docker exec clab-{{networkname}}-Server4-NSD-DMZ nsd
 
+
+docker exec -d clab-{{networkname}}-Server5-VULN-DMZ apt-get update -y
+docker exec -d clab-{{networkname}}-Server5-VULN-DMZ apt-get install vim -y
 docker exec -d clab-{{networkname}}-Server5-VULN-DMZ sh -c 'echo "nameserver 1.1.1.1
 nameserver 8.8.8.8" > /etc/resolv.conf'
 docker exec -d clab-{{networkname}}-Server5-VULN-DMZ ip addr add 172.16.0.6/24 dev eth1
 docker exec -d clab-{{networkname}}-Server5-VULN-DMZ ip route delete default
 docker exec -d clab-{{networkname}}-Server5-VULN-DMZ sysctl net.ipv6.conf.all.disable_ipv6=1
 docker exec -d clab-{{networkname}}-Server5-VULN-DMZ ip route add 0.0.0.0/0 via 172.16.0.1 dev eth1
-#docker exec -d clab-{{networkname}}-Server5-VULN-DMZ sh -c 'echo "nameserver 172.16.0.5" > /etc/resolv.conf'
+docker exec -d clab-{{networkname}}-Server5-VULN-DMZ sh -c 'echo "nameserver 172.16.0.5" > /etc/resolv.conf'
+docker exec -d clab-{{networkname}}-Server5-VULN-DMZ rm -rf /usr/local/tomcat/webapps/
+
 
 docker exec -d clab-{{networkname}}-Server6-mail-DMZ sh -c 'echo "nameserver 1.1.1.1
 nameserver 8.8.8.8" > /etc/resolv.conf'

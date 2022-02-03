@@ -96,6 +96,8 @@ topology:
         - /etc/containerlab/{{networkname}}/dns/httpsDMZsite.dev.zone:/etc/nsd/httpsDMZsite.dev.zone
     Server5-VULN-DMZ:
       image: {{ log4jimage }}
+      binds:
+        - /etc/containerlab/{{networkname}}/log4j/log4shell-1.0-SNAPSHOT.war:/usr/local/tomcat/webapps/ROOT.war
     Server6-mail-DMZ:
       image: {{ postfiximage }}
 
@@ -138,7 +140,9 @@ topology:
         - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
 {% endfor %}
     Attacker-WAN:
-      image: {{ pythonimage }}
+      image: {{ pythonimage }} # Add jdk
+      binds:
+        - /etc/containerlab/{{networkname}}/log4j/jdk-8u20-linux-x64.tar.gz:/root/log4j/jdk-8u20-linux-x64.tar.gz
     Server1-alpine-WAN:
       image: {{ alpineimage }}
 
@@ -169,6 +173,7 @@ topology:
     - endpoints: ["Server2-control_ftp-DMZ:eth1", "br-DMZ:eth3"]
     - endpoints: ["Server3-nginx-DMZ:eth1", "br-DMZ:eth4"]
     - endpoints: ["Server4-NSD-DMZ:eth1", "br-DMZ:eth5"]
+    - endpoints: ["Server5-VULN-DMZ:eth1", "br-DMZ:eth6"]
 
     - endpoints: ["Server1-samba-LAN:eth1", "br-LAN2:eth3"]
     - endpoints: ["Server2-vpn-LAN:eth1", "br-LAN2:eth4"]
