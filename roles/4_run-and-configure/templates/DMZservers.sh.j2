@@ -1,21 +1,36 @@
 #!/bin/sh
 
+##### Server1-nginx-DMZ for DMZsite.dev #####
+### set DNS first to avoid resolving issues related to the hosts DNS servers
+docker exec -d clab-{{networkname}}-Server1-nginx-DMZ bash -c 'echo "nameserver 1.1.1.1
+nameserver 8.8.8.8" > /etc/resolv.conf'
+
+### install packages
 docker exec clab-{{networkname}}-Server1-nginx-DMZ apt-get update -y
 docker exec clab-{{networkname}}-Server1-nginx-DMZ apt-get install {{ basic_packages }}
+
+### set network configuration
 docker exec -d clab-{{networkname}}-Server1-nginx-DMZ ip addr add 172.16.0.2/24 dev eth1
 docker exec -d clab-{{networkname}}-Server1-nginx-DMZ ip route delete default
 docker exec clab-{{networkname}}-Server1-nginx-DMZ {{ ipv6_configuration }}
 docker exec -d clab-{{networkname}}-Server1-nginx-DMZ ip route add 0.0.0.0/0 via 172.16.0.1 dev eth1
 docker exec -d clab-{{networkname}}-Server1-nginx-DMZ bash -c 'echo "nameserver 172.16.0.5" > /etc/resolv.conf'
 
+##### Server2-control_ftp-DMZ for ftp, ping and ssh #####
+### set DNS first to avoid resolving issues related to the hosts DNS servers
 docker exec -d clab-{{networkname}}-Server2-control_ftp-DMZ sh -c 'echo "nameserver 1.1.1.1
 nameserver 8.8.8.8" > /etc/resolv.conf'
-docker exec clab-{{networkname}}-Server2-control_ftp-DMZ apk --no-cache add openssh bash vim openrc vsftpd 
+
+### install packages
+docker exec clab-{{networkname}}-Server2-control_ftp-DMZ apk --no-cache add openssh bash vim openrc vsftpd
+
+### set network configuration
 docker exec -d clab-{{networkname}}-Server2-control_ftp-DMZ ip addr add 172.16.0.3/24 dev eth1
 docker exec -d clab-{{networkname}}-Server2-control_ftp-DMZ ip route delete default
 docker exec -d clab-{{networkname}}-Server2-control_ftp-DMZ sysctl net.ipv6.conf.all.disable_ipv6=1
 docker exec -d clab-{{networkname}}-Server2-control_ftp-DMZ ip route add 0.0.0.0/0 via 172.16.0.1 dev eth1
 docker exec -d clab-{{networkname}}-Server2-control_ftp-DMZ sh -c 'echo "nameserver 172.16.0.5" > /etc/resolv.conf'
+
 ### SSH Config
 docker exec clab-{{networkname}}-Server2-control_ftp-DMZ adduser sshuser --gecos "" --disabled-password
 docker exec clab-{{networkname}}-Server2-control_ftp-DMZ sh -c 'echo "sshuser:sshuserpassword" | chpasswd'
@@ -24,60 +39,89 @@ docker exec clab-{{networkname}}-Server2-control_ftp-DMZ sh -c 'ssh-keygen -A'
 docker exec clab-{{networkname}}-Server2-control_ftp-DMZ sh -c 'rc-status'
 docker exec clab-{{networkname}}-Server2-control_ftp-DMZ sh -c 'touch /run/openrc/softlevel'
 docker exec clab-{{networkname}}-Server2-control_ftp-DMZ sh -c '/etc/init.d/sshd restart'
+
 ### FTP Config
 docker exec clab-{{networkname}}-Server2-control_ftp-DMZ bash /ftp/conf.sh
 docker exec -d clab-{{networkname}}-Server2-control_ftp-DMZ bash -c 'nohup bash pingServers.sh &'
 
+##### Server3-nginx-DMZ for httpsDMZsite.dev #####
+### set DNS first to avoid resolving issues related to the hosts DNS servers
+docker exec -d clab-{{networkname}}-Server3-nginx-DMZ bash -c 'echo "nameserver 1.1.1.1
+nameserver 8.8.8.8" > /etc/resolv.conf'
+
+### install packages
 docker exec clab-{{networkname}}-Server3-nginx-DMZ apt-get update -y
 docker exec clab-{{networkname}}-Server3-nginx-DMZ apt-get install {{ basic_packages }}
 docker exec clab-{{networkname}}-Server3-nginx-DMZ apt-get install openssl -y
 
+### set network configuration
 docker exec -d clab-{{networkname}}-Server3-nginx-DMZ ip addr add 172.16.0.4/24 dev eth1
 docker exec -d clab-{{networkname}}-Server3-nginx-DMZ ip route delete default
 docker exec clab-{{networkname}}-Server3-nginx-DMZ {{ ipv6_configuration }}
 docker exec -d clab-{{networkname}}-Server3-nginx-DMZ ip route add 0.0.0.0/0 via 172.16.0.1 dev eth1
 docker exec -d clab-{{networkname}}-Server3-nginx-DMZ bash -c 'echo "nameserver 172.16.0.5" > /etc/resolv.conf'
+
+### setup website + https
 docker exec clab-{{networkname}}-Server3-nginx-DMZ bash -c 'openssl req -x509 -newkey rsa:4096 -nodes -out /etc/ssl/certs/localhost.crt -keyout /etc/ssl/private/localhost.key -days 365 -subj "/C=NL/O=httpsDMZsite/OU=Domain Control Validated/CN=*.httpsDMZsite.dev"'
 docker cp /etc/containerlab/{{networkname}}/httpsDMZsite.conf clab-{{networkname}}-Server3-nginx-DMZ:/etc/nginx/conf.d/default.conf
 docker exec clab-{{networkname}}-Server3-nginx-DMZ bash -c 'service nginx reload'
 
+##### Server4-NSD-DMZ as authoritive namerserver #####
+### set DNS first to avoid resolving issues related to the hosts DNS servers
 docker exec clab-{{networkname}}-Server4-NSD-DMZ sh -c 'echo "nameserver 1.1.1.1
 nameserver 8.8.8.8" > /etc/resolv.conf'
+
+### install packages
 docker exec clab-{{networkname}}-Server4-NSD-DMZ apk --no-cache add nsd
+
+### set network configuration
 docker exec -d clab-{{networkname}}-Server4-NSD-DMZ ip addr add 172.16.0.5/24 dev eth1
 docker exec -d clab-{{networkname}}-Server4-NSD-DMZ ip route delete default
 docker exec -d clab-{{networkname}}-Server4-NSD-DMZ sysctl net.ipv6.conf.all.disable_ipv6=1
 docker exec -d clab-{{networkname}}-Server4-NSD-DMZ ip route add 0.0.0.0/0 via 172.16.0.1 dev eth1
 docker exec -d clab-{{networkname}}-Server4-NSD-DMZ sh -c 'echo "nameserver 127.0.0.1" > /etc/resolv.conf'
+
+### start nsd
 docker exec clab-{{networkname}}-Server4-NSD-DMZ nsd
 
+##### Server5-VULN-DMZ ............ #####
+### set DNS first to avoid resolving issues related to the hosts DNS servers
 docker exec -d clab-{{networkname}}-Server5-VULN-DMZ sh -c 'echo "nameserver 1.1.1.1
 nameserver 8.8.8.8" > /etc/resolv.conf'
+
+### set network configuration
 docker exec -d clab-{{networkname}}-Server5-VULN-DMZ ip addr add 172.16.0.6/24 dev eth1
 docker exec -d clab-{{networkname}}-Server5-VULN-DMZ ip route delete default
 docker exec -d clab-{{networkname}}-Server5-VULN-DMZ sysctl net.ipv6.conf.all.disable_ipv6=1
 docker exec -d clab-{{networkname}}-Server5-VULN-DMZ ip route add 0.0.0.0/0 via 172.16.0.1 dev eth1
 docker exec -d clab-{{networkname}}-Server5-VULN-DMZ sh -c 'echo "nameserver 172.16.0.5" > /etc/resolv.conf'
 
-
-docker exec clab-network-Server6-mail-DMZ sh -c 'echo "nameserver 1.1.1.1
+##### Server6-mail-DMZ ............ #####
+### set DNS first to avoid resolving issues related to the hosts DNS servers
+docker exec clab-{{networkname}}-Server6-mail-DMZ sh -c 'echo "nameserver 1.1.1.1
 nameserver 8.8.8.8" > /etc/resolv.conf'
-docker exec clab-network-Server6-mail-DMZ apt-get update -y
-docker exec clab-network-Server6-mail-DMZ apt-get install {{ basic_packages }}
-docker exec clab-network-Server6-mail-DMZ bash -c 'debconf-set-selections <<< "postfix postfix/mailname string Server6-mail-DMZ.DMZsite.dev"'
-docker exec clab-network-Server6-mail-DMZ bash -c 'debconf-set-selections <<< "postfix postfix/main_mailer_type select  Internet Site"'
-docker exec clab-network-Server6-mail-DMZ bash -c 'debconf-set-selections <<< "postfix postfix/protocols   select  ipv4"'
-docker exec clab-network-Server6-mail-DMZ bash -c 'debconf-set-selections <<< "postfix postfix/destinations    string  $myhostname, Server6-mail-DMZ.DMZsite.dev, DMZsite.dev, localhost.DMZsite.dev, localhost, mail.DMZsite.dev"'
-docker exec clab-network-Server6-mail-DMZ bash -c 'debconf-set-selections <<< "postfix postfix/protocols   select  ipv4"'
-docker exec clab-network-Server6-mail-DMZ bash -c 'debconf-set-selections <<< "postfix postfix/mynetworks  string  127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128 172.16.0.0/24 192.168.0.0/16"'
-docker exec clab-network-Server6-mail-DMZ bash -c 'DEBIAN_FRONTEND=noninteractive apt-get install --assume-yes postfix -y'
 
-docker exec -d clab-network-Server6-mail-DMZ ip addr add 172.16.0.7/24 dev eth1
-docker exec -d clab-network-Server6-mail-DMZ ip route delete default
-docker exec -d clab-network-Server6-mail-DMZ ip route add 0.0.0.0/0 via 172.16.0.1 dev eth1
+### install packages
+docker exec clab-{{networkname}}-Server6-mail-DMZ apt-get update -y
+docker exec clab-{{networkname}}-Server6-mail-DMZ apt-get install {{ basic_packages }}
 
+### set configuration parameters for postfix installation
+docker exec clab-{{networkname}}-Server6-mail-DMZ bash -c 'debconf-set-selections <<< "postfix postfix/mailname string Server6-mail-DMZ.DMZsite.dev"'
+docker exec clab-{{networkname}}-Server6-mail-DMZ bash -c 'debconf-set-selections <<< "postfix postfix/main_mailer_type select  Internet Site"'
+docker exec clab-{{networkname}}-Server6-mail-DMZ bash -c 'debconf-set-selections <<< "postfix postfix/protocols   select  ipv4"'
+docker exec clab-{{networkname}}-Server6-mail-DMZ bash -c 'debconf-set-selections <<< "postfix postfix/destinations    string  $myhostname, Server6-mail-DMZ.DMZsite.dev, DMZsite.dev, localhost.DMZsite.dev, localhost, mail.DMZsite.dev"'
+docker exec clab-{{networkname}}-Server6-mail-DMZ bash -c 'debconf-set-selections <<< "postfix postfix/protocols   select  ipv4"'
+docker exec clab-{{networkname}}-Server6-mail-DMZ bash -c 'debconf-set-selections <<< "postfix postfix/mynetworks  string  127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128 172.16.0.0/24 192.168.0.0/16"'
+docker exec clab-{{networkname}}-Server6-mail-DMZ bash -c 'DEBIAN_FRONTEND=noninteractive apt-get install --assume-yes postfix -y'
 
-docker exec clab-network-Server6-mail-DMZ bash -c 'echo "
+### set network configuration
+docker exec -d clab-{{networkname}}-Server6-mail-DMZ ip addr add 172.16.0.7/24 dev eth1
+docker exec -d clab-{{networkname}}-Server6-mail-DMZ ip route delete default
+docker exec -d clab-{{networkname}}-Server6-mail-DMZ ip route add 0.0.0.0/0 via 172.16.0.1 dev eth1
+docker exec -d clab-{{networkname}}-Server6-mail-DMZ sysctl net.ipv6.conf.all.disable_ipv6=1
+
+### setup tls for smtp in master.cf (postfix)
+docker exec clab-{{networkname}}-Server6-mail-DMZ bash -c 'echo "
 submission inet n       -       -       -       -       smtpd
   -o syslog_name=postfix/submission
   -o smtpd_tls_wrappermode=no
@@ -88,18 +132,21 @@ submission inet n       -       -       -       -       smtpd
   -o smtpd_sasl_type=dovecot
   -o smtpd_sasl_path=private/auth" >> /etc/postfix/master.cf'
 
-docker exec clab-network-Server6-mail-DMZ bash -c 'openssl rand -base64 48 > passphrase.txt'
-docker exec clab-network-Server6-mail-DMZ bash -c 'openssl genrsa -aes128 -passout file:passphrase.txt -out server.key 2048'
-docker exec clab-network-Server6-mail-DMZ bash -c 'openssl req -new -passin file:passphrase.txt -key server.key -out server.csr -subj "/C=NL/O=krkr/OU=Domain Control Validated/CN=*.DMZsite.dev"'
-docker exec clab-network-Server6-mail-DMZ bash -c 'cp server.key server.key.org'
-docker exec clab-network-Server6-mail-DMZ bash -c 'openssl rsa -in server.key.org -passin file:passphrase.txt -out server.key'
-docker exec clab-network-Server6-mail-DMZ bash -c 'openssl x509 -req -days 36500 -in server.csr -signkey server.key -out server.crt'
-docker exec clab-network-Server6-mail-DMZ bash -c 'mv server.crt /etc/ssl.crt'
-docker exec clab-network-Server6-mail-DMZ bash -c 'mv server.key /etc/ssl.key'
+### generate a key and certificate
+docker exec clab-{{networkname}}-Server6-mail-DMZ bash -c 'openssl rand -base64 48 > passphrase.txt'
+docker exec clab-{{networkname}}-Server6-mail-DMZ bash -c 'openssl genrsa -aes128 -passout file:passphrase.txt -out server.key 2048'
+docker exec clab-{{networkname}}-Server6-mail-DMZ bash -c 'openssl req -new -passin file:passphrase.txt -key server.key -out server.csr -subj "/C=NL/O=krkr/OU=Domain Control Validated/CN=*.DMZsite.dev"'
+docker exec clab-{{networkname}}-Server6-mail-DMZ bash -c 'cp server.key server.key.org'
+docker exec clab-{{networkname}}-Server6-mail-DMZ bash -c 'openssl rsa -in server.key.org -passin file:passphrase.txt -out server.key'
+docker exec clab-{{networkname}}-Server6-mail-DMZ bash -c 'openssl x509 -req -days 36500 -in server.csr -signkey server.key -out server.crt'
+docker exec clab-{{networkname}}-Server6-mail-DMZ bash -c 'mv server.crt /etc/ssl.crt'
+docker exec clab-{{networkname}}-Server6-mail-DMZ bash -c 'mv server.key /etc/ssl.key'
 
-docker exec clab-network-Server6-mail-DMZ bash -c 'sed -i '26,33d' /etc/postfix/main.cf'
+### removes original tls smtp configuration parameters of postfix
+docker exec clab-{{networkname}}-Server6-mail-DMZ bash -c 'sed -i '26,33d' /etc/postfix/main.cf'
 
-docker exec clab-network-Server6-mail-DMZ bash -c '
+### setup tls for smtp in main.cf (postfix)
+docker exec clab-{{networkname}}-Server6-mail-DMZ bash -c '
 echo "smtpd_tls_cert_file=/etc/ssl.crt
 smtpd_tls_key_file=/etc/ssl.key
 smtpd_use_tls=yes
@@ -108,17 +155,18 @@ smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
 smtpd_tls_security_level=may
 smtpd_tls_protocols = !SSLv2, !SSLv3" >> /etc/postfix/main.cf'
 
+### setup user and his maildirectory
+docker exec clab-{{networkname}}-Server6-mail-DMZ bash -c 'useradd john -m'
+docker exec clab-{{networkname}}-Server6-mail-DMZ bash -c '(echo "john"; sleep 1; echo "john";) | passwd john'
+docker exec clab-{{networkname}}-Server6-mail-DMZ bash -c 'mkdir /home/john/Maildir'
+docker exec clab-{{networkname}}-Server6-mail-DMZ bash -c 'chown john:john /home/john/Maildir'
+docker exec clab-{{networkname}}-Server6-mail-DMZ bash -c 'chmod -R 700 /home/john/Maildir'
 
+### install dovecot
+docker exec clab-{{networkname}}-Server6-mail-DMZ apt install dovecot-core dovecot-pop3d dovecot-common dovecot-imapd -y
 
-docker exec clab-network-Server6-mail-DMZ bash -c 'useradd john -m'
-docker exec clab-network-Server6-mail-DMZ bash -c '(echo "john"; sleep 1; echo "john";) | passwd john'
-docker exec clab-network-Server6-mail-DMZ bash -c 'mkdir /home/john/Maildir'
-docker exec clab-network-Server6-mail-DMZ bash -c 'chown john:john /home/john/Maildir'
-docker exec clab-network-Server6-mail-DMZ bash -c 'chmod -R 700 /home/john/Maildir'
-
-docker exec clab-network-Server6-mail-DMZ apt install dovecot-core dovecot-pop3d dovecot-common dovecot-imapd -y
-
-docker exec clab-network-Server6-mail-DMZ bash -c 'echo "disable_plaintext_auth = no
+### setup dovecot configuration file
+docker exec clab-{{networkname}}-Server6-mail-DMZ bash -c 'echo "disable_plaintext_auth = no
 mail_privileged_group = mail
 userdb {
   driver = passwd
@@ -139,24 +187,24 @@ service auth {
 ssl=required
 ssl_cert = </etc/ssl.crt
 ssl_key = </etc/ssl.key" > /etc/dovecot/dovecot.conf'
+docker exec clab-{{networkname}}-Server6-mail-DMZ bash -c "sed -i 's/mail_location = mbox:~\/mail:INBOX=\/var\/mail\/%u/mail_location = maildir:~\/Maildir/' /etc/dovecot/conf.d/10-mail.conf"
 
-docker exec clab-network-Server6-mail-DMZ bash -c "sed -i 's/mail_location = mbox:~\/mail:INBOX=\/var\/mail\/%u/mail_location = maildir:~\/Maildir/' /etc/dovecot/conf.d/10-mail.conf"
+### set the nameserver to the local authoritive nameserver
+docker exec -d clab-{{networkname}}-Server6-mail-DMZ sh -c 'echo "nameserver 172.16.0.5" > /etc/resolv.conf'
 
-
-docker exec -d clab-network-Server6-mail-DMZ sh -c 'echo "nameserver 172.16.0.5" > /etc/resolv.conf'
-
-
-docker exec clab-network-Server6-mail-DMZ bash -c 'postconf -e "home_mailbox= Maildir/"'
-docker exec clab-network-Server6-mail-DMZ bash -c 'postconf -e "virtual_alias_maps= hash:/etc/postfix/virtual"'
-docker exec clab-network-Server6-mail-DMZ bash -c 'echo "john@Server6-mail-DMZ john
+### configure postfix user
+docker exec clab-{{networkname}}-Server6-mail-DMZ bash -c 'postconf -e "home_mailbox= Maildir/"'
+docker exec clab-{{networkname}}-Server6-mail-DMZ bash -c 'postconf -e "virtual_alias_maps= hash:/etc/postfix/virtual"'
+docker exec clab-{{networkname}}-Server6-mail-DMZ bash -c 'echo "john@Server6-mail-DMZ john
 john@mail.DMZsite.dev john
 john@DMZsite.dev john" > /etc/postfix/virtual'
+docker exec clab-{{networkname}}-Server6-mail-DMZ bash -c 'postmap /etc/postfix/virtual'
+docker exec clab-{{networkname}}-Server6-mail-DMZ bash -c 'echo "export MAIL=~/Maildir" | tee -a /etc/bash.bashrc | tee -a /etc/profile.d/mail.sh'
+docker exec clab-{{networkname}}-Server6-mail-DMZ bash -c 'source /etc/profile.d/mail.sh'
 
-docker exec clab-network-Server6-mail-DMZ bash -c 'postmap /etc/postfix/virtual'
-docker exec clab-network-Server6-mail-DMZ bash -c 'echo "export MAIL=~/Maildir" | tee -a /etc/bash.bashrc | tee -a /etc/profile.d/mail.sh'
-docker exec clab-network-Server6-mail-DMZ bash -c 'source /etc/profile.d/mail.sh'
-docker exec clab-network-Server6-mail-DMZ bash -c 'newaliases'
-docker exec clab-network-Server6-mail-DMZ bash -c 'postfix start'
-docker exec clab-network-Server6-mail-DMZ bash -c 'dovecot'
+### start postfix and dovecot
+docker exec clab-{{networkname}}-Server6-mail-DMZ bash -c 'newaliases'
+docker exec clab-{{networkname}}-Server6-mail-DMZ bash -c 'postfix start'
+docker exec clab-{{networkname}}-Server6-mail-DMZ bash -c 'dovecot'
  
 

@@ -1,15 +1,22 @@
 #!/bin/sh
 
+##### Server1-samba-LAN for SMB
+### set the SMB configuration
 docker exec -d clab-{{networkname}}-Server1-samba-LAN chmod u+x /root/SMBconf.sh
 docker exec -d clab-{{networkname}}-Server1-samba-LAN bash /root/SMBconf.sh
 
+### set network configuration
 docker exec -d clab-{{networkname}}-Server1-samba-LAN ip addr add 192.168.40.5/24 dev eth1
 docker exec -d clab-{{networkname}}-Server1-samba-LAN ip route delete default
 docker exec -d clab-{{networkname}}-Server1-samba-LAN sysctl net.ipv6.conf.all.disable_ipv6=1
 docker exec -d clab-{{networkname}}-Server1-samba-LAN ip route add 0.0.0.0/0 via 192.168.40.1 dev eth1
 docker exec -d clab-{{networkname}}-Server1-samba-LAN bash -c 'echo "nameserver 172.16.0.5" > /etc/resolv.conf'
 
+##### Server2-vpn-LAN wireguard vpn server
+### generate keys for the vpn
 docker exec clab-{{networkname}}-Server2-vpn-LAN bash -c 'wg genkey | tee /etc/wireguard/privatekey | wg pubkey > /etc/wireguard/publickey'
+
+### set network configuration
 docker exec -d clab-{{networkname}}-Server2-vpn-LAN ip addr add 192.168.40.10/24 dev eth1
 docker exec -d clab-{{networkname}}-Server2-vpn-LAN ip route delete default
 docker exec -d clab-{{networkname}}-Server2-vpn-LAN {{ ipv6_configuration }}
@@ -18,6 +25,7 @@ docker exec -d clab-{{networkname}}-Server2-vpn-LAN bash -c 'echo "nameserver 17
 nameserver 1.1.1.1
 nameserver 8.8.8.8" > /etc/resolv.conf'
 
+### setup wireguard vpn configuration
 docker exec clab-{{networkname}}-Server2-vpn-LAN bash -c 'echo "[Interface]
 Address = 192.168.50.2
 PrivateKey = $(cat /etc/wireguard/privatekey)

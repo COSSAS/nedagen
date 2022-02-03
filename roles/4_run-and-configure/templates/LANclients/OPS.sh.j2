@@ -3,9 +3,14 @@
 {% set LANops = (NumberofLANclients | int *OpsPercentage | int *0.01)|int %}
 
 {% for k in range(1, LANops | int +1 ) %}
+### set DNS first to avoid resolving issues related to the hosts DNS servers
 docker exec -d clab-{{networkname}}-Client{{k}}-OPS-LAN sh -c 'echo "nameserver 1.1.1.1
 nameserver 8.8.8.8" > /etc/resolv.conf'
+
+### install packages
 docker exec clab-{{networkname}}-Client{{k}}-OPS-LAN apk --no-cache add curl samba-client bash openssh sshpass lftp
+
+### set network configuration
 docker exec -d clab-{{networkname}}-Client{{k}}-OPS-LAN ip addr add 192.168.30.{{k+2}}/24 dev eth1
 docker exec -d clab-{{networkname}}-Client{{k}}-OPS-LAN ip route delete default
 docker exec -d clab-{{networkname}}-Client{{k}}-OPS-LAN sysctl net.ipv6.conf.all.disable_ipv6=1

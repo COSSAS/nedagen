@@ -1,5 +1,6 @@
 #!/bin/sh
 
+### disables IPv6 and removes the default route to the docker network
 docker exec -d clab-{{networkname}}-router-WAN sysctl net.ipv6.conf.all.disable_ipv6=1
 docker exec -d clab-{{networkname}}-router-WAN ip route delete default
 
@@ -9,9 +10,11 @@ docker exec -d clab-{{networkname}}-router-LAN1 ip route delete default
 docker exec -d clab-{{networkname}}-router-LAN2 sysctl net.ipv6.conf.all.disable_ipv6=1
 docker exec -d clab-{{networkname}}-router-LAN2 ip route delete default
 
+### Network Address Translation to the hosts network (Internet access)
 docker exec -d clab-{{networkname}}-router-Internet sysctl net.ipv6.conf.all.disable_ipv6=1
 docker exec -d clab-{{networkname}}-router-Internet iptables -t nat -A POSTROUTING -s 172.16.0.0/16 -o eth0 -j MASQUERADE
 
+### do not acceept traffic from the not used in this network private ip ranges
 docker exec -d clab-{{networkname}}-router-Internet iptables -A FORWARD -d 192.168.0.0/16 -j DROP
 docker exec -d clab-{{networkname}}-router-Internet iptables -A FORWARD -d 127.0.0.0/8 -j DROP
 docker exec -d clab-{{networkname}}-router-Internet iptables -A FORWARD -d 169.254.0.0/16 -j DROP
@@ -20,9 +23,11 @@ docker exec -d clab-{{networkname}}-router-Internet iptables -A FORWARD -s 192.1
 docker exec -d clab-{{networkname}}-router-Internet iptables -A FORWARD -s 127.0.0.0/8 -j DROP
 docker exec -d clab-{{networkname}}-router-Internet iptables -A FORWARD -s 169.254.0.0/16 -j DROP
 
+### drop dns queries to the local sites to go out to the Internet
 docker exec -d clab-{{networkname}}-router-Internet iptables -I FORWARD -p udp --dport 53 -d 1.1.1.1,8.8.8.8 -m string --hex-string “|07|DMZsite|03|dev|” --algo bm -j DROP
 docker exec -d clab-{{networkname}}-router-Internet iptables -I FORWARD -p udp --dport 53 -s 1.1.1.1,8.8.8.8 -m string --hex-string “|12|httpsDMZsite|03|dev|” --algo bm -j DROP
 
+### firewall ruling (currently not of importance since there is no block all rule set at the end)
 docker exec -d clab-{{networkname}}-router-WAN iptables -A FORWARD -d 172.16.0.2 -p tcp --dport 80 -j ACCEPT
 docker exec -d clab-{{networkname}}-router-WAN iptables -A FORWARD -s 172.16.0.2 -p tcp -j ACCEPT
 docker exec -d clab-{{networkname}}-router-WAN iptables -A FORWARD -s 172.16.0.3 -j ACCEPT
@@ -31,6 +36,10 @@ docker exec -d clab-{{networkname}}-router-WAN iptables -A FORWARD -d 172.16.0.4
 docker exec -d clab-{{networkname}}-router-WAN iptables -A FORWARD -s 172.16.0.4 -p tcp -j ACCEPT
 docker exec -d clab-{{networkname}}-router-WAN iptables -A FORWARD -d 172.16.0.5 -p tcp --dport 53 -j ACCEPT
 docker exec -d clab-{{networkname}}-router-WAN iptables -A FORWARD -s 172.16.0.5 -j ACCEPT
+
+### vpn port forwarding
 docker exec -d clab-{{networkname}}-router-WAN iptables -t nat -A PREROUTING -i eth1 -p udp --dport 51820 -j DNAT --to-destination 192.168.50.2
+
+### Network Address Translation to the Internet router
 docker exec -d clab-{{networkname}}-router-WAN iptables --table nat --append POSTROUTING -s 192.168.30.2 --out-interface eth1 -j RETURN
 docker exec -d clab-{{networkname}}-router-WAN iptables --table nat --append POSTROUTING -s 192.168.0.0/16 --out-interface eth1 -j MASQUERADE

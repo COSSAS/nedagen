@@ -1,11 +1,17 @@
 #!/bin/sh
 
+### set DNS first to avoid resolving issues related to the hosts DNS servers
+docker exec -d clab-{{networkname}}-Attacker-LAN bash -c 'echo "nameserver 1.1.1.1
+nameserver 8.8.8.8" > /etc/resolv.conf'
+
+### install packages
 docker exec clab-{{networkname}}-Attacker-LAN apt-get update -y
 docker exec clab-{{networkname}}-Attacker-LAN apt-get install {{ basic_packages }}
 docker exec clab-{{networkname}}-Attacker-LAN apt-get -yq install pip ssh
 docker exec clab-{{networkname}}-Attacker-LAN pip install atomic-operator
 docker exec clab-{{networkname}}-Attacker-LAN atomic-operator get_atomics --destination "/root/atomic-operator"
 
+### set network configuration
 docker exec -d clab-{{networkname}}-Attacker-LAN {{ ipv6_configuration }}
 docker exec -d clab-{{networkname}}-Attacker-LAN ip addr add 192.168.30.2/24 dev eth1
 docker exec -d clab-{{networkname}}-Attacker-LAN ip route delete default

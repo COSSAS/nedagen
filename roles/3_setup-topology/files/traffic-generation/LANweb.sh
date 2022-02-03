@@ -5,6 +5,8 @@ web_weight=$1
 
 web_sleep=$(bc<<<"($web_weight*10)") 
 
+### query the local hosted websites and most popular websites found in the Tranco-list of top million sites ID: L225 (date: 01:02:2022)
+
 random_number=$(($RANDOM % 10))
 
 while true
