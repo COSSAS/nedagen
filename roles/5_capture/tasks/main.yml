@@ -48,11 +48,18 @@
   until: job_result_attackerLAN.finished
   retries: 500
 
-- name: Check status attacker WAN async script
+- name: Check status attacker1 WAN async script
   become: yes
-  async_status: jid={{ AttackerWAN_script.ansible_job_id }}
-  register: job_result_attackerWAN
-  until: job_result_attackerWAN.finished
+  async_status: jid={{ Attacker1WAN_script.ansible_job_id }}
+  register: job_result_attacker1WAN
+  until: job_result_attacker1WAN.finished
+  retries: 500
+
+- name: Check status attacker2 WAN async script
+  become: yes
+  async_status: jid={{ Attacker2WAN_script.ansible_job_id }}
+  register: job_result_attacker2WAN
+  until: job_result_attacker2WAN.finished
   retries: 500
 
 - name: Check status install tshark

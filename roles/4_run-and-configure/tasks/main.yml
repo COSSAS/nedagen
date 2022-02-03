@@ -51,7 +51,9 @@
     - { src: 'WANclients/DEVS.sh.j2', dest: '/etc/containerlab/{{ networkname }}/WANclient_scripts/DEVS.sh' }
     - { src: 'WANclients/OPS.sh.j2', dest: '/etc/containerlab/{{ networkname }}/WANclient_scripts/OPS.sh' }
     - { src: 'WANclients/enableVPN.sh.j2', dest: '/etc/containerlab/{{ networkname }}/WANclient_scripts/enableVPN.sh' }
-    - { src: 'WANclients/Attacker.sh.j2', dest: '/etc/containerlab/{{ networkname }}/WANclient_scripts/Attacker.sh' }
+    - { src: 'WANclients/Attacker1.sh.j2', dest: '/etc/containerlab/{{ networkname }}/WANclient_scripts/Attacker1.sh' }
+    - { src: 'WANclients/Attacker2.sh.j2', dest: '/etc/containerlab/{{ networkname }}/WANclient_scripts/Attacker2.sh' }
+
 
 - name: Copy Bridge script
   become: yes
@@ -105,28 +107,26 @@
   poll: 0
   register: AttackerLAN_script
 
-- name: Run Attacker WAN script
+- name: Run Attacker1 WAN script
   become: yes
-  shell: /etc/containerlab/{{ networkname }}/WANclient_scripts/Attacker.sh
+  shell: /etc/containerlab/{{ networkname }}/WANclient_scripts/Attacker1.sh
   ignore_errors: True
   async: 1000
   poll: 0
-  register: AttackerWAN_script
+  register: Attacker1WAN_script
+
+- name: Run Attacker2 WAN script
+  become: yes
+  shell: /etc/containerlab/{{ networkname }}/WANclient_scripts/Attacker2.sh
+  ignore_errors: True
+  async: 1000
+  poll: 0
+  register: Attacker2WAN_script
 
 - name: Run DMZ Server script
   become: yes
   shell: /etc/containerlab/{{ networkname }}/DMZservers.sh
   ignore_errors: True
-#  async: 1000
-#  poll: 0
-#  register: DMZ_server_script  
-
-#- name: Check status DMZ server async script
-#  become: yes
-#  async_status: jid={{ DMZ_server_script.ansible_job_id }}
-#  register: job_result_DMZ_server
-#  until: job_result_DMZ_server.finished
-#  retries: 500
 
 - name: Run LAN Client ADMIN script
   become: yes

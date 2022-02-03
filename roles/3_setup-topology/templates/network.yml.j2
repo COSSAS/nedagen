@@ -148,12 +148,15 @@ topology:
         - /etc/containerlab/{{networkname}}/traffic-generation/sendingMail.sh:/sendingMail.sh
         - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
 {% endfor %}
-    Attacker-WAN:
+    Attacker1-WAN:
       image: {{ pythonimage }} # Add jdk
+      binds:
+        - /etc/containerlab/{{networkname}}/log4j/jdk-8u20-linux-x64.tar.gz:/root/log4j/jdk-8u20-linux-x64.tar.gz
+    Attacker2-WAN:
+      image: {{ pythonimage }}
       binds:
         - /etc/containerlab/{{networkname}}/traffic-generation/sendingMail.sh:/sendPhisingmail.sh
         - /etc/containerlab/{{networkname}}/malware.sh:/malware.sh
-        - /etc/containerlab/{{networkname}}/log4j/jdk-8u20-linux-x64.tar.gz:/root/log4j/jdk-8u20-linux-x64.tar.gz
     Server1-alpine-WAN:
       image: {{ alpineimage }}
 
@@ -177,8 +180,9 @@ topology:
 
 
     # client and server links
-    - endpoints: ["Attacker-WAN:eth1", "br-Internet:eth4"]
-    - endpoints: ["Server1-alpine-WAN:eth1", "br-Internet:eth5"]
+    - endpoints: ["Attacker1-WAN:eth1", "br-Internet:eth4"]
+    - endpoints: ["Attacker2-WAN:eth1", "br-Internet:eth5"]
+    - endpoints: ["Server1-alpine-WAN:eth1", "br-Internet:eth6"]
 
     - endpoints: ["Server1-nginx-DMZ:eth1", "br-DMZ:eth2"]
     - endpoints: ["Server2-control_ftp-DMZ:eth1", "br-DMZ:eth3"]
