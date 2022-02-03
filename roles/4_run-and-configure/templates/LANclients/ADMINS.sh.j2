@@ -38,12 +38,12 @@ mailboxes = (\"INBOX\",)
  
 [destination]
 type = Maildir     
-path = ~/Maildir/              
-destinations = (\"~/Maildir/\", )
+path = ~/Maildir/        
+###destinations = (\"~john//Maildir/\", )
                                
 [options]                      
-read_all = false    
-delete_after = 30
+read_all = true
+delete = yes
 delivered_to = false
 received = true     
 verbose = 1         
@@ -57,7 +57,9 @@ docker exec --user john clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c 'mkd
 docker exec --user john clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c 'mkdir ~/Maildir/old'
 
 ### start retrieving mails with potential phising
-docker exec -d --user john clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c "nohup bash retrieveMail.sh &"
+docker exec -d clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c "cp retrieveMail.sh /home/john/."
+
+###docker exec -d --user john clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c "bash retrieveMail.sh &"
 
 {#
 docker exec --user john clab-{{networkname}}-Client{{k}}-ADMINS-LAN getmail

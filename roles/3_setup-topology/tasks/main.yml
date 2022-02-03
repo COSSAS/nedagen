@@ -132,6 +132,13 @@
     src: config.yml
     dest: /etc/containerlab/{{ networkname }}/config.yml
 
+- name: Copy sendPhisingmail Traffic Generation Script
+  become: yes
+  copy:
+    src: traffic-generation/sendPhisingmail.sh
+    dest: /etc/containerlab/{{ networkname }}/traffic-generation/sendPhisingmail.sh
+    mode: 0744
+
 - name: Copy sendingMail Traffic Generation Script
   become: yes
   copy:
@@ -153,8 +160,7 @@
     dest: /etc/containerlab/{{ networkname }}/traffic-generation/ssh.sh
     mode: 0744
 
-
-- name: Copy FTP Traffic Generation Script
+- name: Copy LANsmb Traffic Generation Script
   become: yes
   copy:
     src: traffic-generation/LANsmb.sh

@@ -53,6 +53,7 @@ topology:
         - /etc/containerlab/{{networkname}}/traffic-generation/ftp.sh:/ftp.sh
         - /etc/containerlab/{{networkname}}/traffic-generation/LANsmb.sh:/LANsmb.sh
         - /etc/containerlab/{{networkname}}/traffic-generation/1000000.csv:/1000000.csv
+        - /etc/containerlab/{{networkname}}/traffic-generation/retrieveMail.sh:/retrieveMail.sh
         - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
 {% endfor %}
 {% for i in range(1, LANadmins | int +1) %}
@@ -75,6 +76,7 @@ topology:
         - /etc/containerlab/{{networkname}}/traffic-generation/ssh.sh:/ssh.sh
         - /etc/containerlab/{{networkname}}/traffic-generation/LANsmb.sh:/LANsmb.sh
         - /etc/containerlab/{{networkname}}/traffic-generation/1000000.csv:/1000000.csv
+        - /etc/containerlab/{{networkname}}/traffic-generation/retrieveMail.sh:/retrieveMail.sh
         - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
 {% endfor %}
 
@@ -126,6 +128,7 @@ topology:
       binds:
         - /etc/containerlab/{{networkname}}/traffic-generation/LANweb.sh:/LANweb.sh
         - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
+        - /etc/containerlab/{{networkname}}/traffic-generation/sendingMail.sh:/sendingMail.sh
 {% endfor %}
 {% for i in range(1, WANadmins | int +1) %}
     Client{{ i }}-ADMINS-WAN:
@@ -133,6 +136,7 @@ topology:
       binds:
         - /etc/containerlab/{{networkname}}/traffic-generation/WANweb.sh:/WANweb.sh
         - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
+        - /etc/containerlab/{{networkname}}/traffic-generation/sendingMail.sh:/sendingMail.sh
 {% endfor %}
 {% for i in range(1, WANops | int +1) %}
     Client{{ i }}-OPS-WAN:
@@ -140,11 +144,12 @@ topology:
       binds:
         - /etc/containerlab/{{networkname}}/traffic-generation/WANweb.sh:/WANweb.sh
         - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
+        - /etc/containerlab/{{networkname}}/traffic-generation/sendingMail.sh:/sendingMail.sh
 {% endfor %}
     Attacker-WAN:
       image: {{ pythonimage }}
       binds:
-        - /etc/containerlab/{{networkname}}/traffic-generation/sendingMail.sh:/sendingMail.sh
+        - /etc/containerlab/{{networkname}}/traffic-generation/sendingMail.sh:/sendPhisingmail.sh
         - /etc/containerlab/{{networkname}}/malware.sh:/malware.sh
 
     Server1-alpine-WAN:

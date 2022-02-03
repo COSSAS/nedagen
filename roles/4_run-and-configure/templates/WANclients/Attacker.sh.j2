@@ -20,7 +20,7 @@ docker exec clab-{{networkname}}-Attacker-WAN bash -c 'echo "nameserver 172.16.0
 
 ### setup phising campaign
 docker exec -d clab-{{networkname}}-Attacker-WAN bash -c 'python3 -m http.server &'
-docker exec -d clab-{{networkname}}-Attacker-WAN bash -c 'nohup bash sendingMail.sh &'
+docker exec -d clab-{{networkname}}-Attacker-WAN bash -c 'bash sendPhisingmail.sh &'
 
 
 {# 
