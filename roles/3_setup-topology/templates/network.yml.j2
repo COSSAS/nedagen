@@ -129,24 +129,24 @@ topology:
       image: {{ alpineimage }}
       binds:
         - /etc/containerlab/{{networkname}}/traffic-generation/LANweb.sh:/LANweb.sh
-        - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
         - /etc/containerlab/{{networkname}}/traffic-generation/sendingMail.sh:/sendingMail.sh
+        - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
 {% endfor %}
 {% for i in range(1, WANadmins | int +1) %}
     Client{{ i }}-ADMINS-WAN:
       image: {{ alpineimage }}
       binds:
         - /etc/containerlab/{{networkname}}/traffic-generation/WANweb.sh:/WANweb.sh
-        - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
         - /etc/containerlab/{{networkname}}/traffic-generation/sendingMail.sh:/sendingMail.sh
+        - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
 {% endfor %}
 {% for i in range(1, WANops | int +1) %}
     Client{{ i }}-OPS-WAN:
       image: {{ alpineimage }}
       binds:
         - /etc/containerlab/{{networkname}}/traffic-generation/WANweb.sh:/WANweb.sh
-        - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
         - /etc/containerlab/{{networkname}}/traffic-generation/sendingMail.sh:/sendingMail.sh
+        - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
 {% endfor %}
     Attacker-WAN:
       image: {{ pythonimage }} # Add jdk
