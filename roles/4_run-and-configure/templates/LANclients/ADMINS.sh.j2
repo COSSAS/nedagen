@@ -56,7 +56,9 @@ docker exec --user john clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c 'mkd
 docker exec --user john clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c 'mkdir ~/Maildir/new'
 docker exec --user john clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c 'mkdir ~/Maildir/old'
 
+### start retrieving mails with potential phising
 docker exec -d --user john clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c "nohup bash retrieveMail.sh &"
+
 {#
 docker exec --user john clab-{{networkname}}-Client{{k}}-ADMINS-LAN getmail
 john=$(ls -Altr ~/Maildir/new | tail -1 | awk '{print $9}')
