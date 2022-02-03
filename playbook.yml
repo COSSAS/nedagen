@@ -16,7 +16,7 @@
   vars:
     staticinterfaces_brLan1: 4
     staticinterfaces_brInternet: 5
-    staticinterfaces_brDMZ: 6
+    staticinterfaces_brDMZ: 7
   vars_files:
     - config.yml
   roles:

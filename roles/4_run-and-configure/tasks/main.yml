@@ -117,9 +117,16 @@
   become: yes
   shell: /etc/containerlab/{{ networkname }}/DMZservers.sh
   ignore_errors: True
-  async: 1000
-  poll: 0
-  register: DMZ_server_script  
+#  async: 1000
+#  poll: 0
+#  register: DMZ_server_script  
+
+#- name: Check status DMZ server async script
+#  become: yes
+#  async_status: jid={{ DMZ_server_script.ansible_job_id }}
+#  register: job_result_DMZ_server
+#  until: job_result_DMZ_server.finished
+#  retries: 500
 
 - name: Run LAN Client ADMIN script
   become: yes

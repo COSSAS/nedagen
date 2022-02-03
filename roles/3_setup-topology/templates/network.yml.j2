@@ -63,6 +63,8 @@ topology:
         - /etc/containerlab/{{networkname}}/traffic-generation/ssh.sh:/ssh.sh
         - /etc/containerlab/{{networkname}}/traffic-generation/LANsmb.sh:/LANsmb.sh
         - /etc/containerlab/{{networkname}}/traffic-generation/1000000.csv:/1000000.csv
+        - /etc/containerlab/{{networkname}}/getmail-5.16:/getmail-5.16
+        - /etc/containerlab/{{networkname}}/traffic-generation/retrieveMail.sh:/retrieveMail.sh
         - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
 {% endfor %}
 {% for i in range(1, LANops | int +1) %}
@@ -99,7 +101,9 @@ topology:
       binds:
         - /etc/containerlab/{{networkname}}/log4j/log4shell-1.0-SNAPSHOT.war:/usr/local/tomcat/webapps/ROOT.war
     Server6-mail-DMZ:
-      image: {{ postfiximage }}
+      image: {{ ubuntuimage }}
+#    Server7-dhcp-DMZ:
+#      image: {{ ubuntuimage }}
 
 # LAN servers
     Server1-samba-LAN:
@@ -142,6 +146,8 @@ topology:
     Attacker-WAN:
       image: {{ pythonimage }} # Add jdk
       binds:
+        - /etc/containerlab/{{networkname}}/traffic-generation/sendingMail.sh:/sendingMail.sh
+        - /etc/containerlab/{{networkname}}/malware.sh:/malware.sh
         - /etc/containerlab/{{networkname}}/log4j/jdk-8u20-linux-x64.tar.gz:/root/log4j/jdk-8u20-linux-x64.tar.gz
     Server1-alpine-WAN:
       image: {{ alpineimage }}
@@ -174,6 +180,8 @@ topology:
     - endpoints: ["Server3-nginx-DMZ:eth1", "br-DMZ:eth4"]
     - endpoints: ["Server4-NSD-DMZ:eth1", "br-DMZ:eth5"]
     - endpoints: ["Server5-VULN-DMZ:eth1", "br-DMZ:eth6"]
+    - endpoints: ["Server6-mail-DMZ:eth1", "br-DMZ:eth7"]
+#    - endpoints: ["Server7-dhcp-DMZ:eth1", "br-DMZ:eth8"]
 
     - endpoints: ["Server1-samba-LAN:eth1", "br-LAN2:eth3"]
     - endpoints: ["Server2-vpn-LAN:eth1", "br-LAN2:eth4"]

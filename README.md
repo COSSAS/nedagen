@@ -13,6 +13,7 @@ Protocols in the dataset:
 - WG
 - SMB
 - FTP
+- SMTP
 
 Profiles:
 - Developers
