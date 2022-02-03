@@ -73,11 +73,23 @@
     src: SMBconf.sh.j2
     dest: /etc/containerlab/{{ networkname }}/SMBconf.sh
 
+- name: Set malware script
+  become: yes
+  copy:
+    src: malware.sh
+    dest: /etc/containerlab/{{ networkname }}/malware.sh
+
 - name: Copy DMZsite config
   become: yes
   copy:
     src: nginx/DMZsite.conf
     dest: /etc/containerlab/{{ networkname }}/nginx/DMZsite.conf
+
+- name: Copy getmail
+  become: yes
+  copy:
+    src: getmail-5.16
+    dest: /etc/containerlab/{{ networkname }}/getmail-5.16
 
 - name: Copy httpsDMZ config
   become: yes
@@ -119,6 +131,20 @@
   copy:
     src: config.yml
     dest: /etc/containerlab/{{ networkname }}/config.yml
+
+- name: Copy sendingMail Traffic Generation Script
+  become: yes
+  copy:
+    src: traffic-generation/sendingMail.sh
+    dest: /etc/containerlab/{{ networkname }}/traffic-generation/sendingMail.sh
+    mode: 0744
+
+- name: Copy retrieveMail Traffic Generation Script
+  become: yes
+  copy:
+    src: traffic-generation/retrieveMail.sh
+    dest: /etc/containerlab/{{ networkname }}/traffic-generation/retrieveMail.sh
+    mode: 0744
 
 - name: Copy SSH Traffic Generation Script
   become: yes

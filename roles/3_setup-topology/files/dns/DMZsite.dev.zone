@@ -13,4 +13,8 @@ $ORIGIN DMZsite.dev.
 $TTL 60
 ns1     A       172.16.0.5
 
+
 @       A       172.16.0.2
+
+mail    A       172.16.0.7
+@       MX 10   mail

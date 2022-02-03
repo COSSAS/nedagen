@@ -63,6 +63,8 @@ topology:
         - /etc/containerlab/{{networkname}}/traffic-generation/ssh.sh:/ssh.sh
         - /etc/containerlab/{{networkname}}/traffic-generation/LANsmb.sh:/LANsmb.sh
         - /etc/containerlab/{{networkname}}/traffic-generation/1000000.csv:/1000000.csv
+        - /etc/containerlab/{{networkname}}/getmail-5.16:/getmail-5.16
+        - /etc/containerlab/{{networkname}}/traffic-generation/retrieveMail.sh:/retrieveMail.sh
         - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
 {% endfor %}
 {% for i in range(1, LANops | int +1) %}
@@ -95,9 +97,11 @@ topology:
         - /etc/containerlab/{{networkname}}/dns/DMZsite.dev.zone:/etc/nsd/DMZsite.dev.zone
         - /etc/containerlab/{{networkname}}/dns/httpsDMZsite.dev.zone:/etc/nsd/httpsDMZsite.dev.zone
     Server5-VULN-DMZ:
-      image: {{ log4jimage }}
+      image: {{ alpineimage }}
     Server6-mail-DMZ:
-      image: {{ postfiximage }}
+      image: {{ ubuntuimage }}
+#    Server7-dhcp-DMZ:
+#      image: {{ ubuntuimage }}
 
 # LAN servers
     Server1-samba-LAN:
@@ -139,6 +143,10 @@ topology:
 {% endfor %}
     Attacker-WAN:
       image: {{ pythonimage }}
+      binds:
+        - /etc/containerlab/{{networkname}}/traffic-generation/sendingMail.sh:/sendingMail.sh
+        - /etc/containerlab/{{networkname}}/malware.sh:/malware.sh
+
     Server1-alpine-WAN:
       image: {{ alpineimage }}
 
@@ -169,6 +177,9 @@ topology:
     - endpoints: ["Server2-control_ftp-DMZ:eth1", "br-DMZ:eth3"]
     - endpoints: ["Server3-nginx-DMZ:eth1", "br-DMZ:eth4"]
     - endpoints: ["Server4-NSD-DMZ:eth1", "br-DMZ:eth5"]
+    - endpoints: ["Server5-VULN-DMZ:eth1", "br-DMZ:eth6"]
+    - endpoints: ["Server6-mail-DMZ:eth1", "br-DMZ:eth7"]
+#    - endpoints: ["Server7-dhcp-DMZ:eth1", "br-DMZ:eth8"]
 
     - endpoints: ["Server1-samba-LAN:eth1", "br-LAN2:eth3"]
     - endpoints: ["Server2-vpn-LAN:eth1", "br-LAN2:eth4"]
