@@ -43,7 +43,8 @@ docker exec clab-{{networkname}}-Server2-control_ftp-DMZ sh -c '/etc/init.d/sshd
 ### FTP Config
 docker exec clab-{{networkname}}-Server2-control_ftp-DMZ bash /ftp/conf.sh
 docker exec -d clab-{{networkname}}-Server2-control_ftp-DMZ bash -c 'nohup bash pingServers.sh &'
-docker exec clab-{{networkname}}-Server2-control_ftp-DMZ sh -c 'echo "sensitive data" > sensitivedata.txt'
+docker exec clab-{{networkname}}-Server2-control_ftp-DMZ sh -c 'echo "sensitive data" > /home/sshuser/sensitivedata.txt'
+docker exec clab-{{networkname}}-Server2-control_ftp-DMZ sh -c 'chmod 777 /home/sshuser/sensitivedata.txt'
 
 ##### Server3-nginx-DMZ for httpsDMZsite.dev #####
 ### set DNS first to avoid resolving issues related to the hosts DNS servers

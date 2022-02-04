@@ -17,9 +17,6 @@ docker exec -d clab-{{networkname}}-Client{{k}}-ADMINS-LAN sysctl net.ipv6.conf.
 docker exec -d clab-{{networkname}}-Client{{k}}-ADMINS-LAN ip route add 0.0.0.0/0 via 192.168.20.1 dev eth1
 docker exec -d clab-{{networkname}}-Client{{k}}-ADMINS-LAN sh -c 'echo "nameserver 172.16.0.5" > /etc/resolv.conf'
 
-### change to weak permissions shadow file
-docker exec -d clab-{{networkname}}-Client{{k}}-ADMINS-LAN sh -c 'chmod +r /etc/shadow'
-
 ### allow to change from user to another user
 docker exec clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c 'chmod 4755 /bin/su'
 
