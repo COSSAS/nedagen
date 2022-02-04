@@ -32,6 +32,9 @@ do
         fi
     done
 
+    random_TTL=$(($RANDOM % 250 + 1))
+    sysctl -w net.ipv4.ip_default_ttl=$random_TTL
+
     # Configure new IP address
     ip addr add $ip_address/8 dev eth1
     sleep 1

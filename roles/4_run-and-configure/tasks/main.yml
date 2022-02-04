@@ -54,7 +54,6 @@
     - { src: 'WANclients/Attacker1.sh.j2', dest: '/etc/containerlab/{{ networkname }}/WANclient_scripts/Attacker1.sh' }
     - { src: 'WANclients/Attacker2.sh.j2', dest: '/etc/containerlab/{{ networkname }}/WANclient_scripts/Attacker2.sh' }
 
-
 - name: Copy Bridge script
   become: yes
   template:
