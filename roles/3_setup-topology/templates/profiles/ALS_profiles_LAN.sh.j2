@@ -7,7 +7,7 @@
 
 
 # Functions to run Cronjobs on Departments - Assign distribution 0-1
-# These Cronjobs run the actual traffic generation scripts as defined in Cronjobs.sh.j2
+# These Cronjobs run the actual traffic generation scripts as defined in Cronjobs_LAN.sh.j2
 developers () {
    # Retrieve weights from Config File
    dep="developers"
@@ -17,8 +17,8 @@ developers () {
    ftp={{ ALS_developers_weight_ftp }}
    # Run Cronjob and pass assigned weights
    {% for i in range(1, LANdevs | int +1) %}
-   docker exec -d clab-{{networkname}}-Client{{i}}-DEVS-LAN chmod +x /Cronjobs.sh
-   docker exec -d clab-{{networkname}}-Client{{i}}-DEVS-LAN bash /Cronjobs.sh $dep $web $smb $ssh $ftp
+   docker exec -d clab-{{networkname}}-Client{{i}}-DEVS-LAN chmod +x /Cronjobs_LAN.sh
+   docker exec -d clab-{{networkname}}-Client{{i}}-DEVS-LAN bash /Cronjobs_LAN.sh $dep $web $smb $ssh $ftp
    {% endfor %}
 }
 
@@ -31,8 +31,8 @@ admins () {
    ftp={{ ALS_administration_weight_ftp }}
 
    {% for i in range(1, LANadmins | int +1) %}
-   docker exec -d clab-{{networkname}}-Client{{i}}-ADMINS-LAN chmod +x /Cronjobs.sh
-   docker exec -d clab-{{networkname}}-Client{{i}}-ADMINS-LAN bash /Cronjobs.sh $dep $web $smb $ssh $ftp
+   docker exec -d clab-{{networkname}}-Client{{i}}-ADMINS-LAN chmod +x /Cronjobs_LAN.sh
+   docker exec -d clab-{{networkname}}-Client{{i}}-ADMINS-LAN bash /Cronjobs_LAN.sh $dep $web $smb $ssh $ftp
    {% endfor %}
 }
 
@@ -45,8 +45,8 @@ operations () {
    ftp={{ ALS_operations_weight_ftp }}
 
    {% for i in range(1, LANops | int +1) %}
-   docker exec -d clab-{{networkname}}-Client{{i}}-OPS-LAN chmod +x /Cronjobs.sh
-   docker exec -d clab-{{networkname}}-Client{{i}}-OPS-LAN bash /Cronjobs.sh $dep $web $smb $ssh $ftp
+   docker exec -d clab-{{networkname}}-Client{{i}}-OPS-LAN chmod +x /Cronjobs_LAN.sh
+   docker exec -d clab-{{networkname}}-Client{{i}}-OPS-LAN bash /Cronjobs_LAN.sh $dep $web $smb $ssh $ftp
    {% endfor %}
 }
 

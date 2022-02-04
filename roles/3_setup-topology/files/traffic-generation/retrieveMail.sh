@@ -1,5 +1,7 @@
 #!/bin/bash
 
+
+
 ### retrieves mail via getmail and automatically downloads and executes the remote file from which a link was seen in the latest received email
 while :
 do

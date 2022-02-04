@@ -6,6 +6,7 @@ web=$2
 smb=$3
 ssh=$4
 ftp=$5
+mail=$6
 
 
 ### Bash only accept integers, using BC to multiply decimals to 0-100% representation
@@ -14,6 +15,7 @@ web_weight=$(bc<<<"(1-$web)*10")
 smb_weight=$(bc<<<"(1-$smb)*10")
 ssh_weight=$(bc<<<"(1-$ssh)*10") 
 ftp_weight=$(bc<<<"(1-$ftp)*10") 
+mail_weight=$(bc<<<"(1-$mail)*10") 
 
 
 ### Bash random variable
@@ -36,8 +38,8 @@ EOF
 }
 
 ### Random Start Time Cronjob 'LANweb.sh'
-lan_web () {
-croncmd="bash /LANweb.sh $web_weight & "
+wan_web () {
+croncmd="bash /WANweb.sh $web_weight & "
 if [ $bash_start_time -ge 15 ]
 then
 cronjob="$(($bash_start_time - 14)) 9 * * 1-5 $croncmd"
@@ -48,7 +50,7 @@ add_entries
 }
 
 ### Random Start Time SSH Traffic Generation
-lan_ssh () {
+{# lan_ssh () {
 croncmd="bash /ssh.sh $ssh_weight & "
 if [ $bash_start_time -ge 15 ]
 then
@@ -81,11 +83,23 @@ else
 cronjob="$((45+$bash_start_time)) 8 * * 1-5 $croncmd"
 fi
 add_entries
-}
+} #}
+
+### Random Start Time ICMP Health Status Traffic Generation
+wan_sendmail () {
+croncmd="bash /sendingMail.sh $mail_weight &"
+if [ $bash_start_time -ge 15 ]
+then
+cronjob="$(($bash_start_time - 14)) 9 * * 1-5 $croncmd"
+else
+cronjob="$((45+$bash_start_time)) 8 * * 1-5 $croncmd"
+fi
+add_entries
+} #}
 
 ### Random End Time for all Cronjobs
 kill_cronjobs () {
-killcroncmd="kill \$(pgrep -f 'LANweb.sh'); kill \$(pgrep -f 'ssh.sh'); kill \$(pgrep -f 'ftp.sh'); kill \$(pgrep -f 'LANsmb.sh')"
+killcroncmd="kill \$(pgrep -f 'WANweb.sh'); "
 if [ $bash_end_time -ge 15 ]
 then
 killcronjobs="$(($bash_end_time - 14)) 17 * * 1-5 $killcroncmd"
@@ -115,29 +129,31 @@ case $department in
 	developers)
     
     # Start Scripts (In case you start the network at 2 in the afternoon and want the scripts to be running immediately)
-    bash /LANweb.sh $web_weight 
-    bash /ssh.sh $ssh_weight &
-    bash /ftp.sh $ftp_weight &
-    bash /LANsmb.sh $smb_weight &
+    bash /WANweb.sh $web_weight 
+    bash /sendingMail.sh $mail_weight &
     
     # Execute Cronjobs
-    lan_web
-    lan_ssh
+    wan_web
+    wan_sendmail
     kill_cronjobs
 	;;
 
 	operations)
-    bash /LANweb.sh $web_weight 
+    bash /WANweb.sh $web_weight &
+    bash /sendingMail.sh $mail_weight &
 
-    lan_web
+    wan_web
+    wan_sendmail
     kill_cronjobs
 	;;
 
 
 	administration)
-    bash /LANweb.sh $web_weight 
+    bash /WANweb.sh $web_weight &
+    bash /sendingMail.sh $mail_weight &
 
-    lan_web
+    wan_web
+    wan_sendmail
     kill_cronjobs
 	;;
 

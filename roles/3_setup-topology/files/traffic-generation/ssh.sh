@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ssh_weight=$1
-ssh_sleep=$(bc<<<"($ssh_weight*10)") 
+ssh_sleep=$(bc<<<"($ssh_weight*50)") 
 
 
 
