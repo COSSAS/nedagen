@@ -54,7 +54,7 @@ topology:
         - /etc/containerlab/{{networkname}}/traffic-generation/LANsmb.sh:/LANsmb.sh
         - /etc/containerlab/{{networkname}}/traffic-generation/1000000.csv:/1000000.csv
         - /etc/containerlab/{{networkname}}/traffic-generation/retrieveMail.sh:/retrieveMail.sh
-        - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
+        - /etc/containerlab/{{networkname}}/Cronjobs_LAN.sh:/Cronjobs_LAN.sh
 {% endfor %}
 {% for i in range(1, LANadmins | int +1) %}
     Client{{ i }}-ADMINS-LAN:
@@ -66,7 +66,7 @@ topology:
         - /etc/containerlab/{{networkname}}/traffic-generation/1000000.csv:/1000000.csv
         - /etc/containerlab/{{networkname}}/getmail-5.16:/getmail-5.16
         - /etc/containerlab/{{networkname}}/traffic-generation/retrieveMail.sh:/retrieveMail.sh
-        - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
+        - /etc/containerlab/{{networkname}}/Cronjobs_LAN.sh:/Cronjobs_LAN.sh
 {% endfor %}
 {% for i in range(1, LANops | int +1) %}
     Client{{ i }}-OPS-LAN:
@@ -77,7 +77,7 @@ topology:
         - /etc/containerlab/{{networkname}}/traffic-generation/LANsmb.sh:/LANsmb.sh
         - /etc/containerlab/{{networkname}}/traffic-generation/1000000.csv:/1000000.csv
         - /etc/containerlab/{{networkname}}/traffic-generation/retrieveMail.sh:/retrieveMail.sh
-        - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
+        - /etc/containerlab/{{networkname}}/Cronjobs_LAN.sh:/Cronjobs_LAN.sh
 {% endfor %}
 
 # DMZ servers
@@ -130,7 +130,7 @@ topology:
       binds:
         - /etc/containerlab/{{networkname}}/traffic-generation/LANweb.sh:/LANweb.sh
         - /etc/containerlab/{{networkname}}/traffic-generation/sendingMail.sh:/sendingMail.sh
-        - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
+        - /etc/containerlab/{{networkname}}/Cronjobs_WAN.sh:/Cronjobs_WAN.sh
 {% endfor %}
 {% for i in range(1, WANadmins | int +1) %}
     Client{{ i }}-ADMINS-WAN:
@@ -138,7 +138,7 @@ topology:
       binds:
         - /etc/containerlab/{{networkname}}/traffic-generation/WANweb.sh:/WANweb.sh
         - /etc/containerlab/{{networkname}}/traffic-generation/sendingMail.sh:/sendingMail.sh
-        - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
+        - /etc/containerlab/{{networkname}}/Cronjobs_WAN.sh:/Cronjobs_WAN.sh
 {% endfor %}
 {% for i in range(1, WANops | int +1) %}
     Client{{ i }}-OPS-WAN:
@@ -146,7 +146,7 @@ topology:
       binds:
         - /etc/containerlab/{{networkname}}/traffic-generation/WANweb.sh:/WANweb.sh
         - /etc/containerlab/{{networkname}}/traffic-generation/sendingMail.sh:/sendingMail.sh
-        - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
+        - /etc/containerlab/{{networkname}}/Cronjobs_WAN.sh:/Cronjobs_WAN.sh
 {% endfor %}
     Attacker1-WAN:
       image: {{ pythonimage }} # Add jdk

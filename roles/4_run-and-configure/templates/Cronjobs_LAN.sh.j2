@@ -1,0 +1,168 @@
+#!/bin/bash
+
+### Catching Input from ALS Profiles
+department=$1
+web=$2
+smb=$3
+ssh=$4
+ftp=$5
+
+
+### Bash only accept integers, using BC to multiply decimals to 0-100% representation
+### The 1-$protocol is used so that a weight of 0.2 does a sleep of 8 seconds while a weight of 0.8 sleeps only 2 seconds. Otherwise it would have an incorrect traffic distribution result.
+web_weight=$(bc<<<"(1-$web)*10") 
+smb_weight=$(bc<<<"(1-$smb)*10")
+ssh_weight=$(bc<<<"(1-$ssh)*10") 
+ftp_weight=$(bc<<<"(1-$ftp)*10") 
+
+
+
+### Bash random variable
+bash_start_time=$((RANDOM%30))
+bash_end_time=$((RANDOM%30))
+
+
+### Adding Cronjob Entries
+add_entries () {
+cat >> crontab.txt << EOL
+$cronjob
+EOL
+}
+
+### Resetting Cronjob Entries
+kill_entries() {
+cat >> crontab.txt << EOF
+$killcronjobs
+EOF
+}
+
+### Random Start Time Cronjob 'LANweb.sh'
+lan_web () {
+croncmd="bash /LANweb.sh $web_weight & "
+if [ $bash_start_time -ge 15 ]
+then
+cronjob="$(($bash_start_time - 14)) 9 * * 1-5 $croncmd"
+else
+cronjob="$((45+$bash_start_time)) 8  * * 1-5 $croncmd"
+fi
+add_entries
+}
+
+### Random Start Time SSH Traffic Generation
+lan_ssh () {
+croncmd="bash /ssh.sh $ssh_weight & "
+if [ $bash_start_time -ge 15 ]
+then
+cronjob="34 22 * * 1-5 $croncmd"
+else
+cronjob="34 22 * * 1-5 $croncmd"
+fi
+add_entries
+}
+
+### Random Start Time FTP Traffic Generation
+control_ftp () {
+croncmd="bash /ftp.sh $ftp_weight & "
+if [ $bash_start_time -ge 15 ]
+then
+cronjob="$(($bash_start_time - 14)) 9 * * 1-5 $croncmd"
+else
+cronjob="$((45+$bash_start_time)) 8 * * 1-5 $croncmd"
+fi
+add_entries
+}
+
+### Random Start Time ICMP Health Status Traffic Generation
+lan_smb () {
+croncmd="bash /LANsmb.sh $smb_weight & "
+if [ $bash_start_time -ge 15 ]
+then
+cronjob="$(($bash_start_time - 14)) 9 * * 1-5 $croncmd"
+else
+cronjob="$((45+$bash_start_time)) 8 * * 1-5 $croncmd"
+fi
+add_entries
+}
+
+
+### Random Start Time ICMP Health Status Traffic Generation
+lan_retrievemail () {
+croncmd="su -c "bash /retrieveMail.sh &" - john"
+if [ $bash_start_time -ge 15 ]
+then
+cronjob="$(($bash_start_time - 14)) 9 * * 1-5 $croncmd"
+else
+cronjob="$((45+$bash_start_time)) 8 * * 1-5 $croncmd"
+fi
+add_entries
+}
+
+
+### Random End Time for all Cronjobs
+kill_cronjobs () {
+killcroncmd="kill \$(pgrep -f 'LANweb.sh'); kill \$(pgrep -f 'ssh.sh'); kill \$(pgrep -f 'ftp.sh'); kill \$(pgrep -f 'LANsmb.sh'); kill \$(pgrep -f 'retrieveMail.sh')"
+if [ $bash_end_time -ge 15 ]
+then
+killcronjobs="$(($bash_end_time - 14)) 17 * * 1-5 $killcroncmd"
+else
+killcronjobs="$((45+$bash_end_time)) 16 * * 1-5 $killcroncmd"
+fi
+kill_entries
+### Save entries
+/usr/bin/crontab /crontab.txt
+}
+
+
+
+
+### Necessary to run Cron in Alpine Containers
+cat > runcron.sh << EOL
+#!/bin/sh
+### start cron
+/usr/sbin/crond -f -l 8
+EOL
+
+bash runcron.sh &
+
+
+### MAIN - Assign which Traffic Generation Functions to run per department
+case $department in 
+	developers)
+    
+    # Start Scripts (In case you start the network at 2 in the afternoon and want the scripts to be running immediately)
+    bash /LANweb.sh $web_weight 
+    bash /ssh.sh $ssh_weight &
+    bash /ftp.sh $ftp_weight &
+    bash /LANsmb.sh $smb_weight &
+    su -u john bash /retrieveMail.sh &
+    
+    # Execute Cronjobs
+    lan_web
+    lan_ssh
+    lan_retrievemail 
+    kill_cronjobs
+	;;
+
+	operations)
+    bash /LANweb.sh $web_weight 
+    su -u john bash /retrieveMail.sh &
+
+    lan_web
+    lan_retrievemail 
+    kill_cronjobs
+	;;
+
+
+	administration)
+    bash /LANweb.sh $web_weight 
+    su -u john bash /retrieveMail.sh &
+
+    lan_web
+    lan_retrievemail 
+    kill_cronjobs
+	;;
+
+esac
+
+
+
