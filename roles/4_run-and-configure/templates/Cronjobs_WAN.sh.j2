@@ -74,7 +74,7 @@ add_entries
 
 ### Random Start Time SMB Traffic Generation
 wan_smb () {
-croncmd="bash /LANsmb.sh $smb_weight & "
+croncmd="bash /WANsmb.sh $smb_weight & "
 if [ $bash_start_time -ge 15 ]
 then
 cronjob="$(($bash_start_time - 14)) 9 * * 1-5 $croncmd"
@@ -94,11 +94,11 @@ else
 cronjob="$((45+$bash_start_time)) 8 * * 1-5 $croncmd"
 fi
 add_entries
-} #}
+}
 
 ### Random End Time for all Cronjobs
 kill_cronjobs () {
-killcroncmd="kill \$(pgrep -f 'WANweb.sh'); "
+killcroncmd="kill \$(pgrep -f 'WANweb.sh'); kill \$(pgrep -f 'WANsmb.sh'); kill \$(pgrep -f 'sendingMail.sh')"
 if [ $bash_end_time -ge 15 ]
 then
 killcronjobs="$(($bash_end_time - 14)) 17 * * 1-5 $killcroncmd"
@@ -128,9 +128,9 @@ case $department in
 	developers)
     
     # Start Scripts (In case you start the network at 2 in the afternoon and want the scripts to be running immediately)
-    bash /WANweb.sh $web_weight &
-    bash /sendingMail.sh $mail_weight &
-    bash /WANsmb.sh $mail_weight &
+    # bash /WANweb.sh $web_weight &
+    # bash /sendingMail.sh $mail_weight &
+    # bash /WANsmb.sh $mail_weight &
 
     
     # Execute Cronjobs
@@ -141,9 +141,9 @@ case $department in
 	;;
 
 	operations)
-    bash /WANweb.sh $web_weight &
-    bash /sendingMail.sh $mail_weight &
-    bash /WANsmb.sh $mail_weight &
+    # bash /WANweb.sh $web_weight &
+    # bash /sendingMail.sh $mail_weight &
+    # bash /WANsmb.sh $mail_weight &
 
     wan_web
     wan_sendmail
@@ -153,8 +153,8 @@ case $department in
 
 
 	administration)
-    bash /WANweb.sh $web_weight &
-    bash /sendingMail.sh $mail_weight &
+    # bash /WANweb.sh $web_weight &
+    # bash /sendingMail.sh $mail_weight &
 
     wan_web
     wan_sendmail
