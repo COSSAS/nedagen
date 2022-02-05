@@ -6,6 +6,7 @@ web=$2
 smb=$3
 ssh=$4
 ftp=$5
+mail=$6
 
 
 ### Bash only accept integers, using BC to multiply decimals to 0-100% representation
@@ -14,7 +15,7 @@ web_weight=$(bc<<<"(1-$web)*10")
 smb_weight=$(bc<<<"(1-$smb)*10")
 ssh_weight=$(bc<<<"(1-$ssh)*10") 
 ftp_weight=$(bc<<<"(1-$ftp)*10") 
-
+mail_weight=$(bc<<<"(1-$mail)*10") 
 
 
 ### Bash random variable
@@ -72,7 +73,7 @@ fi
 add_entries
 }
 
-### Random Start Time ICMP Health Status Traffic Generation
+### Random Start Time SMB Traffic Generation
 lan_smb () {
 croncmd="bash /LANsmb.sh $smb_weight & "
 if [ $bash_start_time -ge 15 ]
@@ -85,9 +86,9 @@ add_entries
 }
 
 
-### Random Start Time ICMP Health Status Traffic Generation
+### Random Start Time Mail Traffic Generation
 lan_retrievemail () {
-croncmd="su -c "bash /retrieveMail.sh &" - john"
+croncmd="su -c "bash /home/john/retrieveMail.sh $mail_weight &" - john"
 if [ $bash_start_time -ge 15 ]
 then
 cronjob="$(($bash_start_time - 14)) 9 * * 1-5 $croncmd"
@@ -134,18 +135,19 @@ case $department in
     bash /ssh.sh $ssh_weight &
     bash /ftp.sh $ftp_weight &
     bash /LANsmb.sh $smb_weight &
-    su john /home/john/retrieveMail.sh &
+    su john /home/john/retrieveMail.sh $mail_weight &
     
     # Execute Cronjobs
     lan_web
     lan_ssh
     lan_retrievemail 
+    lan_smb
     kill_cronjobs
 	;;
 
 	operations)
     bash /LANweb.sh $web_weight 
-    su john /home/john/retrieveMail.sh &
+    su john /home/john/retrieveMail.sh $mail_weight &
 
     lan_web
     lan_retrievemail 
@@ -155,7 +157,7 @@ case $department in
 
 	administration)
     bash /LANweb.sh $web_weight 
-    su john /home/john/retrieveMail.sh &
+    su john /home/john/retrieveMail.sh $mail_weight &
 
     lan_web
     lan_retrievemail 

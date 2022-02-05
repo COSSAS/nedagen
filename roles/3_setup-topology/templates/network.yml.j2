@@ -135,6 +135,7 @@ topology:
       binds:
         - /etc/containerlab/{{networkname}}/traffic-generation/LANweb.sh:/LANweb.sh
         - /etc/containerlab/{{networkname}}/traffic-generation/sendingMail.sh:/sendingMail.sh
+        - /etc/containerlab/{{networkname}}/traffic-generation/WANsmb.sh:/WANsmb.sh
         - /etc/containerlab/{{networkname}}/Cronjobs_WAN.sh:/Cronjobs_WAN.sh
 {% endfor %}
 {% for i in range(1, WANadmins | int +1) %}
@@ -143,6 +144,7 @@ topology:
       binds:
         - /etc/containerlab/{{networkname}}/traffic-generation/WANweb.sh:/WANweb.sh
         - /etc/containerlab/{{networkname}}/traffic-generation/sendingMail.sh:/sendingMail.sh
+        - /etc/containerlab/{{networkname}}/traffic-generation/WANsmb.sh:/WANsmb.sh
         - /etc/containerlab/{{networkname}}/Cronjobs_WAN.sh:/Cronjobs_WAN.sh
 {% endfor %}
 {% for i in range(1, WANops | int +1) %}
@@ -151,6 +153,7 @@ topology:
       binds:
         - /etc/containerlab/{{networkname}}/traffic-generation/WANweb.sh:/WANweb.sh
         - /etc/containerlab/{{networkname}}/traffic-generation/sendingMail.sh:/sendingMail.sh
+        - /etc/containerlab/{{networkname}}/traffic-generation/WANsmb.sh:/WANsmb.sh
         - /etc/containerlab/{{networkname}}/Cronjobs_WAN.sh:/Cronjobs_WAN.sh
 {% endfor %}
     Attacker1-WAN:
