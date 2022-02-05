@@ -43,10 +43,10 @@ sudo python -m pip install ansible
 1. Signup to [Dockerhub](https://hub.docker.com/) - credentials are required
 
 2. Clone this repo:
-```git clone https://ci.tno.nl/gitlab/smd/purplecontainerlab/code nedage```
+```git clone https://ci.tno.nl/gitlab/smd/purplecontainerlab/code NeDaGen```
 
 3. Enter the cloned directory:
-```cd nedage```
+```cd NeDaGen```
 
 4. Fill in config.yml
 
@@ -63,9 +63,9 @@ WAN clients and Attacker nodes do not have internet access after initialization
 
 
 ## Roadmap
-- [ ] Attacker Story
-  - [ ] Initial Access
-  - [ ] Lateral Movement
+- [ ] Attacker Stories
+  - [x] Attacker Story 1
+  - [ ] Attacker Story 2
 
 ## License
 This tool is fully open source. It does rely on containerlab which is made by Nokia and licensed under the BSD 3-Clause License and the open source Atomic Red Team.

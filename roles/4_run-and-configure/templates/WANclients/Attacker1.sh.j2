@@ -7,7 +7,7 @@ nameserver 8.8.8.8" > /etc/resolv.conf'
 ### install packages
 docker exec clab-{{networkname}}-Attacker1-WAN apt-get update -y
 docker exec clab-{{networkname}}-Attacker1-WAN apt-get install {{ basic_packages }}
-docker exec clab-{{networkname}}-Attacker1-WAN apt-get -yq install pip ssh git netcat unzip
+docker exec clab-{{networkname}}-Attacker1-WAN apt-get -yq install pip ssh git netcat unzip screen
 docker exec clab-{{networkname}}-Attacker1-WAN pip install atomic-operator
 docker exec clab-{{networkname}}-Attacker1-WAN atomic-operator get_atomics --destination "/root/atomic-operator"
 

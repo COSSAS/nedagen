@@ -134,12 +134,19 @@
     dest: /etc/containerlab/{{ networkname }}/log4j/jdk-8u20-linux-x64.tar.gz
     mode: 0644
 
-- name: Copy Log4j Vulnerable WebApp
+- name: Copy Log4j Vulnerable App
   become: yes
   copy:
     src: log4j/log4shell-1.0-SNAPSHOT.war
     dest: /etc/containerlab/{{ networkname }}/log4j/log4shell-1.0-SNAPSHOT.war
     mode: 0644
+
+- name: Copy LOG4J Exploitation Script
+  become: yes
+  copy:
+    src: log4j/exploit.sh
+    dest: /etc/containerlab/{{ networkname }}/log4j/exploit.sh
+    mode: 0744
 
 - name: Copy config variables
   become: yes
@@ -195,6 +202,8 @@
     src: traffic-generation/pingServers.sh
     dest: /etc/containerlab/{{ networkname }}/traffic-generation/pingServers.sh
     mode: 0744
+
+
 
 - name: Copy LANweb.sh
   become: yes
