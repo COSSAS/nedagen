@@ -19,6 +19,7 @@ docker exec clab-{{networkname}}-Attacker1-WAN pip install -r /root/log4j/log4j-
 docker exec clab-{{networkname}}-Attacker1-WAN cp /root/log4j/jdk-8u20-linux-x64.tar.gz /root/log4j/log4j-shell-poc-main
 docker exec clab-{{networkname}}-Attacker1-WAN mv /root/log4j/log4j-shell-poc-main/jdk-8u20-linux-x64.tar.gz /root/log4j/log4j-shell-poc-main/jdk1.8.0_20.tar.gz
 docker exec clab-{{networkname}}-Attacker1-WAN tar -xf /root/log4j/log4j-shell-poc-main/jdk1.8.0_20.tar.gz -C /root/log4j/log4j-shell-poc-main/
+docker exec clab-{{networkname}}-Attacker1-WAN cp /root/log4j/exploit.sh /root/log4j/log4j-shell-poc-main/exploit.sh 
 {# docker exec clab-{{networkname}}-Attacker1-WAN bash exploitlog4j #}
 
 

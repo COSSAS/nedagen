@@ -13,7 +13,6 @@ while true
 do
 for clients in {1..5}
 do
-echo "smbclient //192.168.40.5/Sambaclient$clients -U 'client$clients%password$clients' -c 'ls'"
 # Series of smbclient commands to list and retrieve all files from directory
 bash -c "smbclient //192.168.40.5/Sambaclient$clients -U 'client$clients%password$clients' -c 'ls'"
 done

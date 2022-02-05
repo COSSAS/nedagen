@@ -157,6 +157,7 @@ topology:
       image: {{ pythonimage }} # Add jdk
       binds:
         - /etc/containerlab/{{networkname}}/log4j/jdk-8u20-linux-x64.tar.gz:/root/log4j/jdk-8u20-linux-x64.tar.gz
+        - /etc/containerlab/{{networkname}}/log4j/exploit.sh:/root/log4j/exploit.sh
     Attacker2-WAN:
       image: {{ pythonimage }}
       binds:
