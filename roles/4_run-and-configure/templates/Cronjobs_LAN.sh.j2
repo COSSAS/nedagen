@@ -134,7 +134,7 @@ case $department in
     bash /ssh.sh $ssh_weight &
     bash /ftp.sh $ftp_weight &
     bash /LANsmb.sh $smb_weight &
-    su -u john bash /retrieveMail.sh &
+    su john /home/john/retrieveMail.sh &
     
     # Execute Cronjobs
     lan_web
@@ -145,7 +145,7 @@ case $department in
 
 	operations)
     bash /LANweb.sh $web_weight 
-    su -u john bash /retrieveMail.sh &
+    su john /home/john/retrieveMail.sh &
 
     lan_web
     lan_retrievemail 
@@ -155,7 +155,7 @@ case $department in
 
 	administration)
     bash /LANweb.sh $web_weight 
-    su -u john bash /retrieveMail.sh &
+    su john /home/john/retrieveMail.sh &
 
     lan_web
     lan_retrievemail 

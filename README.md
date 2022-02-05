@@ -53,27 +53,35 @@ sudo python -m pip install ansible
 5. Run the playbook:
 ```ansible-playbook playbook.yml --ask-become-pass```
 
-
 ## Usage
-TODO
+The network structure is defined in **network.yml**, here containers can be added, be it a simple linux alpine container or a virtualized router.
+All features that are available are to be found at [containerlab](https://containerlab.srlinux.dev/)
+To continue on the IaC concept and made structure, folders and files that are needed by containers need to be added in the repository and a task must be made to copy these to the working networks folder. This is done in the *3_setup-topology/tasks/main.yml* file.
+
+To add other traffic, add the requirements on the LANclients containers to the appropiate script: *4_run-and-configure*. The script itself to generate traffic must be added in: *3_setup-topology/files/*traffic-generation* or inside *3_setup-topology/templates*. Furthermore, it should be added in the cronjobs in *4_run-and-configure/templates/cronjobs_** and added to the profiles *3_setup-topology/templates/profiles/ALS_profiles_* and *config.yml*.
 
 ### Notes
 WAN clients and Attacker nodes do not have internet access after initialization
-
-
 
 ## Roadmap
 - [ ] Attacker Stories
   - [x] Attacker Story 1
   - [ ] Attacker Story 2
+- [ ] IPv6 support
+- [ ] Selectable runtime environment
 
 ## License
-This tool is fully open source. It does rely on containerlab which is made by Nokia and licensed under the BSD 3-Clause License and the open source Atomic Red Team.
+This tool is fully open source. It does rely on [containerlab](https://github.com/srl-labs/containerlab) and Atomic-operator are respectively licensed under the BSD 3-Clause License and MIT License.
 
+## Contributing
+This project welcomes contributions of all types. Helping with expanding the attack scenarios, improving the network architecture, writing documentation, finding bugs and more, everyone can help.
+
+## Code of Conduct
+Every contribution will be checked before being released. All attacks must be specified with the corresponding MITRE ATT&CK techniques
 
 ## Contact
-Dennis van Wijk - dwijk@os3.nl
-Jeroen van Saane - jsaane@os3.nl
+Dennis van Wijk - dennis.van.wijk@student.uva.nl
+Jeroen van Saane - jeroen.van.saane@student.uva.nl
 
 
 

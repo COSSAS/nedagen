@@ -38,17 +38,6 @@
   ignore_errors: yes
   when: cleancapture.user_input == 'yes'
 
-- name: Delete capfolders
-  become: yes
-  file:
-    path: "{{ item.path }}"
-    state: absent
-  with_items: "{{ capfolders['files'] }}"
-  ignore_errors: yes
-  async: 1000
-  poll: 0
-  when: cleancapture.user_input == 'yes'
-
 - name: Delete network files
   become: yes
   shell: find . -type d -name 'clab-*' -exec rm -r {} \; -type d 2> /dev/null
@@ -74,6 +63,17 @@
   ignore_errors: yes
   with_items: "{{ folders['files'] }}"
   when: cleanupp.user_input == 'yes'
+
+- name: Delete capfolders
+  become: yes
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ capfolders['files'] }}"
+  ignore_errors: yes
+  async: 1000
+  poll: 0
+  when: cleancapture.user_input == 'yes'
 
 - name: Delete network yaml
   become: yes

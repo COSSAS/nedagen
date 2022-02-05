@@ -10,18 +10,6 @@
   poll: 0
   register: install_tshark
 
-- name: Make capture directory
-  become: yes
-  file:
-    path: /etc/containerlab/captures
-    state: directory
-
-- name: Make network specific capture directory
-  become: yes
-  file:
-    path: /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}
-    state: directory
-
 - name: Copy Capture script
   become: yes
   template:

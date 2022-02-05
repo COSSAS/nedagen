@@ -6,6 +6,19 @@
     path: /etc/containerlab/{{ networkname }}
     state: directory
 
+- name: Get timestamp from the system
+  shell: "date +%Y-%m-%d%H-%M-%S"
+  register: tstamp
+
+- name: Set variables
+  set_fact:
+    cur_date: "{{ tstamp.stdout[0:10]}}"
+    cur_time: "{{ tstamp.stdout[10:]}}"
+
+- name: System timestamp - date
+  debug:
+    msg:  "Current date: {{ cur_date }}_{{ cur_time }}"
+
 # - name: Log into DockerHub
 #   become: yes
 #   docker_login:
@@ -154,11 +167,11 @@
     src: config.yml
     dest: /etc/containerlab/{{ networkname }}/config.yml
 
-- name: Copy sendPhisingmail Traffic Generation Script
+- name: Copy sendPhishingmail Traffic Generation Script
   become: yes
   copy:
-    src: traffic-generation/sendPhisingmail.sh
-    dest: /etc/containerlab/{{ networkname }}/traffic-generation/sendPhisingmail.sh
+    src: traffic-generation/sendPhishingmail.sh
+    dest: /etc/containerlab/{{ networkname }}/traffic-generation/sendPhishingmail.sh
     mode: 0744
 
 - name: Copy sendingMail Traffic Generation Script
@@ -224,6 +237,25 @@
   copy:
     src: traffic-generation/1000000.csv
     dest: /etc/containerlab/{{ networkname }}/traffic-generation/1000000.csv
+    mode: 0744
+
+- name: Make capture directory
+  become: yes
+  file:
+    path: /etc/containerlab/captures
+    state: directory
+
+- name: Make network specific capture directory
+  become: yes
+  file:
+    path: /etc/containerlab/captures/{{networkname}}-{{ cur_date }}_{{ cur_time }}
+    state: directory
+    
+- name: Copy phishingAttackTraffic file
+  become: yes
+  copy:
+    src: traffic-generation/phishingAttackTraffic.txt
+    dest: /etc/containerlab/captures/{{ networkname }}-{{ cur_date }}_{{ cur_time }}/phishingAttackTraffic.txt
     mode: 0744
 
 - name: Configure network topology
