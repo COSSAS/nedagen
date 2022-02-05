@@ -6,6 +6,7 @@ web=$2
 smb=$3
 ssh=$4
 ftp=$5
+mail=$6
 
 
 ### Bash only accept integers, using BC to multiply decimals to 0-100% representation
@@ -14,7 +15,7 @@ web_weight=$(bc<<<"(1-$web)*10")
 smb_weight=$(bc<<<"(1-$smb)*10")
 ssh_weight=$(bc<<<"(1-$ssh)*10") 
 ftp_weight=$(bc<<<"(1-$ftp)*10") 
-
+mail_weight=$(bc<<<"(1-$mail)*10") 
 
 
 ### Bash random variable
@@ -87,7 +88,7 @@ add_entries
 
 ### Random Start Time Retrieve Mail Traffic Generation
 lan_retrievemail () {
-croncmd="su -c "bash /retrieveMail.sh &" - john"
+croncmd="su -c "bash /home/john/retrieveMail.sh $mail_weight &" - john"
 if [ $bash_start_time -ge 15 ]
 then
 cronjob="$(($bash_start_time - 14)) 9 * * 1-5 $croncmd"
