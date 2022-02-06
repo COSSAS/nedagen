@@ -59,7 +59,7 @@ docker exec --user john clab-{{networkname}}-Client{{k}}-OPS-LAN bash -c 'mkdir 
 docker exec --user john clab-{{networkname}}-Client{{k}}-OPS-LAN bash -c 'mkdir ~/Maildir/old'
 
 ### change location retrievingMail script and add traffic marking file
-docker exec -d clab-{{networkname}}-Client{{k}}-OPS-LAN bash -c "cp retrieveMail.sh /home/john/."
+docker exec -d clab-{{networkname}}-Client{{k}}-OPS-LAN bash -c "cp /retrieveMail.sh /home/john/."
 docker exec -d clab-{{networkname}}-Client{{k}}-OPS-LAN bash -c "chown john:john phishingAttackTraffic.txt"
 docker exec -d clab-{{networkname}}-Client{{k}}-OPS-LAN bash -c "chown john /home/john/retrieveMail.sh"
 docker exec -d clab-{{networkname}}-Client{{k}}-OPS-LAN bash -c "ln phishingAttackTraffic /home/john/phishingAttackTraffic.txt"

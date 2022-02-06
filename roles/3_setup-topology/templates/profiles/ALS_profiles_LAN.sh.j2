@@ -31,6 +31,10 @@ admins () {
    ssh={{ ALS_administration_weight_ssh }}
    ftp={{ ALS_administration_weight_ftp }}
    mail={{ ALS_administration_weight_mail }}
+<<<<<<< HEAD
+=======
+
+>>>>>>> e32b754f50b31af709ff074ed4580cba21acf83a
    {% for i in range(1, LANadmins | int +1) %}
    docker exec -d clab-{{networkname}}-Client{{i}}-ADMINS-LAN chmod +x /Cronjobs_LAN.sh
    docker exec -d clab-{{networkname}}-Client{{i}}-ADMINS-LAN bash /Cronjobs_LAN.sh $dep $web $smb $ssh $ftp $mail
