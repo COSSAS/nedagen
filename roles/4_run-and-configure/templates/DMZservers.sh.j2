@@ -94,7 +94,7 @@ nameserver 8.8.8.8" > /etc/resolv.conf'
 
 ### install packages
 docker exec clab-{{networkname}}-Server5-VULN-DMZ apt-get update -y
-docker exec clab-{{networkname}}-Server5-VULN-DMZ apt-get install smbclient vim -y
+docker exec clab-{{networkname}}-Server5-VULN-DMZ apt-get install smbclient vim dnsutils -y
 
 ### set network configuration
 docker exec -d clab-{{networkname}}-Server5-VULN-DMZ ip addr add 172.16.0.6/24 dev eth1

@@ -7,11 +7,11 @@ nameserver 8.8.8.8" > /etc/resolv.conf'
 ### install packages
 docker exec clab-{{networkname}}-Attacker1-WAN apt-get update -y
 docker exec clab-{{networkname}}-Attacker1-WAN apt-get install {{ basic_packages }}
-docker exec clab-{{networkname}}-Attacker1-WAN apt-get -yq install pip ssh git netcat unzip screen
+docker exec clab-{{networkname}}-Attacker1-WAN apt-get -yq install pip ssh git netcat unzip screen dnsutils python2
 docker exec clab-{{networkname}}-Attacker1-WAN pip install atomic-operator
 docker exec clab-{{networkname}}-Attacker1-WAN atomic-operator get_atomics --destination "/root/atomic-operator"
 
-### Log4J Attacker Dependencies
+### Log4J Dependencies
 docker exec clab-{{networkname}}-Attacker1-WAN curl -o /root/log4j/log4j-shell-poc.zip https://github.com/kozmer/log4j-shell-poc/archive/refs/heads/main.zip -O -J -L; 
 docker exec clab-{{networkname}}-Attacker1-WAN chmod 777 /root/log4j/log4j-shell-poc.zip
 docker exec clab-{{networkname}}-Attacker1-WAN unzip /root/log4j/log4j-shell-poc.zip -d /root/log4j/
@@ -20,9 +20,11 @@ docker exec clab-{{networkname}}-Attacker1-WAN cp /root/log4j/jdk-8u20-linux-x64
 docker exec clab-{{networkname}}-Attacker1-WAN mv /root/log4j/log4j-shell-poc-main/jdk-8u20-linux-x64.tar.gz /root/log4j/log4j-shell-poc-main/jdk1.8.0_20.tar.gz
 docker exec clab-{{networkname}}-Attacker1-WAN tar -xf /root/log4j/log4j-shell-poc-main/jdk1.8.0_20.tar.gz -C /root/log4j/log4j-shell-poc-main/
 docker exec clab-{{networkname}}-Attacker1-WAN cp /root/log4j/exploit.sh /root/log4j/log4j-shell-poc-main/exploit.sh 
-{# docker exec clab-{{networkname}}-Attacker1-WAN bash exploitlog4j #}
+docker exec clab-{{networkname}}-Attacker1-WAN cp /root/log4j/smbenumeration.sh /root/log4j/log4j-shell-poc-main/smbenumeration.sh
 
-
+### DNS Exfiltration
+docker exec clab-{{networkname}}-Attacker1-WAN git clone https://github.com/m57/dnsteal /root/log4j/dns_exfil/
+docker exec clab-{{networkname}}-Attacker1-WAN cp /root/log4j/dns_exfil.sh /root/log4j/log4j-shell-poc-main/dns_exfil.sh
 
 
 docker exec -d clab-{{networkname}}-Attacker1-WAN {{ ipv6_configuration }}

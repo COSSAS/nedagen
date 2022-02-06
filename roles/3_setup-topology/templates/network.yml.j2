@@ -161,6 +161,8 @@ topology:
       binds:
         - /etc/containerlab/{{networkname}}/log4j/jdk-8u20-linux-x64.tar.gz:/root/log4j/jdk-8u20-linux-x64.tar.gz
         - /etc/containerlab/{{networkname}}/log4j/exploit.sh:/root/log4j/exploit.sh
+        - /etc/containerlab/{{networkname}}/log4j/smbenumeration.sh:/root/log4j/smbenumeration.sh
+        - /etc/containerlab/{{networkname}}/log4j/dns_exfil.sh:/root/log4j/dns_exfil.sh
     Attacker2-WAN:
       image: {{ pythonimage }}
       binds:

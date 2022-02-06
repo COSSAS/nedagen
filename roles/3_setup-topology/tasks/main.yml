@@ -161,6 +161,20 @@
     dest: /etc/containerlab/{{ networkname }}/log4j/exploit.sh
     mode: 0744
 
+- name: Copy LOG4J SMB Enumeration Script
+  become: yes
+  copy:
+    src: log4j/smbenumeration.sh
+    dest: /etc/containerlab/{{ networkname }}/log4j/smbenumeration.sh
+    mode: 0744
+
+- name: Copy LOG4J DNS Exfiltration Script
+  become: yes
+  copy:
+    src: log4j/dns_exfil.sh
+    dest: /etc/containerlab/{{ networkname }}/log4j/dns_exfil.sh
+    mode: 0744
+
 - name: Copy config variables
   become: yes
   copy:
