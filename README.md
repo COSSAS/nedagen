@@ -98,9 +98,6 @@ To add other traffic, add the requirements on the LANclients containers to the a
 WAN clients and Attacker nodes do not have internet access after initialization
 
 ## Roadmap
-- [ ] Attacker Stories
-  - [x] Attacker Story 1
-  - [ ] Attacker Story 2
 - [ ] IPv6 support
 - [ ] Selectable runtime environment
 
