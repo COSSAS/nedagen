@@ -4,8 +4,9 @@
 department=$1
 web=$2
 smb=$3
-mail=$4
-
+ssh=$4
+ftp=$5
+mail=$6
 
 ### Bash only accept integers, using BC to multiply decimals to 0-100% representation
 ### The 1-$protocol is used so that a weight of 0.2 does a sleep of 8 seconds while a weight of 0.8 sleeps only 2 seconds. Otherwise it would have an incorrect traffic distribution result.
@@ -14,7 +15,6 @@ smb_weight=$(bc<<<"(1-$smb)*10")
 ssh_weight=$(bc<<<"(1-$ssh)*10") 
 ftp_weight=$(bc<<<"(1-$ftp)*10") 
 mail_weight=$(bc<<<"(1-$mail)*10") 
-
 
 ### Bash random variable
 bash_start_time=$((RANDOM%30))
@@ -37,7 +37,7 @@ EOF
 
 ### Random Start Time Cronjob 'WANweb.sh'
 wan_web () {
-croncmd="bash /WANweb.sh $web_weight & "
+croncmd="screen -d -m -S web_traffic bash -c 'bash /WANweb.sh $web_weight'"
 if [ $bash_start_time -ge 15 ]
 then
 cronjob="$(($bash_start_time - 14)) 9 * * 1-5 $croncmd"
@@ -47,34 +47,10 @@ fi
 add_entries
 }
 
-### Random Start Time SSH Traffic Generation
-{# lan_ssh () {
-croncmd="bash /ssh.sh $ssh_weight & "
-if [ $bash_start_time -ge 15 ]
-then
-cronjob="34 22 * * 1-5 $croncmd"
-else
-cronjob="34 22 * * 1-5 $croncmd"
-fi
-add_entries
-}
-
-### Random Start Time FTP Traffic Generation
-control_ftp () {
-croncmd="bash /ftp.sh $ftp_weight & "
-if [ $bash_start_time -ge 15 ]
-then
-cronjob="$(($bash_start_time - 14)) 9 * * 1-5 $croncmd"
-else
-cronjob="$((45+$bash_start_time)) 8 * * 1-5 $croncmd"
-fi
-add_entries
-}
-#}
 
 ### Random Start Time SMB Traffic Generation
 wan_smb () {
-croncmd="bash /WANsmb.sh $smb_weight & "
+croncmd="screen -d -m -S smb_traffic bash -c 'bash /WANweb.sh $smb_weight'"
 if [ $bash_start_time -ge 15 ]
 then
 cronjob="$(($bash_start_time - 14)) 9 * * 1-5 $croncmd"
@@ -86,7 +62,7 @@ add_entries
 
 ### Random Start Time Mail Traffic Generation
 wan_sendmail () {
-croncmd="bash /sendingMail.sh $mail_weight &"
+croncmd="screen -d -m -S mail_traffic bash -c 'bash /LANweb.sh $mail_weight'"
 if [ $bash_start_time -ge 15 ]
 then
 cronjob="$(($bash_start_time - 14)) 9 * * 1-5 $croncmd"
@@ -98,7 +74,7 @@ add_entries
 
 ### Random End Time for all Cronjobs
 kill_cronjobs () {
-killcroncmd="kill \$(pgrep -f 'WANweb.sh'); kill \$(pgrep -f 'WANsmb.sh'); kill \$(pgrep -f 'sendingMail.sh')"
+killcroncmd="screen -XS web_traffic quit; screen -XS smb_traffic quit; screen -XS mail_traffic quit;"
 if [ $bash_end_time -ge 15 ]
 then
 killcronjobs="$(($bash_end_time - 14)) 17 * * 1-5 $killcroncmd"
@@ -109,8 +85,6 @@ kill_entries
 ### Save entries
 /usr/bin/crontab /crontab.txt
 }
-
-
 
 
 ### Necessary to run Cron in Alpine Containers
@@ -126,14 +100,6 @@ bash runcron.sh &
 ### MAIN - Assign which Traffic Generation Functions to run per department
 case $department in 
 	developers)
-    
-    # Start Scripts (In case you start the network at 2 in the afternoon and want the scripts to be running immediately)
-    # bash /WANweb.sh $web_weight &
-    # bash /sendingMail.sh $mail_weight &
-    # bash /WANsmb.sh $mail_weight &
-
-    
-    # Execute Cronjobs
     wan_smb
     wan_web
     wan_sendmail
@@ -141,21 +107,14 @@ case $department in
 	;;
 
 	operations)
-    # bash /WANweb.sh $web_weight &
-    # bash /sendingMail.sh $mail_weight &
-    # bash /WANsmb.sh $mail_weight &
-
+    wan_smb
     wan_web
     wan_sendmail
-    wan_smb
     kill_cronjobs
 	;;
 
 
 	administration)
-    # bash /WANweb.sh $web_weight &
-    # bash /sendingMail.sh $mail_weight &
-
     wan_web
     wan_sendmail
     kill_cronjobs
