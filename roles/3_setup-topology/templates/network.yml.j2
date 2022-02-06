@@ -2,7 +2,7 @@ name: {{ networkname }}
 
 mgmt:
   network: custom_mgmt                # management network name
-  ipv4_subnet: 172.30.0.0/16       # ipv4 range
+  ipv4_subnet: 172.30.0.0/16          # ipv4 range
 
 topology:
   defaults:
@@ -49,10 +49,14 @@ topology:
       image: {{ alpineimage }}
       binds:
         - /etc/containerlab/{{networkname}}/traffic-generation/LANweb.sh:/LANweb.sh
-        - /etc/containerlab/{{networkname}}/traffic-generation/pingServers.sh:/pingServers.sh
         - /etc/containerlab/{{networkname}}/traffic-generation/ssh.sh:/ssh.sh
         - /etc/containerlab/{{networkname}}/traffic-generation/ftp.sh:/ftp.sh
-        - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
+        - /etc/containerlab/{{networkname}}/traffic-generation/LANsmb.sh:/LANsmb.sh
+        - /etc/containerlab/{{networkname}}/traffic-generation/1000000.csv:/1000000.csv
+        - /etc/containerlab/{{networkname}}/getmail-5.16:/getmail-5.16
+        - /etc/containerlab/{{networkname}}/traffic-generation/retrieveMail.sh:/retrieveMail.sh
+        - /etc/containerlab/captures/{{ networkname }}-{{ cur_date }}_{{ cur_time }}/phishingAttackTraffic.txt:/phishingAttackTraffic.txt
+        - /etc/containerlab/{{networkname}}/Cronjobs_LAN.sh:/Cronjobs_LAN.sh
 {% endfor %}
 {% for i in range(1, LANadmins | int +1) %}
     Client{{ i }}-ADMINS-LAN:
@@ -60,7 +64,12 @@ topology:
       binds:
         - /etc/containerlab/{{networkname}}/traffic-generation/LANweb.sh:/LANweb.sh
         - /etc/containerlab/{{networkname}}/traffic-generation/ssh.sh:/ssh.sh
-        - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
+        - /etc/containerlab/{{networkname}}/traffic-generation/LANsmb.sh:/LANsmb.sh
+        - /etc/containerlab/{{networkname}}/traffic-generation/1000000.csv:/1000000.csv
+        - /etc/containerlab/{{networkname}}/getmail-5.16:/getmail-5.16
+        - /etc/containerlab/{{networkname}}/traffic-generation/retrieveMail.sh:/retrieveMail.sh
+        - /etc/containerlab/captures/{{ networkname }}-{{ cur_date }}_{{ cur_time }}/phishingAttackTraffic.txt:/phishingAttackTraffic.txt
+        - /etc/containerlab/{{networkname}}/Cronjobs_LAN.sh:/Cronjobs_LAN.sh
 {% endfor %}
 {% for i in range(1, LANops | int +1) %}
     Client{{ i }}-OPS-LAN:
@@ -68,7 +77,12 @@ topology:
       binds:
         - /etc/containerlab/{{networkname}}/traffic-generation/LANweb.sh:/LANweb.sh
         - /etc/containerlab/{{networkname}}/traffic-generation/ssh.sh:/ssh.sh
-        - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
+        - /etc/containerlab/{{networkname}}/traffic-generation/LANsmb.sh:/LANsmb.sh
+        - /etc/containerlab/{{networkname}}/traffic-generation/1000000.csv:/1000000.csv
+        - /etc/containerlab/{{networkname}}/getmail-5.16:/getmail-5.16
+        - /etc/containerlab/{{networkname}}/traffic-generation/retrieveMail.sh:/retrieveMail.sh
+        - /etc/containerlab/captures/{{ networkname }}-{{ cur_date }}_{{ cur_time }}/phishingAttackTraffic.txt:/phishingAttackTraffic.txt
+        - /etc/containerlab/{{networkname}}/Cronjobs_LAN.sh:/Cronjobs_LAN.sh
 {% endfor %}
 
 # DMZ servers
@@ -80,6 +94,7 @@ topology:
       image: {{ alpineimage }}
       binds:
         - /etc/containerlab/{{networkname}}/ftp/conf.sh:/ftp/conf.sh
+        - /etc/containerlab/{{networkname}}/traffic-generation/pingServers.sh:/pingServers.sh
     Server3-nginx-DMZ:
       image: {{ webservernginximage }}
     Server4-NSD-DMZ:
@@ -88,6 +103,14 @@ topology:
         - /etc/containerlab/{{networkname}}/dns/nsd.conf:/etc/nsd/nsd.conf
         - /etc/containerlab/{{networkname}}/dns/DMZsite.dev.zone:/etc/nsd/DMZsite.dev.zone
         - /etc/containerlab/{{networkname}}/dns/httpsDMZsite.dev.zone:/etc/nsd/httpsDMZsite.dev.zone
+    Server5-VULN-DMZ:
+      image: {{ log4jimage }}
+      binds:
+        - /etc/containerlab/{{networkname}}/log4j/log4shell-1.0-SNAPSHOT.war:/usr/local/tomcat/webapps/ROOT.war
+    Server6-mail-DMZ:
+      image: {{ ubuntuimage }}
+#    Server7-dhcp-DMZ:
+#      image: {{ ubuntuimage }}
 
 # LAN servers
     Server1-samba-LAN:
@@ -111,24 +134,40 @@ topology:
       image: {{ alpineimage }}
       binds:
         - /etc/containerlab/{{networkname}}/traffic-generation/LANweb.sh:/LANweb.sh
-        - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
+        - /etc/containerlab/{{networkname}}/traffic-generation/sendingMail.sh:/sendingMail.sh
+        - /etc/containerlab/{{networkname}}/traffic-generation/WANsmb.sh:/WANsmb.sh
+        - /etc/containerlab/{{networkname}}/Cronjobs_WAN.sh:/Cronjobs_WAN.sh
 {% endfor %}
 {% for i in range(1, WANadmins | int +1) %}
     Client{{ i }}-ADMINS-WAN:
       image: {{ alpineimage }}
       binds:
         - /etc/containerlab/{{networkname}}/traffic-generation/WANweb.sh:/WANweb.sh
-        - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
+        - /etc/containerlab/{{networkname}}/traffic-generation/sendingMail.sh:/sendingMail.sh
+        - /etc/containerlab/{{networkname}}/traffic-generation/WANsmb.sh:/WANsmb.sh
+        - /etc/containerlab/{{networkname}}/Cronjobs_WAN.sh:/Cronjobs_WAN.sh
 {% endfor %}
 {% for i in range(1, WANops | int +1) %}
     Client{{ i }}-OPS-WAN:
       image: {{ alpineimage }}
       binds:
         - /etc/containerlab/{{networkname}}/traffic-generation/WANweb.sh:/WANweb.sh
-        - /etc/containerlab/{{networkname}}/Cronjobs.sh:/Cronjobs.sh
+        - /etc/containerlab/{{networkname}}/traffic-generation/sendingMail.sh:/sendingMail.sh
+        - /etc/containerlab/{{networkname}}/traffic-generation/WANsmb.sh:/WANsmb.sh
+        - /etc/containerlab/{{networkname}}/Cronjobs_WAN.sh:/Cronjobs_WAN.sh
 {% endfor %}
-    Attacker-WAN:
+    Attacker1-WAN:
+      image: {{ pythonimage }} # Add jdk
+      binds:
+        - /etc/containerlab/{{networkname}}/log4j/jdk-8u20-linux-x64.tar.gz:/root/log4j/jdk-8u20-linux-x64.tar.gz
+        - /etc/containerlab/{{networkname}}/log4j/exploit.sh:/root/log4j/exploit.sh
+        - /etc/containerlab/{{networkname}}/log4j/smbenumeration.sh:/root/log4j/smbenumeration.sh
+        - /etc/containerlab/{{networkname}}/log4j/dns_exfil.sh:/root/log4j/dns_exfil.sh
+    Attacker2-WAN:
       image: {{ pythonimage }}
+      binds:
+        - /etc/containerlab/{{networkname}}/traffic-generation/sendPhishingmail.sh:/sendPhishingmail.sh
+        - /etc/containerlab/{{networkname}}/malware.sh:/malware.sh
     Server1-alpine-WAN:
       image: {{ alpineimage }}
 
@@ -152,13 +191,17 @@ topology:
 
 
     # client and server links
-    - endpoints: ["Attacker-WAN:eth1", "br-Internet:eth4"]
-    - endpoints: ["Server1-alpine-WAN:eth1", "br-Internet:eth5"]
+    - endpoints: ["Attacker1-WAN:eth1", "br-Internet:eth4"]
+    - endpoints: ["Attacker2-WAN:eth1", "br-Internet:eth5"]
+    - endpoints: ["Server1-alpine-WAN:eth1", "br-Internet:eth6"]
 
     - endpoints: ["Server1-nginx-DMZ:eth1", "br-DMZ:eth2"]
     - endpoints: ["Server2-control_ftp-DMZ:eth1", "br-DMZ:eth3"]
     - endpoints: ["Server3-nginx-DMZ:eth1", "br-DMZ:eth4"]
     - endpoints: ["Server4-NSD-DMZ:eth1", "br-DMZ:eth5"]
+    - endpoints: ["Server5-VULN-DMZ:eth1", "br-DMZ:eth6"]
+    - endpoints: ["Server6-mail-DMZ:eth1", "br-DMZ:eth7"]
+#    - endpoints: ["Server7-dhcp-DMZ:eth1", "br-DMZ:eth8"]
 
     - endpoints: ["Server1-samba-LAN:eth1", "br-LAN2:eth3"]
     - endpoints: ["Server2-vpn-LAN:eth1", "br-LAN2:eth4"]

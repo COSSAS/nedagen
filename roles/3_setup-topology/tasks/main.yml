@@ -6,6 +6,19 @@
     path: /etc/containerlab/{{ networkname }}
     state: directory
 
+- name: Get timestamp from the system
+  shell: "date +%Y-%m-%d%H-%M-%S"
+  register: tstamp
+
+- name: Set variables
+  set_fact:
+    cur_date: "{{ tstamp.stdout[0:10]}}"
+    cur_time: "{{ tstamp.stdout[10:]}}"
+
+- name: System timestamp - date
+  debug:
+    msg:  "Current date: {{ cur_date }}_{{ cur_time }}"
+
 # - name: Log into DockerHub
 #   become: yes
 #   docker_login:
@@ -26,6 +39,7 @@
     - nginx
     - dns
     - ftp
+    - log4j
     - traffic-generation
     - profiles
     - LANclient_scripts
@@ -73,11 +87,23 @@
     src: SMBconf.sh.j2
     dest: /etc/containerlab/{{ networkname }}/SMBconf.sh
 
+- name: Set malware script
+  become: yes
+  copy:
+    src: malware.sh
+    dest: /etc/containerlab/{{ networkname }}/malware.sh
+
 - name: Copy DMZsite config
   become: yes
   copy:
     src: nginx/DMZsite.conf
     dest: /etc/containerlab/{{ networkname }}/nginx/DMZsite.conf
+
+- name: Copy getmail
+  become: yes
+  copy:
+    src: getmail-5.16
+    dest: /etc/containerlab/{{ networkname }}/getmail-5.16
 
 - name: Copy httpsDMZ config
   become: yes
@@ -114,11 +140,67 @@
     dest: /etc/containerlab/{{ networkname }}/ftp/conf.sh
     mode: 0644
 
+- name: Copy Log4j JDK Dependency
+  become: yes
+  copy:
+    src: log4j/jdk-8u20-linux-x64.tar.gz
+    dest: /etc/containerlab/{{ networkname }}/log4j/jdk-8u20-linux-x64.tar.gz
+    mode: 0644
+
+- name: Copy Log4j Vulnerable App
+  become: yes
+  copy:
+    src: log4j/log4shell-1.0-SNAPSHOT.war
+    dest: /etc/containerlab/{{ networkname }}/log4j/log4shell-1.0-SNAPSHOT.war
+    mode: 0644
+
+- name: Copy LOG4J Exploitation Script
+  become: yes
+  copy:
+    src: log4j/exploit.sh
+    dest: /etc/containerlab/{{ networkname }}/log4j/exploit.sh
+    mode: 0744
+
+- name: Copy LOG4J SMB Enumeration Script
+  become: yes
+  copy:
+    src: log4j/smbenumeration.sh
+    dest: /etc/containerlab/{{ networkname }}/log4j/smbenumeration.sh
+    mode: 0744
+
+- name: Copy LOG4J DNS Exfiltration Script
+  become: yes
+  copy:
+    src: log4j/dns_exfil.sh
+    dest: /etc/containerlab/{{ networkname }}/log4j/dns_exfil.sh
+    mode: 0744
+
 - name: Copy config variables
   become: yes
   copy:
     src: config.yml
     dest: /etc/containerlab/{{ networkname }}/config.yml
+
+- name: Copy sendPhishingmail Traffic Generation Script
+  become: yes
+  copy:
+    src: traffic-generation/sendPhishingmail.sh
+    dest: /etc/containerlab/{{ networkname }}/traffic-generation/sendPhishingmail.sh
+    mode: 0744
+
+- name: Copy sendingMail Traffic Generation Script
+  become: yes
+  copy:
+    src: traffic-generation/sendingMail.sh
+    dest: /etc/containerlab/{{ networkname }}/traffic-generation/sendingMail.sh
+    mode: 0744
+
+- name: Copy retrieveMail Traffic Generation Script
+  become: yes
+  copy:
+    src: traffic-generation/retrieveMail.sh
+    dest: /etc/containerlab/{{ networkname }}/traffic-generation/retrieveMail.sh
+    mode: 0744
 
 - name: Copy SSH Traffic Generation Script
   become: yes
@@ -127,6 +209,20 @@
     dest: /etc/containerlab/{{ networkname }}/traffic-generation/ssh.sh
     mode: 0744
 
+- name: Copy LANsmb Traffic Generation Script
+  become: yes
+  copy:
+    src: traffic-generation/LANsmb.sh
+    dest: /etc/containerlab/{{ networkname }}/traffic-generation/LANsmb.sh
+    mode: 0744
+
+- name: Copy WANsmb Traffic Generation Script
+  become: yes
+  copy:
+    src: traffic-generation/WANsmb.sh
+    dest: /etc/containerlab/{{ networkname }}/traffic-generation/WANsmb.sh
+    mode: 0744
+    
 - name: Copy FTP Traffic Generation Script
   become: yes
   copy:
@@ -141,6 +237,8 @@
     dest: /etc/containerlab/{{ networkname }}/traffic-generation/pingServers.sh
     mode: 0744
 
+
+
 - name: Copy LANweb.sh
   become: yes
   copy:
@@ -153,6 +251,32 @@
   copy:
     src: traffic-generation/WANweb.sh
     dest: /etc/containerlab/{{ networkname }}/traffic-generation/WANweb.sh
+    mode: 0744
+
+- name: Copy Tranco websites
+  become: yes
+  copy:
+    src: traffic-generation/1000000.csv
+    dest: /etc/containerlab/{{ networkname }}/traffic-generation/1000000.csv
+    mode: 0744
+
+- name: Make capture directory
+  become: yes
+  file:
+    path: /etc/containerlab/captures
+    state: directory
+
+- name: Make network specific capture directory
+  become: yes
+  file:
+    path: /etc/containerlab/captures/{{networkname}}-{{ cur_date }}_{{ cur_time }}
+    state: directory
+    
+- name: Copy phishingAttackTraffic file
+  become: yes
+  copy:
+    src: traffic-generation/phishingAttackTraffic.txt
+    dest: /etc/containerlab/captures/{{ networkname }}-{{ cur_date }}_{{ cur_time }}/phishingAttackTraffic.txt
     mode: 0744
 
 - name: Configure network topology

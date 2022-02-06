@@ -1,6 +1,7 @@
 #!/bin/sh
 
 ssh_weight=$1
+ssh_sleep=$(bc<<<"($ssh_weight*50)") 
 
 
 
@@ -10,7 +11,8 @@ do
     dd if=/dev/random of=random.stuff bs=1M count=2
     rm random.stuff
 EOF
-    sleep $((20*$ssh_weight))
+
+    sleep $ssh_sleep
     wait
     
 done

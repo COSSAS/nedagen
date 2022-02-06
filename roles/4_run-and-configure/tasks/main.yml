@@ -51,7 +51,8 @@
     - { src: 'WANclients/DEVS.sh.j2', dest: '/etc/containerlab/{{ networkname }}/WANclient_scripts/DEVS.sh' }
     - { src: 'WANclients/OPS.sh.j2', dest: '/etc/containerlab/{{ networkname }}/WANclient_scripts/OPS.sh' }
     - { src: 'WANclients/enableVPN.sh.j2', dest: '/etc/containerlab/{{ networkname }}/WANclient_scripts/enableVPN.sh' }
-    - { src: 'WANclients/Attacker.sh.j2', dest: '/etc/containerlab/{{ networkname }}/WANclient_scripts/Attacker.sh' }
+    - { src: 'WANclients/Attacker1.sh.j2', dest: '/etc/containerlab/{{ networkname }}/WANclient_scripts/Attacker1.sh' }
+    - { src: 'WANclients/Attacker2.sh.j2', dest: '/etc/containerlab/{{ networkname }}/WANclient_scripts/Attacker2.sh' }
 
 - name: Copy Bridge script
   become: yes
@@ -60,11 +61,18 @@
     dest: /etc/containerlab/{{ networkname }}/Bridges.sh
     mode: '0744'
 
-- name: Copy Cronjob script
+- name: Copy Cronjob LAN script
   become: yes
   template:
-    src: Cronjobs.sh.j2
-    dest: /etc/containerlab/{{ networkname }}/Cronjobs.sh
+    src: Cronjobs_LAN.sh.j2
+    dest: /etc/containerlab/{{ networkname }}/Cronjobs_LAN.sh
+    mode: '0744'
+
+- name: Copy Cronjob WAN script
+  become: yes
+  template:
+    src: Cronjobs_WAN.sh.j2
+    dest: /etc/containerlab/{{ networkname }}/Cronjobs_WAN.sh
     mode: '0744'
 
 - name: Deploy topology
@@ -105,21 +113,26 @@
   poll: 0
   register: AttackerLAN_script
 
-- name: Run Attacker WAN script
+- name: Run Attacker1 WAN script
   become: yes
-  shell: /etc/containerlab/{{ networkname }}/WANclient_scripts/Attacker.sh
+  shell: /etc/containerlab/{{ networkname }}/WANclient_scripts/Attacker1.sh
   ignore_errors: True
   async: 1000
   poll: 0
-  register: AttackerWAN_script
+  register: Attacker1WAN_script
+
+- name: Run Attacker2 WAN script
+  become: yes
+  shell: /etc/containerlab/{{ networkname }}/WANclient_scripts/Attacker2.sh
+  ignore_errors: True
+  async: 1000
+  poll: 0
+  register: Attacker2WAN_script
 
 - name: Run DMZ Server script
   become: yes
   shell: /etc/containerlab/{{ networkname }}/DMZservers.sh
   ignore_errors: True
-  async: 1000
-  poll: 0
-  register: DMZ_server_script  
 
 - name: Run LAN Client ADMIN script
   become: yes
@@ -231,10 +244,17 @@
   shell: /etc/containerlab/{{ networkname }}/WANclient_scripts/enableVPN.sh
   ignore_errors: True
 
+- name: Run ALS on LAN
+  become: yes
+  shell: /etc/containerlab/{{ networkname }}/profiles/ALS_profiles_LAN.sh
+  ignore_errors: True
+  async: 1000
+  poll: 0
+
 - name: Run ALS on WAN
   become: yes
   shell: /etc/containerlab/{{ networkname }}/profiles/ALS_profiles_WAN.sh
   ignore_errors: True
   async: 1000
   poll: 0
-  register: ALS_WAN_client_script
+

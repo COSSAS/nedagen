@@ -30,6 +30,10 @@ useradd -m $username
 
 done
 
+# Add sensitive user account information in one of the LANclients (Used in attacker story #2)
+unlucky_user=$(( $RANDOM % $(({{ NumberofLANclients }})) + 1 ))
+echo "username: client$unlucky_user , password: password$unlucky_user" > /var/www/html/client$unlucky_user/details.bak
+
 
 # Developers Share
 # Can add user group in linux to only grant access to users part of the developers group

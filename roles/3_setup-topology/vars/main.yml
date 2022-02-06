@@ -8,3 +8,5 @@ frrimage: frrouting/frr:latest
 vpnimage: linuxserver/wireguard
 sambaimage: dperson/samba
 pythonimage: python:3.7-slim
+postfiximage: mailu/postfix
+log4jimage: tomcat:8.0.36-jre8

@@ -10,18 +10,6 @@
   poll: 0
   register: install_tshark
 
-- name: Make capture directory
-  become: yes
-  file:
-    path: /etc/containerlab/captures
-    state: directory
-
-- name: Make network specific capture directory
-  become: yes
-  file:
-    path: /etc/containerlab/captures/{{networkname}}-{{ ansible_date_time.iso8601 }}
-    state: directory
-
 - name: Copy Capture script
   become: yes
   template:
@@ -33,13 +21,6 @@
   file:
     path: /etc/containerlab/captures/capture.sh
     mode: '0744'
-
-- name: Check status DMZ server async script
-  become: yes
-  async_status: jid={{ DMZ_server_script.ansible_job_id }}
-  register: job_result_DMZ_server
-  until: job_result_DMZ_server.finished
-  retries: 500  
 
 - name: Check status WAN server async script
   become: yes
@@ -55,11 +36,18 @@
   until: job_result_attackerLAN.finished
   retries: 500
 
-- name: Check status attacker WAN async script
+- name: Check status attacker1 WAN async script
   become: yes
-  async_status: jid={{ AttackerWAN_script.ansible_job_id }}
-  register: job_result_attackerWAN
-  until: job_result_attackerWAN.finished
+  async_status: jid={{ Attacker1WAN_script.ansible_job_id }}
+  register: job_result_attacker1WAN
+  until: job_result_attacker1WAN.finished
+  retries: 500
+
+- name: Check status attacker2 WAN async script
+  become: yes
+  async_status: jid={{ Attacker2WAN_script.ansible_job_id }}
+  register: job_result_attacker2WAN
+  until: job_result_attacker2WAN.finished
   retries: 500
 
 - name: Check status install tshark
