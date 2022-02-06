@@ -62,7 +62,7 @@ add_entries
 
 ### Random Start Time Mail Traffic Generation
 wan_sendmail () {
-croncmd="screen -d -m -S mail_traffic bash -c 'bash /LANweb.sh $mail_weight'"
+croncmd="screen -d -m -S mail_traffic bash -c 'bash /sendingMail.sh $mail_weight'"
 if [ $bash_start_time -ge 15 ]
 then
 cronjob="$(($bash_start_time - 14)) 9 * * 1-5 $croncmd"

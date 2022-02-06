@@ -10,7 +10,7 @@ docker exec -d clab-{{networkname}}-Client{{k}}-DEVS-WAN sh -c 'echo "nameserver
 nameserver 8.8.8.8" > /etc/resolv.conf'
 
 ### install packages
-docker exec clab-{{networkname}}-Client{{k}}-DEVS-WAN apk --no-cache add bash wireguard-tools curl macchanger
+docker exec clab-{{networkname}}-Client{{k}}-DEVS-WAN apk --no-cache add bash screen wireguard-tools curl macchanger
 
 ### setup wireguard (keys)
 docker exec clab-{{networkname}}-Client{{k}}-DEVS-WAN bash -c 'modprobe wireguard'
