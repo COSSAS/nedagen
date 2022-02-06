@@ -14,6 +14,7 @@ Protocols in the dataset:
 - SMB
 - FTP
 - SMTP
+- LDAP
 
 Profiles:
 - Developers
