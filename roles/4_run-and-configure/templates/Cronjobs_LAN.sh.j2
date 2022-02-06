@@ -39,7 +39,7 @@ EOF
 
 ### Random Start Time Cronjob 'LANweb.sh'
 lan_web () {
-croncmd="bash /LANweb.sh $web_weight & "
+croncmd="screen -d -m -S web_traffic bash -c 'bash /LANweb.sh $web_weight'"
 if [ $bash_start_time -ge 15 ]
 then
 cronjob="$(($bash_start_time - 14)) 9 * * 1-5 $croncmd"
@@ -51,19 +51,19 @@ add_entries
 
 ### Random Start Time SSH Traffic Generation
 lan_ssh () {
-croncmd="bash /ssh.sh $ssh_weight & "
+croncmd="screen -d -m -S ssh_traffic bash -c 'bash /ssh.sh $ssh_weight'"
 if [ $bash_start_time -ge 15 ]
 then
-cronjob="34 22 * * 1-5 $croncmd"
+cronjob="$(($bash_start_time - 14)) 9 * * 1-5 $croncmd"
 else
-cronjob="34 22 * * 1-5 $croncmd"
+cronjob="$((45+$bash_start_time)) 8 * * 1-5 $croncmd"
 fi
 add_entries
 }
 
 ### Random Start Time FTP Traffic Generation
 control_ftp () {
-croncmd="bash /ftp.sh $ftp_weight & "
+croncmd="screen -d -m -S ftp_traffic bash -c 'bash /ftp.sh $ftp_weight'"
 if [ $bash_start_time -ge 15 ]
 then
 cronjob="$(($bash_start_time - 14)) 9 * * 1-5 $croncmd"
@@ -75,7 +75,7 @@ add_entries
 
 ### Random Start Time SMB Traffic Generation
 lan_smb () {
-croncmd="bash /LANsmb.sh $smb_weight & "
+croncmd="screen -d -m -S smb_traffic bash -c 'bash /LANsmb.sh $smb_weight'"
 if [ $bash_start_time -ge 15 ]
 then
 cronjob="$(($bash_start_time - 14)) 9 * * 1-5 $croncmd"
@@ -88,7 +88,7 @@ add_entries
 
 ### Random Start Time Retrieve Mail Traffic Generation
 lan_retrievemail () {
-croncmd="su -c "bash /home/john/retrieveMail.sh $mail_weight &" - john"
+croncmd="screen -d -m -S retrieve_mail bash -c 'su john -s /home/john/retrieveMail.sh $mail_weight'"
 if [ $bash_start_time -ge 15 ]
 then
 cronjob="$(($bash_start_time - 14)) 9 * * 1-5 $croncmd"
@@ -101,7 +101,7 @@ add_entries
 
 ### Random End Time for all Cronjobs
 kill_cronjobs () {
-killcroncmd="kill \$(pgrep -f 'LANweb.sh'); kill \$(pgrep -f 'ssh.sh'); kill \$(pgrep -f 'ftp.sh'); kill \$(pgrep -f 'LANsmb.sh'); kill \$(pgrep -f 'retrieveMail.sh')"
+killcroncmd="screen -XS web_traffic quit; screen -XS ssh_traffic quit; screen -XS ftp_traffic quit; screen -XS smb_traffic quit; screen -XS retrieve_mail quit;"
 if [ $bash_end_time -ge 15 ]
 then
 killcronjobs="$(($bash_end_time - 14)) 17 * * 1-5 $killcroncmd"
@@ -114,43 +114,37 @@ kill_entries
 }
 
 
-
-### Necessary to run Cron in Alpine Containers
+### Necessary to run Cron in Alpine Containers:
 cat > runcron.sh << EOL
 #!/bin/sh
 ### start cron
 /usr/sbin/crond -f -l 8
 EOL
-
 bash runcron.sh &
 
 
 ### MAIN - Assign which Traffic Generation Functions to run per department
 case $department in 
 	developers)
-    
-    # Execute Cronjobs
     lan_web
     lan_ssh
-    lan_retrievemail 
+    control_ftp
     lan_smb
     kill_cronjobs
 	;;
 
 	operations)
     lan_web
-    lan_retrievemail 
+    lan_retrievemail
     kill_cronjobs
 	;;
-
 
 	administration)
-
+    lan_smb
     lan_web
-    lan_retrievemail 
+    lan_retrievemail
     kill_cronjobs
 	;;
-
 esac
 
 

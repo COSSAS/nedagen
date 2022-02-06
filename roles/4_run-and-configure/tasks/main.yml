@@ -218,14 +218,6 @@
   poll: 0
   register: ALS_LAN_client_script
 
-- name: Run ALS on WAN
-  become: yes
-  shell: /etc/containerlab/{{ networkname }}/profiles/ALS_profiles_WAN.sh
-  ignore_errors: True
-  async: 1000
-  poll: 0
-  register: ALS_LAN_client_script
-
 - name: Check status WAN client ADMINS async script
   become: yes
   async_status: jid={{ WAN_client_ADMINS.ansible_job_id }}
@@ -252,10 +244,17 @@
   shell: /etc/containerlab/{{ networkname }}/WANclient_scripts/enableVPN.sh
   ignore_errors: True
 
+- name: Run ALS on LAN
+  become: yes
+  shell: /etc/containerlab/{{ networkname }}/profiles/ALS_profiles_LAN.sh
+  ignore_errors: True
+  async: 1000
+  poll: 0
+
 - name: Run ALS on WAN
   become: yes
   shell: /etc/containerlab/{{ networkname }}/profiles/ALS_profiles_WAN.sh
   ignore_errors: True
   async: 1000
   poll: 0
-  register: ALS_WAN_client_script
+

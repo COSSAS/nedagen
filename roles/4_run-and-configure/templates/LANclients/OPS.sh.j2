@@ -8,7 +8,7 @@ docker exec -d clab-{{networkname}}-Client{{k}}-OPS-LAN sh -c 'echo "nameserver 
 nameserver 8.8.8.8" > /etc/resolv.conf'
 
 ### install packages
-docker exec clab-{{networkname}}-Client{{k}}-OPS-LAN apk --no-cache add curl samba-client bash openssh sshpass lftp busybox-extras python2
+docker exec clab-{{networkname}}-Client{{k}}-OPS-LAN apk --no-cache add curl screen samba-client bash openssh sshpass lftp busybox-extras python2
 
 ### set network configuration
 docker exec -d clab-{{networkname}}-Client{{k}}-OPS-LAN ip addr add 192.168.30.{{k+2}}/24 dev eth1
