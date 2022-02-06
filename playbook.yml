@@ -20,8 +20,8 @@
   vars_files:
     - config.yml
   roles:
-#    - 0_docker
-#    - 2_setup-containerlab
+    - 0_docker
+    - 2_setup-containerlab
     - 3_setup-topology
     - 4_run-and-configure
     - 5_capture

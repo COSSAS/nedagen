@@ -19,12 +19,12 @@
   debug:
     msg:  "Current date: {{ cur_date }}_{{ cur_time }}"
 
-# - name: Log into DockerHub
-#   become: yes
-#   docker_login:
-#     username: "{{ Dockerhub_Username }}"
-#     password: "{{ Dockerhub_Password }}"    
-#     reauthorize: yes
+- name: Log into DockerHub
+  become: yes
+  docker_login:
+    username: "{{ Dockerhub_Username }}"
+    password: "{{ Dockerhub_Password }}"    
+    reauthorize: yes
 
 - name: Create Configuration Directories
   become: yes
@@ -236,8 +236,6 @@
     src: traffic-generation/pingServers.sh
     dest: /etc/containerlab/{{ networkname }}/traffic-generation/pingServers.sh
     mode: 0744
-
-
 
 - name: Copy LANweb.sh
   become: yes
