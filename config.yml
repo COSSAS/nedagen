@@ -1,7 +1,7 @@
 ---
 
 # do not use special characters
-# maximum of 750 LANclients, if divided into 3 even parts in the percentages
+# maximum of 750 LANclients, if divided into 3 even parts in the percentages, a maximum of 250 clients per department
 # maximum of 250 WANclients
 # the actual number of clients could be slighly less since they are rounded down with the percentages 
 
