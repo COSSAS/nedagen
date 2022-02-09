@@ -49,19 +49,19 @@ ALS_developers_weight_web: "0.3"          # Set WEB Traffic Generation Weight
 ALS_developers_weight_smb: "0.2"          # Set SMB Traffic Generation Weight
 ALS_developers_weight_ssh: "0.2"          # Set SSH Traffic Generation Weight
 ALS_developers_weight_ftp: "0.2"          # Set FTP Traffic Generation Weight
-ALS_developers_weight_mail: "0.1"         # Set FTP Traffic Generation Weight
+ALS_developers_weight_mail: "0.1"         # Set MAIL Traffic Generation Weight
 
 ALS_administration_weight_web: "0.4"      # Set WEB Traffic Generation Weight
-ALS_administration_weight_smb: "0.3"      # Set WEB Traffic Generation Weight
-ALS_administration_weight_ssh: "0.1"      # Set WEB Traffic Generation Weight
+ALS_administration_weight_smb: "0.3"      # Set SMB Traffic Generation Weight
+ALS_administration_weight_ssh: "0.1"      # Set SSH Traffic Generation Weight
 ALS_administration_weight_ftp: "0.1"      # Set FTP Traffic Generation Weight
-ALS_administration_weight_mail: "0.1"     # Set FTP Traffic Generation Weight
+ALS_administration_weight_mail: "0.1"     # Set MAIL Traffic Generation Weight
 
 ALS_operations_weight_web: "0.5"          # Set WEB Traffic Generation Weight
-ALS_operations_weight_smb: "0.2"          # Set WEB Traffic Generation Weight
-ALS_operations_weight_ssh: "0.1"          # Set WEB Traffic Generation Weight
+ALS_operations_weight_smb: "0.2"          # Set SMB Traffic Generation Weight
+ALS_operations_weight_ssh: "0.1"          # Set SSH Traffic Generation Weight
 ALS_operations_weight_ftp: "0.1"          # Set FTP Traffic Generation Weight
-ALS_operations_weight_mail: "0.1"         # Set FTP Traffic Generation Weight
+ALS_operations_weight_mail: "0.1"         # Set MAIL Traffic Generation Weight
 ```
 
 ### Prerequisites
