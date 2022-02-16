@@ -111,8 +111,8 @@ This project welcomes contributions of all types. Helping with expanding the att
 Every contribution will be checked before being released. All attacks must be specified with the corresponding MITRE ATT&CK techniques
 
 ## Contact
-Dennis van Wijk - dennis.van.wijk@student.uva.nl
-Jeroen van Saane - jeroen.van.saane@student.uva.nl
+Dennis van Wijk - denvanwijk@gmail.com \
+Jeroen van Saane - jeroenvansaane@gmail.com
 
 
 
