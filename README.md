@@ -112,7 +112,7 @@ Every contribution will be checked before being released. All attacks must be sp
 
 ## Contact
 Dennis van Wijk - denvanwijk@gmail.com \
-Jeroen van Saane - jeroenvansaane@gmail.com
+Jeroen van Saane - contact@jeroenvansaane.com
 
 
 
