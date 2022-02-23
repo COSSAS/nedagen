@@ -75,7 +75,7 @@ sudo python -m pip install ansible
 1. Signup to [Dockerhub](https://hub.docker.com/) - credentials are required
 
 2. Clone this repo:
-```git clone https://gitlab.com/cossas/nedagen NeDaGen```
+```git clone https://gitlab.com/cossas/nedagen.git NeDaGen```
 
 3. Enter the cloned directory:
 ```cd NeDaGen```
