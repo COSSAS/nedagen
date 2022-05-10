@@ -4,7 +4,7 @@
 ![Website](https://img.shields.io/badge/website-cossas--project.org-orange)
 ![Commits](https://gitlab.com/cossas/nedagen/-/jobs/artifacts/master/raw/commits.svg?job=create_badge_svg)
 ![Pipeline status](https://gitlab.com/cossas/nedagen/badges/master/pipeline.svg)
-<!-- ![License: MPL2.0](https://gitlab.com/cossas/certitude/-/jobs/artifacts/master/raw/license.svg?job=create_badge_svg) -->
+![License: MPL2.0](https://gitlab.com/cossas/certitude/-/jobs/artifacts/master/raw/license.svg?job=create_badge_svg)
 </div></a>
 
 <hr style="border:2px solid gray"> </hr>
