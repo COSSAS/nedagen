@@ -13,6 +13,8 @@ A Network traffic Dataset Generator for Network-based Intrusion Detection System
 </div>
 <hr style="border:2px solid gray"> </hr>
 
+_All COSSAS projects are hosted on [GitLab](https://gitlab.com/cossas/nedagen/) with a push mirror to GitHub. For issues/contributions check [CONTRIBUTING.md](https://gitlab.com/cossas/home/-/blob/main/CONTRIBUTING.md)_ 
+
 This tool builds a network with a user-defined size and profile. It can be scaled to approximately 1,000 containers and the characteristics of the network can be easily modified. It also incorporates [Atomic-operator](https://www.atomic-operator.com/) to generate malicious network traffic (based on the [MITRE ATT&CK framework](https://attack.mitre.org/)). All corresponding traffic is captured in PCAP(s)/JSON format for further data analysis. 
 
 ### Protocols in the dataset
